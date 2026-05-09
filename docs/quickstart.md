@@ -34,10 +34,12 @@
 
 ```bash
 # Команда выполняется внутри Claude Code
-> /plugin install bookbench
+> /plugin marketplace add vefmvai/bookbench
+> /plugin install bookbench@bookbench
+> /reload-plugins
 ```
 
-Плагин разворачивает свой код в `${CLAUDE_PLUGIN_ROOT}` и инициализирует папку данных `${CLAUDE_PLUGIN_DATA}` при первом запуске любой `/book:*` команды.
+Плагин разворачивает свой код в `${CLAUDE_PLUGIN_ROOT}` (с 0.2.0 — это подпапка `plugins/bookbench/` репозитория, отгружаемая через `git-subdir`) и инициализирует папку данных `${CLAUDE_PLUGIN_DATA}` при первом запуске любой `/book:*` команды.
 
 Подробности по режимам установки (local-dev / GitHub release / Marketplace) — в [`installation.md`](installation.md).
 
@@ -45,7 +47,7 @@
 
 ```
 > /book:doctor
-🤖 BookBench 0.1.0 — диагностика
+🤖 BookBench 0.2.0 — диагностика
    ├─ Claude Code: 2.4 ✅
    ├─ ${CLAUDE_PLUGIN_ROOT}: смонтирован ✅
    ├─ ${CLAUDE_PLUGIN_DATA}: создан ✅

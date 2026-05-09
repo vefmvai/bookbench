@@ -135,7 +135,7 @@ id	language	level	pattern	description
 2. **Fork → branch.** Сделай fork репозитория на GitHub, создай branch с осмысленным именем: `add-narrative-nonfiction-skill`, `fix-voice-gate-edge-case`, `docs-improve-quickstart`.
 3. **Local-dev режим.** Установи плагин из чекаута: `/plugin install ./bookbench`. Это разблокирует `/book:evolve` и позволяет тестировать на синтетических книгах.
 4. **Внеси изменения.** В соответствии со стилем (см. ниже).
-5. **Тесты.** Если меняешь скилл — добавь evaluation case'ы. Если меняешь hook — прогони `bookbench/templates/hooks/tests/anti-ai-cliche-lint.test.sh`.
+5. **Тесты.** Если меняешь скилл — добавь evaluation case'ы. Если меняешь hook — прогони `bookbench/plugins/bookbench/templates/hooks/tests/anti-ai-cliche-lint.test.sh`.
 6. **PR.** Сабмить PR с описанием:
    - Что меняется (кратко).
    - Зачем (мотивация).
@@ -157,7 +157,7 @@ id	language	level	pattern	description
 - #<issue-number>
 
 ## Тесты
-- [ ] `bookbench/templates/hooks/tests/anti-ai-cliche-lint.test.sh` — pass
+- [ ] `bookbench/plugins/bookbench/templates/hooks/tests/anti-ai-cliche-lint.test.sh` — pass
 - [ ] `skills/<changed-skill>/tests/` — pass
 - [ ] Ручная проверка на синтетической книге [X]
 
@@ -294,7 +294,7 @@ description: "Use this skill to detect AI-cliché patterns. Tell users to write 
 - Личные пути (`~/Documents/my-actual-book/...`).
 - Логи (`TUNING-LOG.md`, `REJECTIONS-LOG.md`, `UPDATE-LOG.md`) с реальными данными.
 
-В `bookbench/templates/book/.gitignore` уже исключены `context/voice-profile.md`, `agent-guidelines/writer/voice-samples.md` и реестры памяти. Если ты тестируешь на собственной книге в local-dev — твоя книга **вне** репозитория плагина (это собственность автора).
+В `bookbench/plugins/bookbench/templates/book/.gitignore` уже исключены `context/voice-profile.md`, `agent-guidelines/writer/voice-samples.md` и реестры памяти. Если ты тестируешь на собственной книге в local-dev — твоя книга **вне** репозитория плагина (это собственность автора).
 
 ### Синтетические примеры
 
@@ -318,11 +318,11 @@ description: "Use this skill to detect AI-cliché patterns. Tell users to write 
 
 ```bash
 # Если ты в чекауте плагина
-$ grep -ri "MyActualBookTitle\|MyName\|<твой-приватный-маркер>" bookbench/
+$ grep -ri "MyActualBookTitle\|MyName\|<твой-приватный-маркер>" bookbench/plugins/bookbench/
 # должен вернуть 0 совпадений
 
-$ bookbench/tests/voice-data-audit.sh
-# структурный тест: ни в templates/, ни в docs/, ни в skills/ нет реальных voice data
+$ bash bookbench/tests/audit-public-cleanliness.sh
+# структурный тест: ни в plugins/bookbench/, ни в его templates/, ни в skills/ нет реальных voice data
 ```
 
 Этот аудит будет повторно прогоняться на этапе 17 (подготовка к публикации) и на каждом релизе.
@@ -334,19 +334,25 @@ $ bookbench/tests/voice-data-audit.sh
 ### Структура
 
 ```
-bookbench/tests/                  ← общие тесты (privacy, voice-data audit)
-bookbench/templates/hooks/tests/  ← bash-тесты hook-engine
-bookbench/skills/<skill>/tests/   ← evaluation case'ы скиллов
-bookbench/agent-templates/<role>.eval/                 ← evaluation case'ы ролей
-bookbench/tests/eval-cases/commands/<cmd>/             ← evaluation case'ы команд
-bookbench/tests/eval-cases/skills/<skill>/             ← evaluation case'ы скиллов
+bookbench/tests/                                                ← общие тесты репо (privacy, public-cleanliness audit)
+bookbench/plugins/bookbench/templates/hooks/tests/              ← bash-тесты hook-engine
+bookbench/plugins/bookbench/skills/<skill>/tests/               ← evaluation case'ы скиллов
+bookbench/plugins/bookbench/agent-templates/<role>.eval/        ← evaluation case'ы ролей
+bookbench/tests/eval-cases/commands/<cmd>/                      ← evaluation case'ы команд
+bookbench/tests/eval-cases/skills/<skill>/                      ← evaluation case'ы скиллов
 ```
 
 ### Запуск
 
 ```bash
 # Hook engine
-$ bash bookbench/templates/hooks/tests/anti-ai-cliche-lint.test.sh
+$ bash bookbench/plugins/bookbench/templates/hooks/tests/anti-ai-cliche-lint.test.sh
+
+# Voice-commands privacy structural test
+$ bash bookbench/tests/voice-commands-privacy.test.sh
+
+# Public-cleanliness pre-release audit
+$ bash bookbench/tests/audit-public-cleanliness.sh
 
 # Privacy tests evolver
 $ bash bookbench/tests/eval-cases/commands/evolve/privacy-test-01.sh

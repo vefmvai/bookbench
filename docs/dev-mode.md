@@ -137,7 +137,7 @@ installed_at: 2026-05-08T14:32:11Z
    (b) пропустить (оставить в pending)
    (c) отвергнуть (пометить как not-applicable)
 📝 a
-🤖 ✅ Записал в /Users/.../bookbench/agent-templates/book-writer.md
+🤖 ✅ Записал в /Users/.../bookbench/plugins/bookbench/agent-templates/book-writer.md
 🤖 ✅ git commit: evolve: apply pattern-1 from coffee/scientist-bio/aqueducts
 🤖 ✅ Архивирован в analysis-history/2026-05-08-1645/.
 ```

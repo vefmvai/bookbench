@@ -3,7 +3,7 @@
 > **Фреймворк для написания больших связных текстов — книг, монографий, диссертаций, научпопа — поставляемый как плагин Claude Code.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](CHANGELOG.md)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-%5E2.0-orange.svg)](https://code.claude.com)
 
 ---
@@ -123,7 +123,9 @@ summary.md (автогенерация)
 
 ```bash
 # 1. Установить плагин (через стандартный механизм Claude Code)
-/plugin install bookbench
+/plugin marketplace add vefmvai/bookbench
+/plugin install bookbench@bookbench
+/reload-plugins
 
 # 2. Создать папку для книги
 mkdir my-book && cd my-book
@@ -156,7 +158,7 @@ claude
 | `/book:audit-book` | Аудит всей книги (red thread, cross-references, ИИ-клише) |
 | `/book:help` | Полный список команд с описанием |
 
-Полный каталог — `bookbench/manifest.json` и `bookbench/commands/`. См. также [`docs/customization.md`](docs/customization.md), [`docs/upgrade-guide.md`](docs/upgrade-guide.md).
+Полный каталог — `plugins/bookbench/manifest.json` и `plugins/bookbench/commands/`. См. также [`docs/customization.md`](docs/customization.md), [`docs/upgrade-guide.md`](docs/upgrade-guide.md).
 
 ---
 

@@ -15,7 +15,7 @@
 set -u
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-COMMANDS_DIR="$(cd "$SCRIPT_DIR/../commands" && pwd)"
+COMMANDS_DIR="$(cd "$SCRIPT_DIR/../plugins/bookbench/commands" && pwd)"
 
 PASS=0
 FAIL=0

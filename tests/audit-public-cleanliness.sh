@@ -21,7 +21,7 @@ set -euo pipefail
 
 QUIET=0
 LIST_MARKERS=0
-TARGET="bookbench/"
+TARGET="plugins/bookbench/"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in

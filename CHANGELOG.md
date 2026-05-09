@@ -6,7 +6,40 @@
 
 ## [Unreleased]
 
-_n/a — все изменения текущего цикла вошли в 0.1.5._
+_n/a — все изменения текущего цикла вошли в 0.2.0._
+
+---
+
+## [0.2.0] — 2026-05-09
+
+Major релиз. Структурный рефакторинг репозитория под канонічную структуру Claude Code marketplace. Без содержательных правок в коде команд, скиллов или агентов — только перестановка файлов, обновление `marketplace.json` и фикс относительных путей в инфраструктуре тестов.
+
+### Changed
+
+- **Плагин перенесён из корня репозитория в подпапку `plugins/bookbench/`.** Все исполняемые папки плагина (`commands/`, `skills/`, `agent-templates/`, `lib/`, `templates/`) и его манифесты (`.claude-plugin/plugin.json`, `manifest.json`, `defaults.yaml`, `blocks-catalog.md`) переехали в `plugins/bookbench/`. В корне репозитория остались только проектные файлы: `README.md`, `CHANGELOG.md`, `LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, внешняя документация (`docs/`), инфраструктура тестов (`tests/`), а также сам маркетплейс-манифест (`.claude-plugin/marketplace.json`).
+- **`marketplace.json` теперь использует `git-subdir` с `path: "plugins/bookbench"`** вместо `source: "url"` с полным клоном коррня репо. Версия маркетплейса (`metadata.version`) поднята до 0.2.0.
+- **Версии в `plugin.json`, `manifest.json` и `marketplace.json` подняты до 0.2.0.**
+- **`tests/audit-public-cleanliness.sh`:** дефолтный target обновлён с `bookbench/` на `plugins/bookbench/`.
+- **`tests/voice-commands-privacy.test.sh`:** путь к каталогу команд обновлён на `../plugins/bookbench/commands` (тест проходит — 18/18 PASS).
+- **Документация (`README.md`, `docs/installation.md`, `docs/quickstart.md`, `docs/architecture.md`, `docs/contributing.md`, `docs/faq.md`, `docs/dev-mode.md`):** примеры команд установки переписаны под `/plugin marketplace add vefmvai/bookbench` + `/plugin install bookbench@bookbench`; пути к файлам плагина обновлены на `plugins/bookbench/...` где это релевантно (внутри установленного плагина — по-прежнему `commands/`, `skills/`, `${CLAUDE_PLUGIN_ROOT}` указывает на `plugins/bookbench/`).
+
+### Fixed
+
+- **Sparse-checkout проблема устранена.** В 0.1.x при `/plugin install bookbench@bookbench` Claude Code 2.1.x применял к плагину фильтр `/*` + `!/*/` (только корневые файлы, без подпапок) и не клонировал в кэш `commands/`, `skills/`, `agent-templates/` и `lib/` — без них команды `/book:*` не появлялись. Структура `plugins/<name>/` каноническая для Claude Code marketplace, sparse-checkout срабатывает корректно (выкачивается именно подпапка плагина целиком).
+
+### Migration (для пользователей 0.1.x)
+
+```
+/plugin uninstall bookbench@bookbench
+/plugin marketplace update bookbench   # либо: remove bookbench + add vefmvai/bookbench
+/plugin install bookbench@bookbench
+/reload-plugins
+```
+
+### Known issues
+
+- **35 редких команд всё ещё имеют английские описания** (наследие 0.1.5). Перевод запланирован на 0.2.1.
+- **Префикс `/book:` против `/bookbench:`** — если в 0.1.5 не сработал, в 0.2.0 при `git-subdir`-источнике поведение Claude Code может измениться (теперь корректнее читается `plugin.json` целиком). Проверка эмпирическая — после релиза.
 
 ---
 
@@ -171,7 +204,8 @@ _n/a — первый публичный релиз._
 
 ---
 
-[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.1.5...HEAD
+[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/vefmvai/bookbench/releases/tag/v0.2.0
 [0.1.5]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.5
 [0.1.4]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.4
 [0.1.3]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.3

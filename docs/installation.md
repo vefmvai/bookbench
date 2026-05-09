@@ -38,11 +38,11 @@
 
 ```bash
 # Внутри Claude Code
-> /plugin install bookbench@v0.1.0
+> /plugin install bookbench@v0.2.0
 🤖 Скачиваю bookbench@v0.1.0 с github.com/vefmvai/bookbench/releases/v0.1.0
 🤖 Развёрнут в ${CLAUDE_PLUGIN_ROOT}
 🤖 ${CLAUDE_PLUGIN_DATA} инициализирован: installation.yaml, settings.yaml, registry.yaml
-✅ BookBench 0.1.0 установлен.
+✅ BookBench 0.2.0 установлен.
 ```
 
 В этом режиме:
@@ -74,11 +74,20 @@ $ cd bookbench
 - Изменения в `${CLAUDE_PLUGIN_ROOT}` сразу подхватываются (этот путь — символическая ссылка или прямой путь к чекауту, в зависимости от платформы).
 - Гарантии приватности evolver сохраняются: `/book:evolve` **не читает текст глав**, только мета-файлы (`TUNING-LOG.md`, `REJECTIONS-LOG.md`, гайдлайны, конфиг).
 
-### Режим 3. Marketplace (отложено в 0.2+)
+### Режим 3. Marketplace (с 0.2.0)
 
-Установка из Claude Code plugin marketplace — `/plugin install bookbench` без явной версии. Поддержка планируется после 0.1, когда marketplace будет доступен в стабильном релизе Claude Code.
+Установка из Claude Code plugin marketplace:
 
-В 0.1 используем GitHub release.
+```bash
+# Внутри Claude Code
+> /plugin marketplace add vefmvai/bookbench
+> /plugin install bookbench@bookbench
+> /reload-plugins
+```
+
+Это **рекомендованный путь начиная с 0.2.0**. До 0.2.0 marketplace-установка спотыкалась на sparse-checkout-фильтре Claude Code 2.1.x (плагин лежал в корне репо, и Claude Code не клонировал подпапки `commands/`, `skills/`, `agent-templates/`). В 0.2.0 структура репозитория переведена на каноническую — плагин теперь в подпапке `plugins/bookbench/`, и `git-subdir`-источник работает корректно.
+
+> **Пользователям 0.1.x — обновитесь до 0.2.0.** В 0.1.x marketplace-установка работала только при ручном фиксе кэша. См. [`release-020-notes.md`](release-020-notes.md), раздел «Миграция».
 
 ---
 
@@ -193,7 +202,7 @@ $ rsync -av ~/.bookbench/voices/ user@host:~/.bookbench/voices/
 
 После переноса на новой машине:
 
-1. Установи плагин: `/plugin install bookbench@v0.1.0` (или local-dev).
+1. Установи плагин: `/plugin install bookbench@v0.2.0` (или local-dev).
 2. Зарегистрируй книгу в реестре новой машины: `/book:register ~/Documents/my-book` (нужно, потому что `${CLAUDE_PLUGIN_DATA}/registry.yaml` живёт на машине, а не в книге).
 3. Проверь: `/book:doctor` — должна найти книгу и подтвердить, что все 9 субагентов на месте.
 

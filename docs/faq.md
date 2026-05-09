@@ -18,7 +18,7 @@
 
 ### 1.1. Какая версия Claude Code нужна?
 
-Claude Code `^2.0`. Точное требование зафиксировано в `bookbench/manifest.json` → поле `compatible_claude_code`. Если у тебя 1.x — обнови. Если 2.x — всё работает.
+Claude Code `^2.0`. Точное требование зафиксировано в `plugins/bookbench/manifest.json` → поле `compatible_claude_code`. Если у тебя 1.x — обнови. Если 2.x — всё работает.
 
 Проверить: `claude --version`. Подробности по установке — в [`installation.md`](installation.md).
 
@@ -237,7 +237,7 @@ $ cp .book/.backup/2026-05-08-1432/.hooks/* .book/.hooks/
 1. **Исполняемость:** `ls -l .book/.hooks/anti-ai-cliche-lint.sh` — должен быть `755`. Если нет — `chmod +x`.
 2. **Включён в `config.yaml`:** `hooks.anti_ai_cliche.enabled: true`.
 3. **Тело субагента содержит hook:** `.book/.claude/agents/book-writer.md` → секция `hooks:` → `PostToolUse` на `Edit|Write` с путём к `anti-ai-cliche-lint.sh`.
-4. **Корпус паттернов на месте:** `bookbench/skills/anti-ai-cliche/references/patterns.tsv` — должен содержать 46 паттернов.
+4. **Корпус паттернов на месте:** `plugins/bookbench/skills/anti-ai-cliche/references/patterns.tsv` (внутри установленного плагина — просто `${CLAUDE_PLUGIN_ROOT}/skills/anti-ai-cliche/references/patterns.tsv`) — должен содержать 46 паттернов.
 
 Если всё на месте, но клише пропускается — возможно, паттерн уровня `info` (6 семантических, не блокируют). Проверь `reaction_policy` в `config.yaml`.
 
