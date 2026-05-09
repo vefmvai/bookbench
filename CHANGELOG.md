@@ -6,7 +6,17 @@
 
 ## [Unreleased]
 
-_n/a — все изменения текущего цикла вошли в 0.1.2._
+_n/a — все изменения текущего цикла вошли в 0.1.3._
+
+---
+
+## [0.1.3] — 2026-05-09
+
+Hot-fix №2. В 0.1.2 поле `source` было типа `"github"` — Claude Code 2.1.128 такой тип не принимает («This plugin uses a source type your Claude Code version does not support»). Заменено на универсальный `"git-subdir"` с `path: "."`.
+
+### Fixed
+
+- **`marketplace.json` поле `source.source`** — было `"github"` (не поддерживается в 2.1.128), стало `"git-subdir"` с явным `url` (полный HTTPS) и `path: "."` (плагин лежит в корне репозитория, а не в подпапке). Это рабочий формат, использующийся официальным маркетплейсом Anthropic для всех плагинов.
 
 ---
 
@@ -119,7 +129,8 @@ _n/a — первый публичный релиз._
 
 ---
 
-[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.3
 [0.1.2]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.2
 [0.1.1]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.1
 [0.1.0]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.0
