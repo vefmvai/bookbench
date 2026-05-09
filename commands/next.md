@@ -1,5 +1,5 @@
 ---
-description: Recommends the next workflow step for the current book based on workflow.md, STATE.md, and chapter states. Rule-based core with optional LLM explanation. Without flags shows recommendation; --execute runs the recommended command immediately; --explain adds detailed reasoning. UX-01 from stage 7.2.
+description: Рекомендует следующий шаг воркфлоу для текущей книги на основе workflow.md, STATE.md и состояний глав. Ядро рекомендации — правила, объяснение опционально подмешивает LLM. Без флагов показывает рекомендацию; --execute сразу запускает рекомендованную команду; --explain добавляет развёрнутое обоснование выбора.
 argument-hint: "[--execute] [--explain] [--from-block <name>]"
 allowed-tools: [Read, Bash, Glob, Task, AskUserQuestion]
 ---

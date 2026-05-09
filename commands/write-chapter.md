@@ -1,5 +1,5 @@
 ---
-description: Runs the full chapter micro-cycle for chapter N — strategist, writer, factchecker (with revise-loop max 3), editor, optional skill-mode reviews, optional marketer, coordinator-finalize. The author confirms the spec gate and the final approval gate; everything else is automated through file-based handoff.
+description: Запускает полный микро-цикл главы N через цепочку субагентов — book-strategist (ТЗ), book-writer (драфт), book-factchecker с циклом ревизий до трёх итераций, book-editor (редактура), опциональные skill-проверки, опциональный book-marketer, финализация координатором. Автор подтверждает только два шлюза: одобрение ТЗ (spec-gate) и финальное принятие главы; остальное автоматизировано через файловый протокол передачи артефактов.
 argument-hint: "<chapter-number> [--on-completed re-write|re-edit|abort|ask]"
 allowed-tools: [Task, Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 on_completed: ask

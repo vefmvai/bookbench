@@ -1,5 +1,5 @@
 ---
-description: Runs Phase 1 (book-strategist) plus the spec gate for chapter N. Creates chapters/<id>/spec.md and asks the author to approve. Does not start writing — that is the job of /book:write-chapter.
+description: Прогоняет фазу 1 микро-цикла главы N (агент book-strategist) и шлюз одобрения ТЗ (spec-gate). Создаёт файл chapters/<id>/spec.md и просит автора утвердить ТЗ. Само написание драфта не запускается — это работа команды /book:write-chapter.
 argument-hint: "<chapter-number>"
 allowed-tools: [Task, Read, Write, Edit, AskUserQuestion]
 ---

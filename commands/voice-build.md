@@ -1,5 +1,5 @@
 ---
-description: Builds a voice profile for the current book by activating the voice-builder skill in a dedicated session. Supports --mode=quick|serious (default serious) and --rebuild for overwriting an existing profile. Writes only to .book/. Clears the voice_pending flag in .book/STATE.md on success.
+description: Собирает профиль голоса (voice profile) для текущей книги через активацию скилла voice-builder в выделенной сессии. Поддерживает --mode=quick|serious (по умолчанию serious) и --rebuild для перезаписи уже существующего профиля. Пишет только внутрь .book/. По успеху сбрасывает флаг voice_pending в .book/STATE.md.
 argument-hint: "[--mode=quick|serious] [--rebuild]"
 allowed-tools: [Task, Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion]
 ---

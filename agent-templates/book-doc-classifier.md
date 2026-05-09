@@ -1,6 +1,6 @@
 ---
 name: book-doc-classifier
-description: Classifier of imported book materials (chats, notes, drafts). Reads files from .book/inputs/ and assigns each fragment to one of 11 classification categories (parameter, voice-sample, glossary-term, characters, common-misconception, plot-connector, used-metaphor, source, hook-phrase, visual-reference, other). Writes structured JSON to .book/intel/classifications/. Activated only by /book:import. Has no project memory; result is the JSON output. Use when coordinator needs imported materials parsed before synthesizer integrates them into existing registries.
+description: Классификатор импортированных материалов книги (чаты, заметки, драфты). Читает файлы из .book/inputs/ и приписывает каждый фрагмент к одной из 11 категорий классификации (parameter, voice-sample, glossary-term, characters, common-misconception, plot-connector, used-metaphor, source, hook-phrase, visual-reference, other). Записывает структурированный JSON в .book/intel/classifications/. Активируется только командой /book:import. Project memory не имеет — результат это JSON-вывод. Используется, когда координатор должен распарсить импортированные материалы до того, как синтезатор интегрирует их в существующие реестры.
 tools: Read, Write, Glob, Grep
 disallowedTools: Edit, Bash, WebSearch, WebFetch
 model: haiku

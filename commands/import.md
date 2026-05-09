@@ -1,5 +1,5 @@
 ---
-description: Imports existing author materials (markdown, docx, txt, claude.ai chat exports, Obsidian vaults) into the BookBench structure via a two-stage pipeline — book-doc-classifier (parallel by file) followed by book-doc-synthesizer. Produces INGEST-DECISIONS.md with three buckets (auto-resolved, competing-variants, rejected) and asks the author for batch confirmation. Two modes — new (creates a fresh book from materials) and merge (folds materials into an existing book).
+description: Импортирует существующие материалы автора (markdown, docx, txt, экспорты чатов claude.ai, хранилища Obsidian) в структуру BookBench через двухступенчатый конвейер — book-doc-classifier (параллельно по файлам), затем book-doc-synthesizer. Создаёт INGEST-DECISIONS.md с тремя корзинами (auto-resolved, competing-variants, rejected) и просит автора подтвердить пакетно. Два режима — new (создаёт новую книгу из материалов) и merge (вливает материалы в уже существующую).
 argument-hint: "[<path>] [--mode new|merge] [--from claudeai|obsidian|fs] [--manifest <file>]"
 allowed-tools: [Task, Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---

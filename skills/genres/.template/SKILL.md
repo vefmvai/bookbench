@@ -1,6 +1,6 @@
 ---
 name: TEMPLATE-genre-methodology
-description: Replace this entire frontmatter when generating a new genre methodology. Provides the eight-section structural template that the genre researcher fills with researched content. Mirrors the bundled popular-science skill in form. Used by writing roles when the book is in the matching genre.
+description: Полностью замените этот frontmatter при генерации новой жанровой методологии. Предоставляет восьмисекционный структурный шаблон, который агент genre-researcher заполняет содержимым по итогам исследования. Повторяет по форме встроенный скилл popular-science. Используется писательскими ролями, когда книга относится к соответствующему жанру.
 ---
 
 # Methodology template for a new genre

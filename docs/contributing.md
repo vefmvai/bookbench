@@ -337,8 +337,9 @@ $ bookbench/tests/voice-data-audit.sh
 bookbench/tests/                  ← общие тесты (privacy, voice-data audit)
 bookbench/templates/hooks/tests/  ← bash-тесты hook-engine
 bookbench/skills/<skill>/tests/   ← evaluation case'ы скиллов
-bookbench/agent-templates/<role>.eval/  ← evaluation case'ы ролей
-bookbench/commands/<cmd>.eval/    ← evaluation case'ы команд (опционально)
+bookbench/agent-templates/<role>.eval/                 ← evaluation case'ы ролей
+bookbench/tests/eval-cases/commands/<cmd>/             ← evaluation case'ы команд
+bookbench/tests/eval-cases/skills/<skill>/             ← evaluation case'ы скиллов
 ```
 
 ### Запуск
@@ -348,8 +349,8 @@ bookbench/commands/<cmd>.eval/    ← evaluation case'ы команд (опци�
 $ bash bookbench/templates/hooks/tests/anti-ai-cliche-lint.test.sh
 
 # Privacy tests evolver
-$ bash bookbench/commands/evolve.eval/privacy-test-01.sh
-$ bash bookbench/commands/evolve.eval/privacy-test-02.sh
+$ bash bookbench/tests/eval-cases/commands/evolve/privacy-test-01.sh
+$ bash bookbench/tests/eval-cases/commands/evolve/privacy-test-02.sh
 # ...
 
 # Voice data audit

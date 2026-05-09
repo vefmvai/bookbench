@@ -1,5 +1,5 @@
 ---
-description: Performs a final cross-chapter audit of the whole book — red-thread keyword presence, cohesion across chapters, glossary consistency, untouched imported fragments, and the full anti-AI-cliche corpus. Read-only with respect to chapter text. Produces context/audit-book-report.md without modifying any chapter.
+description: Проводит финальный сквозной аудит всей книги — присутствие ключевых слов «красной нити», связность между главами, согласованность глоссария, наличие нетронутых импортированных фрагментов и полный корпус анти-ИИ-клише. Только чтение по отношению к тексту глав. Создаёт context/audit-book-report.md без правок самих глав.
 argument-hint: "[--severity-threshold low|medium|high]"
 allowed-tools: [Task, Read, Write, Glob, Grep, Bash, AskUserQuestion]
 ---

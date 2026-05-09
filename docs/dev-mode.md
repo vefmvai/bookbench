@@ -254,7 +254,7 @@ privacy:
 
 ### 4 privacy-теста
 
-В `bookbench/commands/evolve.eval/`:
+В `bookbench/tests/eval-cases/commands/evolve/`:
 
 - `privacy-test-01.md` — evolver не читает `chapters/`.
 - `privacy-test-02.md` — evolver не читает `inputs/`.

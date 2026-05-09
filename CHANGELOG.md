@@ -6,7 +6,31 @@
 
 ## [Unreleased]
 
-_n/a — все изменения текущего цикла вошли в 0.1.4._
+_n/a — все изменения текущего цикла вошли в 0.1.5._
+
+---
+
+## [0.1.5] — 2026-05-09
+
+Patch-релиз «Общая уборка». Пост-релизный hot-fix UX: после 0.1.4 плагин технически устанавливался корректно, но в автодополнении `/bookbench:*` всплывали eval-кейсы (тесты, не пользовательские команды), а описания всех 50 команд, 11 SKILL.md и 9 агентов оставались на английском, что противоречит D-23 «только русский в документации».
+
+### Changed
+
+- **Eval-кейсы переехали из `commands/` и `skills/` в `tests/eval-cases/`.** Перенесены: `commands/analyze-session.eval/` → `tests/eval-cases/commands/analyze-session/` (3 кейса), `commands/evolve.eval/` → `tests/eval-cases/commands/evolve/` (4 privacy-теста), `skills/voice-builder/voice-builder.eval/` → `tests/eval-cases/skills/voice-builder/` (4 кейса). Теперь Claude Code не подтягивает их как пользовательские команды — автодополнение `/bookbench:*` показывает только реальные команды. Внутренние ссылки в `commands/evolve.md`, `skills/voice-builder/SKILL.md`, `skills/voice-builder/quality-gate.md`, `docs/dev-mode.md` и `docs/contributing.md` обновлены на новые пути. Папки `agent-templates/<role>.eval/` оставлены на месте — они не сканируются Claude Code как команды.
+- **35 описаний (`description:` в frontmatter) переведены с английского на русский** — точечная работа над топ-приоритетом, остальные 35 редких команд остаются на английском как «известный хвост» для 0.1.6/0.2:
+  - 15 команд: `start`, `write-chapter`, `plan-book`, `plan-chapter`, `discuss-chapter`, `status`, `next`, `help`, `voice-build`, `voice-extract`, `voice-list`, `audit-chapter`, `audit-book`, `re-edit-chapter`, `import`.
+  - 11 `SKILL.md`: `anti-ai-cliche`, `base-methodology`, `factcheck-protocol`, `genre-researcher`, `genres/.template`, `genres/popular-science` (был уже на русском), `import-classification-protocol`, `import-synthesis-protocol`, `marketing-protocol`, `voice-builder`, `voice-profile`.
+  - 9 агентов: `book-coordinator`, `book-doc-classifier`, `book-doc-synthesizer`, `book-editor`, `book-factchecker`, `book-marketer`, `book-observer`, `book-strategist`, `book-tuner`, `book-writer`. Двойные копии в `templates/claude-config/agents/` синхронизированы (соблюдение A-14.1-01).
+- **Терминология глоссария зафиксирована.** Принят единый глоссарий перевода: chapter→глава, draft→драфт, voice profile→профиль голоса, factcheck→факт-чекинг, workflow→воркфлоу, registry→реестр, audit→аудит, tune→тюнинг, eval→eval-кейс, subagent→субагент. Имена агентов (`book-writer`, `book-strategist` и т.д.), пути файлов, параметры команд, имена скиллов — не переводятся, остаются машинно-читаемыми.
+
+### Fixed
+
+- **Поле `slash_prefix` перенесено в `.claude-plugin/plugin.json`** — оно уже было в `manifest.json`, но Claude Code 2.1.x его, по-видимому, оттуда не читал и формировал слаш-префикс из `name` (отсюда `/bookbench:*` вместо желаемого `/book:*`). Теперь дублируется в стандартный `.claude-plugin/plugin.json`. Эффект на автодополнение проверяется автором после обновления плагина.
+
+### Known issues
+
+- **35 редких команд остаются с английскими описаниями** — `archive`, `register`, `forget`, `evolve`, `tune`, `tune-guidelines`, `tune-workflow`, `workflow-add-block`, `workflow-check`, `workflow-edit`, `workflow-move-block`, `workflow-remove-block`, `research-external`, `research-genre`, `research-internal`, `voice-save-as`, `voice-import`, `extract-learnings`, `ship`, `resolve`, `resume`, `run`, `settings`, `update`, `debug`, `doctor`, `config`, `guidelines`, `contribute-genre`, `list`, `analyze-session`, `write-chapter:draft`, `write-chapter:edit`, `write-chapter:factcheck`, `write-chapter:market`. Перевод запланирован на 0.1.6 или 0.2.
+- **Префикс `/book:` против `/bookbench:`** — если перенос `slash_prefix` в `.claude-plugin/plugin.json` не сработает (Claude Code 2.1.x может игнорировать поле или брать имя из `name`), это известное ограничение остаётся до 0.2 без насилия над конфигом.
 
 ---
 
@@ -147,7 +171,8 @@ _n/a — первый публичный релиз._
 
 ---
 
-[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.1.4...HEAD
+[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.1.5...HEAD
+[0.1.5]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.5
 [0.1.4]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.4
 [0.1.3]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.3
 [0.1.2]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.2

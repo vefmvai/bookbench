@@ -1,6 +1,6 @@
 ---
 name: voice-profile
-description: Helps the writer and editor calibrate to the author's voice by reading voice-samples.md and parameter sliders before each chapter. Defines a six-parameter voice model (formality, paragraph length preference, sentence variety, emotional intensity, dash typography, anglicism tolerance) and a calibration procedure for the writer at chapter start. Used by book-writer (Phase 2) and book-editor (Phase 4 cohesion check). Not a replacement for actual voice samples; it is the protocol around them.
+description: Помогает агентам book-writer и book-editor откалиброваться под голос автора — читать voice-samples.md и слайдеры параметров перед каждой главой. Задаёт шестипараметрическую модель голоса (формальность, предпочтительная длина абзаца, вариативность предложений, эмоциональная интенсивность, типографика тире, толерантность к англицизмам) и процедуру калибровки писателя в начале главы. Используется book-writer на фазе 2 и book-editor на фазе 4 (проверка связности). Не заменяет реальные voice-сэмплы — это протокол вокруг них.
 ---
 
 # Voice profile skill

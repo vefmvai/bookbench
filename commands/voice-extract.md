@@ -1,5 +1,5 @@
 ---
-description: Extracts the current book's voice profile and optional voice samples into a single self-contained markdown pack. By default writes the pack to stdout; with --to-file <path> writes to a file outside the plugin tree. Read-only on .book/ — does not modify any source files. Used as a building block by voice save-as.
+description: Извлекает профиль голоса текущей книги (voice profile) и опциональные voice-сэмплы в единый самодостаточный markdown-пакет. По умолчанию печатает пакет в stdout; с флагом --to-file <path> сохраняет в файл за пределами плагина. Только чтение для .book/ — исходные файлы не меняет. Используется как строительный блок командой voice save-as.
 argument-hint: "[--to-stdout | --to-file <path>]"
 allowed-tools: [Read, Write, Bash, Glob, Grep]
 ---

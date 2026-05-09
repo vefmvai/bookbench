@@ -1,5 +1,5 @@
 ---
-description: Forms or extends the book-level plan by invoking book-strategist in book-mode. Produces the chapter list in ROADMAP.md and the red-thread keywords. With --from-imports incorporates classified imported fragments.
+description: Формирует или расширяет план книги через вызов агента book-strategist в режиме book-mode. Создаёт список глав в ROADMAP.md и ключевые слова «красной нити», связывающей главы. С флагом --from-imports встраивает в план уже классифицированные импортированные фрагменты автора.
 argument-hint: "[--from-imports]"
 allowed-tools: [Task, Read, Write, Edit, AskUserQuestion]
 ---

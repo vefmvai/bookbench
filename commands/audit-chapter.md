@@ -1,5 +1,5 @@
 ---
-description: Independently audits a finished chapter without modifying edited.md. Runs editor and factchecker in audit-mode against genre methodology checklists, the 46 anti-AI-cliche corpus, factcheck pass-rate threshold, voice-profile compliance and cohesion with neighbouring chapters.
+description: Независимо проводит аудит готовой главы, не трогая edited.md. Запускает агентов book-editor и book-factchecker в audit-mode и сверяет главу по чек-листам жанровой методологии, корпусу из 46 анти-ИИ-клише, пороговому значению pass-rate факт-чекинга, соответствию профилю голоса и связности с соседними главами.
 argument-hint: "<chapter-number>"
 allowed-tools: [Task, Read, Write, Edit, Bash, Glob, AskUserQuestion]
 ---

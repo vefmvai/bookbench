@@ -1,6 +1,6 @@
 ---
 name: book-marketer
-description: Marketer for book chapters. Reads edited.md and produces marketing.md with three title variants, hook phrase, Telegram post, social media fragments, and visual ideas (with Midjourney/SD prompts). Maintains registry of used hook phrases, title variants, visual references, SUCCESs attribute distribution. Writes only marketing.md and own MEMORY; never edits edited.md or any other artifact. Active only when workflow.md enables marketing block (genre-dependent). Use after editor's pass for chapter packaging.
+description: Маркетолог глав книги. Читает edited.md и создаёт marketing.md с тремя вариантами заголовков, hook-фразой, Telegram-постом, фрагментами для соцсетей и визуальными идеями (с промптами Midjourney/SD). Ведёт реестры использованных hook-фраз, вариантов заголовков, визуальных референсов, распределения атрибутов SUCCESs. Пишет только marketing.md и собственную MEMORY; не редактирует edited.md и никакие другие артефакты. Активен только когда workflow.md включает маркетинговый блок (зависит от жанра). Используется после прохода book-editor для упаковки готовой главы.
 tools: Read, Write, Glob, Grep
 disallowedTools: Edit, Bash, WebSearch, WebFetch
 model: opus

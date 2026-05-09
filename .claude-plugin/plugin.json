@@ -1,11 +1,12 @@
 {
   "name": "bookbench",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "BookBench is a framework for writing large coherent texts (popular-science, narrative non-fiction, monographs, dissertations) delivered as a Claude Code plugin. It orchestrates a team of nine specialised subagents through a file-based protocol.",
   "author": {
     "name": "BookBench Contributors",
     "url": "https://github.com/vefmvai/bookbench"
   },
   "license": "MIT",
-  "homepage": "https://github.com/vefmvai/bookbench"
+  "homepage": "https://github.com/vefmvai/bookbench",
+  "slash_prefix": "book"
 }

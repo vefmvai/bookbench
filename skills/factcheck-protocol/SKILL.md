@@ -1,6 +1,6 @@
 ---
 name: factcheck-protocol
-description: Defines the factchecker's adversarial protocol — claim provenance tags (VERIFIED, CITED, ASSUMED, UNVERIFIABLE), trusted-source policy, claim extraction procedure, revise-loop handshake with the writer (max 3 iterations), cross-chapter inconsistency detection and outdated-source flagging. Used by book-factchecker in Phase 3 and Phase 4b re-check fragments. Includes the adversarial stance principle — every claim is unverified until matched against a trusted source.
+description: Описывает adversarial-протокол факт-чекинга для агента book-factchecker — теги происхождения утверждений (VERIFIED, CITED, ASSUMED, UNVERIFIABLE), политику доверенных источников, процедуру извлечения утверждений из главы, handshake цикла ревизий с book-writer (до трёх итераций), обнаружение противоречий между главами и пометку устаревших источников. Используется book-factchecker на фазе 3 микро-цикла и при повторных проверках фрагментов на фазе 4b. Включает принцип adversarial-позиции — каждое утверждение считается непроверенным, пока не сопоставлено с доверенным источником.
 ---
 
 # Factcheck protocol skill

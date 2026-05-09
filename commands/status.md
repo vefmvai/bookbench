@@ -1,5 +1,5 @@
 ---
-description: Reports the current state of the book at hand — chapter progress, last action, plugin compatibility, active debug sessions and pending competing-variant resolutions. Read-only.
+description: Показывает текущее состояние книги в работе — прогресс по главам, последнее действие, совместимость с версией плагина, активные debug-сессии и нерешённые конфликты конкурирующих вариантов (competing-variants). Только чтение, ничего не меняет.
 argument-hint: ""
 allowed-tools: [Read, Bash, Glob, Grep]
 ---

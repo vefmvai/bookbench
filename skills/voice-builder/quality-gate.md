@@ -127,7 +127,7 @@ Robert MacFarlane, Daniel Kahneman) — публичные литературн�
 ### B.6 ≥ 3 evaluation-кейсов (для voice-builder — 4)
 
 ```bash
-ls voice-builder.eval/
+ls tests/eval-cases/skills/voice-builder/
 # → case-01-clear-author-b1.md
 # → case-02-uncertain-author-fallback-to-b3.md
 # → case-03-b2-iteration.md
@@ -205,7 +205,7 @@ grep -E "[A-Z]:\\\\" SKILL.md
 1. `wc -l SKILL.md` — должно остаться ≤ 500.
 2. `wc -c` на содержимое поля `description:` — должно остаться ≤ 1024.
 3. Опен-сорс grep по 7 запрещённым токенам (см. CLAUDE.md проекта) — должен возвращать 0 совпадений.
-4. Number of files in `voice-builder.eval/` — должно остаться ≥ 3.
+4. Number of files in `tests/eval-cases/skills/voice-builder/` — должно остаться ≥ 3.
 5. Если изменён алгоритм проекции (Step 1-5 в `## Algorithm`) — пересмотреть кейсы 01 и 02 (они опираются на reasoning structure).
 6. Если изменён cap = 2 в B2 — пересмотреть кейс 03.
 7. Если изменена логика partial edit в B3 — пересмотреть кейс 04.

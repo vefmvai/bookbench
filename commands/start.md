@@ -1,5 +1,5 @@
 ---
-description: Initialises a new BookBench book in the current directory by running a five-question interview, scaffolding the .book/ folder, copying templates, registering nine local subagents, and writing the new book to the global registry.
+description: Инициализирует новую книгу BookBench в текущей папке. Проводит интервью из пяти вопросов, разворачивает каркас папки .book/, копирует шаблоны, регистрирует девять локальных субагентов и записывает новую книгу в глобальный реестр. Поддерживает флаг --from-existing для сценария, когда у автора уже есть наброски.
 argument-hint: "[--from-existing]"
 allowed-tools: [Task, Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion]
 ---

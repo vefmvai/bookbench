@@ -1,6 +1,6 @@
 ---
 name: genre-researcher
-description: Researches a target literary genre via deep research and produces a methodology plus a workflow-preset for that genre on demand. Triggered when /book:start onboarding picks a genre that BookBench does not ship as a built-in preset, or when /book:research-genre is invoked explicitly to seed the user-presets cache. Runs five phases — genre profiling, deep research across mandatory source categories, methodology generation, workflow preset assembly, and a five-level validation gate. Writes its output to user-presets, user-methodologies, and optionally user-skills under ${CLAUDE_PLUGIN_DATA}. Never introduces a tenth subagent role.
+description: Исследует целевой литературный жанр через deep research и генерирует методологию плюс workflow-пресет для этого жанра по запросу. Срабатывает, когда онбординг /book:start выбирает жанр, которого нет в комплекте встроенных пресетов BookBench, либо когда /book:research-genre вызывается явно для пополнения кэша user-presets. Выполняет пять фаз — профилирование жанра, deep research по обязательным категориям источников, генерация методологии, сборка workflow-пресета и пятиуровневый шлюз валидации. Записывает результаты в user-presets, user-methodologies и опционально user-skills под ${CLAUDE_PLUGIN_DATA}. Не вводит десятой роли субагента.
 ---
 
 # Genre researcher

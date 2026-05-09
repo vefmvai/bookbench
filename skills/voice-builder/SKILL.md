@@ -1,6 +1,6 @@
 ---
 name: voice-builder
-description: Builds a voice profile for a book from scratch when no source texts are available for import. Activated from book-writer before the first draft.md, from /book:voice build in a dedicated session, or from /book:voice rebuild. Offers three paths — B1 quick interview ~5 min, B2 serious dedicated session ~15-20 min with sample paragraph and iteration, B3 agent proposes profile from book artifacts. Projects abstract author answers (favorite writers, desired reader impression) onto the 6-parameter voice model defined in voice-profile skill. Outputs a filled .book/context/voice-profile.md with a mandatory Reasoning section. Not activated on /book:start, /book:plan-book, /book:plan-chapter or /book:discuss-chapter — voice does not yet apply at planning stages.
+description: Строит профиль голоса (voice profile) книги с нуля, когда нет исходных текстов для импорта. Активируется из агента book-writer перед первым draft.md, из команды /book:voice build в выделенной сессии или из /book:voice rebuild. Предлагает три пути — B1 быстрое интервью ~5 минут, B2 серьёзная выделенная сессия ~15-20 минут с тестовым абзацем и итерацией, B3 агент сам предлагает профиль из артефактов книги. Проецирует абстрактные ответы автора (любимые писатели, желаемое впечатление у читателя) на шестипараметрическую модель голоса из скилла voice-profile. На выходе — заполненный .book/context/voice-profile.md с обязательной секцией Reasoning. Не активируется на /book:start, /book:plan-book, /book:plan-chapter и /book:discuss-chapter — на стадиях планирования голос ещё не применяется.
 model: sonnet
 ---
 
@@ -374,8 +374,8 @@ The actual voice content lives in the book folder, not in the plugin.
 ## Files
 
 This skill ships only `SKILL.md`, `quality-gate.md`, and the four eval
-cases in `voice-builder.eval/`. It has no extra reference files. The
-actual voice content lives in the book folder, not in the plugin.
+cases in `tests/eval-cases/skills/voice-builder/`. It has no extra reference files.
+The actual voice content lives in the book folder, not in the plugin.
 
 ## Notes
 

@@ -1,6 +1,6 @@
 ---
 name: marketing-protocol
-description: Defines the marketer's packaging protocol for a finished chapter — three title variants, hook phrase, Telegram post, social-media snippets, Midjourney prompt, registry of used hook phrases and visual references. Used by book-marketer in Phase 6 of the chapter micro-cycle. Includes anti-AI-cliche subset for marketing copy and the visual-blacklist mechanism that prevents repeated metaphors across chapters of the same book.
+description: Описывает протокол маркетинговой упаковки готовой главы для агента book-marketer — три варианта заголовка, hook-фраза, Telegram-пост, сниппеты для соцсетей, Midjourney-промпт, реестр уже использованных hook-фраз и визуальных референсов. Используется book-marketer на фазе 6 микро-цикла главы. Включает подмножество анти-ИИ-клише для маркетинговых текстов и механизм visual-blacklist, не дающий повторять метафоры между главами одной книги.
 ---
 
 # Marketing protocol skill

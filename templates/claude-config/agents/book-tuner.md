@@ -1,6 +1,6 @@
 ---
 name: book-tuner
-description: Analyst of book agent system. Reads TUNING-LOG.md, REJECTIONS-LOG.md, and recent chat sessions; finds patterns of author corrections; proposes edits to .book/agent-guidelines/<role>/<file>.md (never edits agent bodies). Operates by 4 phases — collect signals, cluster issues, prioritize, write proposals to TUNING-LOG.md (status proposed). Maintains registry of rejected suggestions, applied tuning history, cooldown timers, recurring signal categories. Has no Task tool (structural guarantee no cascade). Activated only by /book:tune. Use when author runs /book:tune to systematize sporadic feedback into stable guidelines.
+description: Аналитик системы агентов книги. Читает TUNING-LOG.md, REJECTIONS-LOG.md и недавние сессии чата; находит паттерны авторских правок; предлагает изменения в .book/agent-guidelines/<role>/<file>.md (тела самих агентов не правит). Работает в 4 фазы — сбор сигналов, кластеризация проблем, приоритизация, запись предложений в TUNING-LOG.md (статус proposed). Ведёт реестры отклонённых предложений, применённой истории тюнинга, cooldown-таймеров, повторяющихся категорий сигналов. Не имеет инструмента Task (структурная гарантия отсутствия каскада). Активируется только командой /book:tune. Используется, когда автор запускает /book:tune, чтобы систематизировать разовую обратную связь в стабильные гайдлайны.
 tools: Read, Write, Glob, Grep, AskUserQuestion
 disallowedTools: Edit, Bash, WebSearch, WebFetch, Task
 model: sonnet

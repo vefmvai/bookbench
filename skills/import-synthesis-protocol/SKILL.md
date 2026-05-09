@@ -1,6 +1,6 @@
 ---
 name: import-synthesis-protocol
-description: Defines the synthesizer protocol for turning classifier JSON output into proposed registry edits and, after author approval, into actual writes to other roles MEMORY.md. Includes deduplication via fingerprinting, three-bucket structure of INGEST-DECISIONS.md (auto-resolved, competing-variants, rejected), conflict handling, and the propose-then-write two-mode operation.
+description: Описывает протокол синтезатора, превращающий JSON-вывод классификатора в предложенные правки реестров и — после одобрения автора — в фактические записи в MEMORY.md других ролей. Включает дедупликацию через фингерпринты, трёхкорзинную структуру INGEST-DECISIONS.md (auto-resolved, competing-variants, rejected), разрешение конфликтов и двухрежимную работу propose-then-write.
 ---
 
 # Import synthesis protocol skill

@@ -1,6 +1,6 @@
 ---
 name: import-classification-protocol
-description: Defines the classification taxonomy of eleven fragment types for the import pipeline — parameter, voice-sample, glossary-term, characters, common-misconception, plot-connector, used-metaphor, source, hook-phrase, visual-reference, other — and the JSON output format for intel/classifications/. Used by book-doc-classifier when /book:import is run. Provides confidence-scoring rules and tagged-fragment shape used by the synthesizer downstream.
+description: Описывает классификационную таксономию из одиннадцати типов фрагментов для конвейера импорта — parameter, voice-sample, glossary-term, characters, common-misconception, plot-connector, used-metaphor, source, hook-phrase, visual-reference, other — и формат JSON-вывода для intel/classifications/. Используется агентом book-doc-classifier при запуске команды /book:import. Задаёт правила confidence-скоринга и форму тегированного фрагмента, который дальше потребляет синтезатор.
 ---
 
 # Import classification protocol skill

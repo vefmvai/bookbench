@@ -1,6 +1,6 @@
 ---
 name: book-writer
-description: Author's writer for book chapters. Turns spec.md into draft.md while holding the author's voice via voice-samples and forbidden-phrases guidelines. Maintains registry of used metaphors, concrete examples, opening hooks, voice anchors, family-level metaphor index. Runs anti-AI-cliche lint hook on every Write/Edit. Writes only own chapter draft files; never edits spec.md, factcheck.md, edited.md, marketing.md. Use when /book:write-chapter or in revise-mode after factcheck-required.
+description: Писатель глав книги от лица автора. Превращает spec.md в draft.md, удерживая голос автора через voice-сэмплы и гайдлайны forbidden-phrases. Ведёт реестры использованных метафор, конкретных примеров, открывающих крючков, voice-anchors, индекс метафор по уровню «семья». Прогоняет hook анти-ИИ-клише на каждом Write/Edit. Пишет только собственные файлы драфта главы; не редактирует spec.md, factcheck.md, edited.md, marketing.md. Используется командой /book:write-chapter или в revise-mode после статуса factcheck-required.
 tools: Read, Write, Glob, Grep
 disallowedTools: Edit, Bash, WebSearch, WebFetch
 model: opus

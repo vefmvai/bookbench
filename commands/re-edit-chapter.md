@@ -1,5 +1,5 @@
 ---
-description: Restarts the edit cycle for chapter N starting from a versioned subfolder vN/. Uses audit-report.md if --from-audit is supplied; otherwise asks the author for the list of issues. Preserves the previous edited.md as v1; produces v2 (or v3, ...). With --with-marketing also re-runs marketer.
+description: Перезапускает цикл редактуры главы N из версионной подпапки vN/. С флагом --from-audit берёт замечания из audit-report.md; иначе запрашивает список проблем у автора. Сохраняет предыдущий edited.md как v1 и создаёт v2 (или v3, ...). С --with-marketing дополнительно перезапускает агента book-marketer.
 argument-hint: "<chapter-number> [--from-audit] [--with-marketing]"
 allowed-tools: [Task, Read, Write, Edit, Bash, AskUserQuestion]
 ---

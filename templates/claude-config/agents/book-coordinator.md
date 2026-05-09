@@ -1,6 +1,6 @@
 ---
 name: book-coordinator
-description: Orchestrates the BookBench team of 8 specialized subagents through a file-based protocol. Reads book state, decides next steps, manages chapter micro-cycle, handles imports, escalates factcheck loops to author after 3 iterations. Acts as the main dialogue agent in the book folder via agent setting in .book/.claude/settings.json. Never edits chapter texts directly; only orchestrates roles, writes STATE.md, UPDATE-LOG.md, and own coordinator/MEMORY.md. Use for any /book:* command and as default agent of the book folder.
+description: Оркестрирует команду из 8 специализированных субагентов BookBench через файловый протокол. Читает состояние книги, решает следующие шаги, управляет микро-циклом главы, обрабатывает импорты, эскалирует к автору циклы факт-чекинга после трёх итераций. Выступает основным диалоговым агентом в папке книги через настройку agent в .book/.claude/settings.json. Никогда не редактирует тексты глав напрямую — только оркестрирует роли, пишет STATE.md, UPDATE-LOG.md и собственный coordinator/MEMORY.md. Используется для любой команды /book:* и как агент по умолчанию для папки книги.
 tools: Read, Write, Edit, Glob, Grep, Bash, Task, AskUserQuestion
 model: sonnet
 permissionMode: acceptEdits

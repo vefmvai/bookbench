@@ -422,7 +422,7 @@ Enforcement is layered:
 
 1. The pseudocode in Step 7P explicitly enumerates allowed paths.
 2. The Task delegation in Step 8P passes only metadata-derived payloads, never raw chapter content.
-3. Privacy unit tests live under `bookbench/commands/evolve.eval/privacy-test-{01..04}.md` and assert that any path traversal into the forbidden list produces a `conflicts/<TS>-privacy-violation.md` record and aborts.
+3. Privacy unit tests live under `bookbench/tests/eval-cases/commands/evolve/privacy-test-{01..04}.md` and assert that any path traversal into the forbidden list produces a `conflicts/<TS>-privacy-violation.md` record and aborts.
 
 ## CI mode (EV-6)
 

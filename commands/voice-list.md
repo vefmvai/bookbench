@@ -1,5 +1,5 @@
 ---
-description: Lists voices saved in the personal library at ~/.bookbench/voices/ (path resolved by voices-helpers H1). For each voice prints the name, the modification timestamp, and a short summary of the six voice parameters extracted from the pack header. Read-only — never writes anywhere.
+description: Выводит список голосов, сохранённых в личной библиотеке ~/.bookbench/voices/ (путь резолвится хелпером voices-helpers H1). Для каждого голоса печатает имя, время последней модификации и краткую сводку из шести параметров голоса, извлечённую из заголовка пакета. Только чтение, ничего не пишет.
 argument-hint: ""
 allowed-tools: [Read, Bash, Glob, Grep]
 ---

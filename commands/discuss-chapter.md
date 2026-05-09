@@ -1,5 +1,5 @@
 ---
-description: Opens an interactive discussion about chapter <N> with the book-strategist before formal spec writing. Useful when the author wants to refine the angle, hook, or thesis collaboratively. Output goes to chapters/<N>/discussion.md and feeds into /book:plan-chapter.
+description: Открывает интерактивное обсуждение главы N с агентом book-strategist до формального написания ТЗ. Полезно, когда автор хочет в диалоге уточнить угол подачи, крючок или ключевой тезис главы. Результат сохраняется в chapters/<N>/discussion.md и подаётся на вход команде /book:plan-chapter.
 argument-hint: "<chapter-number>"
 allowed-tools: [Task, Read, Write, AskUserQuestion]
 ---

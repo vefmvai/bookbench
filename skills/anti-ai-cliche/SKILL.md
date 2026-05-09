@@ -1,6 +1,6 @@
 ---
 name: anti-ai-cliche
-description: Detects 46 LLM-generated text patterns in Russian-language non-fiction prose and signals to writer and editor when an artefact looks AI-generated. Provides three layers of defence — pattern knowledge inside the model, the post-write hook script, and the semantic humanity-test plus grandmother-test. Used by book-writer (Phase 2) and book-editor (Phase 4 plus skill modes). Includes the 34-pattern English corpus, 12 Russian-specific patterns, twelve evaluation cases for regression testing, and override mechanism via per-role forbidden-phrases.md.
+description: Распознаёт 46 типовых паттернов LLM-сгенерированного текста в русскоязычной нон-фикшн прозе и сигнализирует агентам book-writer и book-editor, когда артефакт выглядит ИИ-сгенерированным. Даёт три слоя защиты — встроенное знание паттернов в модели, post-write hook-скрипт и семантический тест человечности плюс «бабушкин тест». Используется агентом book-writer на фазе 2 микро-цикла и book-editor на фазе 4 (плюс skill-режимы). Включает корпус из 34 англоязычных паттернов, 12 специфичных для русского, двенадцать eval-кейсов для регрессионного тестирования и механизм переопределений через per-role forbidden-phrases.md.
 ---
 
 # Anti-AI-cliche skill

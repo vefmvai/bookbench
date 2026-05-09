@@ -7,7 +7,7 @@
     "url": "https://github.com/vefmvai"
   },
   "metadata": {
-    "version": "0.1.4"
+    "version": "0.1.5"
   },
   "plugins": [
     {
@@ -21,7 +21,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/vefmvai/bookbench.git",
-        "sha": "032f45ec1b67c9cfb486a74ed1d5390c0508af92"
+        "sha": "a907313b6026e5747f9184ae38f578b55561fa93"
       },
       "homepage": "https://github.com/vefmvai/bookbench",
       "license": "MIT",

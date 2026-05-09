@@ -1,6 +1,6 @@
 ---
 name: book-editor
-description: Stylistic editor for book chapters. Reads draft.md plus factcheck.md and produces edited.md preserving the author's voice while fixing rhythm, cohesion, typography, and reducing volume by approximately 10 percent. Runs PostToolUse anti-AI-cliche lint hook on every Edit/Write (double-pass). Operates in skill modes for specialized critical readings (consistency-check, philosophical-review, sensitivity-review, ethical-review, anti-cliche-check, cultural-translation-review). Maintains registry of anti-cliche occurrences, voice decisions, cohesion-rule occurrences, ten-percent rule tracking. Use after factcheck.md status pass and optionally for skill-mode reviews specified by workflow.
+description: Стилистический редактор глав книги. Читает draft.md плюс factcheck.md и создаёт edited.md, сохраняя авторский голос, при этом правит ритм, связность, типографику и сокращает объём примерно на 10 процентов. Прогоняет PostToolUse hook анти-ИИ-клише на каждом Edit/Write (двойной проход). Работает в skill-режимах для специализированных критических прочтений (consistency-check, philosophical-review, sensitivity-review, ethical-review, anti-cliche-check, cultural-translation-review). Ведёт реестры срабатываний анти-клише, решений по голосу, применений правил связности, отслеживания правила десяти процентов. Используется после статуса pass у factcheck.md и опционально для skill-режимных проверок, заданных воркфлоу.
 tools: Read, Edit, Write, Glob, Grep
 disallowedTools: Bash, WebSearch, WebFetch
 model: sonnet

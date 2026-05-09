@@ -1,6 +1,6 @@
 ---
 name: book-doc-synthesizer
-description: Synthesizer of imported materials into existing registries. Reads classified fragments from intel/classifications/ and decides which fragment goes into which role's MEMORY.md. Operates in two modes — propose (writes proposals to INGEST-DECISIONS.md) and write (after author approval, edits other roles' MEMORY.md directly). Detects duplicates via fingerprint hashing; flags conflicts with existing outdated/rejected entries. Has no personal memory; writes results into others' registries (MEM-01 exception). Activated only by /book:import. Use after classifier produces intel/classifications/*.json.
+description: Синтезатор импортированных материалов в существующие реестры книги. Читает классифицированные фрагменты из intel/classifications/ и решает, какой фрагмент идёт в MEMORY.md какой роли. Работает в двух режимах — propose (записывает предложения в INGEST-DECISIONS.md) и write (после одобрения автора правит MEMORY.md других ролей напрямую). Обнаруживает дубликаты через фингерпринты; помечает конфликты с уже существующими устаревшими или отклонёнными записями. Собственной памяти не имеет — пишет результаты в чужие реестры (исключение MEM-01). Активируется только командой /book:import. Используется после того, как классификатор произвёл intel/classifications/*.json.
 tools: Read, Edit, Write, Glob, Grep
 disallowedTools: Bash, WebSearch, WebFetch
 model: sonnet

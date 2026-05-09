@@ -1,5 +1,5 @@
 ---
-description: Lists all BookBench slash commands grouped by category, the plugin version, the installation mode and the number of registered books. With a command argument prints the detailed help for that command.
+description: Перечисляет все slash-команды BookBench, сгруппированные по категориям, плюс показывает версию плагина, режим установки и число книг в реестре. Если передать имя команды аргументом — печатает подробную справку именно по ней.
 argument-hint: "[<command-name>]"
 allowed-tools: [Read, Bash, Glob, Grep]
 ---
