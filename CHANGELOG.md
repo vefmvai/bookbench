@@ -6,7 +6,21 @@
 
 ## [Unreleased]
 
-_n/a — все изменения текущего цикла вошли в 0.1.0._
+_n/a — все изменения текущего цикла вошли в 0.1.1._
+
+---
+
+## [0.1.1] — 2026-05-09
+
+Patch-релиз. Делает плагин устанавливаемым через стандартную команду `/plugin install` без ручного клонирования репозитория.
+
+### Added
+
+- **`.claude-plugin/marketplace.json`** — манифест маркетплейса. Превращает репозиторий `vefmvai/bookbench` в полноценный Claude Code marketplace: после `/plugin marketplace add vefmvai/bookbench` плагин становится доступен через `/plugin install bookbench@bookbench`.
+
+### Fixed
+
+- Установка через `/plugin install` теперь работает (в 0.1.0 отсутствовал `marketplace.json`, и команда `/plugin install vefmvai/bookbench` возвращала ошибку «не найден маркетплейс»).
 
 ---
 
@@ -90,5 +104,6 @@ _n/a — первый публичный релиз._
 
 ---
 
-[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.1
 [0.1.0]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.0

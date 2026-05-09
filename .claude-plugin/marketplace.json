@@ -1,0 +1,23 @@
+{
+  "name": "bookbench",
+  "owner": {
+    "name": "vefmvai",
+    "url": "https://github.com/vefmvai"
+  },
+  "metadata": {
+    "description": "Маркетплейс BookBench — фреймворк для написания больших связных текстов через команду из 9 субагентов в Claude Code.",
+    "version": "0.1.1"
+  },
+  "plugins": [
+    {
+      "name": "bookbench",
+      "source": ".",
+      "description": "BookBench — фреймворк для написания больших связных текстов (научпоп, нарративный нон-фикшн, монографии) через команду из 9 субагентов в Claude Code.",
+      "version": "0.1.0",
+      "homepage": "https://github.com/vefmvai/bookbench",
+      "license": "MIT",
+      "category": "writing",
+      "tags": ["writing", "books", "ai-writing", "popular-science", "russian"]
+    }
+  ]
+}
