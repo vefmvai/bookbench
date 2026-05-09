@@ -6,11 +6,37 @@
 
 ## [Unreleased]
 
-_n/a — все изменения текущего цикла вошли в 0.3.0._
+_n/a — все изменения текущего цикла вошли в 0.3.1._
+
+---
+
+## [0.3.1] — 2026-05-09
+
+Hot-fix: marketplace install через `/plugin install bookbench@bookbench` не работал в 0.3.0 — Claude Code 2.1.x клонировал только корневые файлы репо (README, CHANGELOG, LICENSE) без подпапки `plugins/bookbench/`, поэтому плагин «устанавливался» как пустышка (0 commands, 0 skills, 0 agents). Корневая причина — антипаттерн `git-subdir`-ссылки на собственный репо в `marketplace.json`.
+
+### Fixed
+
+- **`.claude-plugin/marketplace.json` поле `source`:** было полное `git-subdir` с url + path + ref + sha (Claude Code не разбирал эту самореференцию корректно и падал на дефолтный sparse-checkout `/*` + `!/*/`, который выкидывает все подпапки). Стало простой строкой с относительным путём `"source": "./plugins/bookbench"` — индустриальный стандарт для marketplace.json внутри своего же репо (используется официальными плагинами 42Crunch, Sentry и др.). Теперь Claude Code корректно находит плагин в подпапке и устанавливает все `commands/`, `skills/`, `agent-templates/`, `lib/`, `templates/`.
+- **Поле `version` плагина в marketplace.json** добавлено явно (`"version": "0.3.1"`) рядом с `source` — раньше его не было, теперь следует паттерну Sentry/42Crunch.
+
+### Migration (для пользователей 0.3.0)
+
+```
+/plugin uninstall bookbench@bookbench
+/plugin marketplace remove bookbench
+/plugin marketplace add vefmvai/bookbench
+/plugin install bookbench@bookbench
+/reload-plugins
+/book:doctor   # должно показать BookBench 0.3.1, команды /book:* появятся
+```
+
+Если `/book:doctor` не работает или команды `/book:*` не видны — проверьте `~/.claude/plugins/cache/bookbench/bookbench/<sha>-<hash>/` — там должны лежать `manifest.json`, `commands/`, `skills/`, `.claude-plugin/plugin.json`.
 
 ---
 
 ## [0.3.0] — 2026-05-09
+
+> ⚠️ **Сломанный marketplace install.** В 0.3.0 marketplace install через `/plugin install bookbench@bookbench` не работает (Claude Code клонирует только корень репо без подпапки плагина). Используйте 0.3.1.
 
 Major-релиз. Переосмысление стартового онбординга и разделение четырёх измерений работы автора (`genre / style / format / audience`) как ортогональных первоклассных сущностей фреймворка. Структурный рефакторинг терминологии `chapter` → `section` во всём коде плагина (~150 файлов). Релиз вырос из первого живого запуска `/book:start` на статье-манифесте «Спираль» в мае 2026 — четыре серьёзных UX-проблемы стартового интервью + одна концептуальная развилка стали Milestone 2.
 
