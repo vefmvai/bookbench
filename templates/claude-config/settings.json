@@ -1,0 +1,28 @@
+{
+  "agent": "book-coordinator",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "command": ".book/.hooks/ops-telemetry-hook.sh"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "filePathPattern": ".book/chapters/**/draft.md|.book/chapters/**/edited.md|.book/chapters/**/marketing.md",
+        "command": ".book/.hooks/anti-ai-cliche-lint.sh"
+      },
+      {
+        "matcher": "*",
+        "command": ".book/.hooks/ops-telemetry-hook.sh"
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "command": ".book/.hooks/ops-telemetry-hook.sh"
+      }
+    ]
+  }
+}

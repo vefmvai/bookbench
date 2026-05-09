@@ -1,0 +1,154 @@
+# .book/config.yaml — dashboard of this book
+# All parameters can be edited via /book:config (interactive) or by hand.
+# Inheritance cascade:
+#   ${CLAUDE_PLUGIN_ROOT}/defaults.yaml > this file > overrides in chapter spec.md
+# After /book:start the values below are merged from defaults.yaml of the chosen genre.
+
+# ────────────────────────────────────────────────────────────
+# book — basic characteristics of the book
+# ────────────────────────────────────────────────────────────
+book:
+  title: "TBD"               # human-readable title; used in marketing artefacts
+  genre: popular-science     # selects defaults from defaults.yaml; only popular-science ships built-in
+  language: ru               # affects language-specific anti-cliche, voice profile, marketing
+  registry_id: "TBD"         # auto-filled by /book:start
+
+# ────────────────────────────────────────────────────────────
+# writing — quantitative parameters (Q1..Q19 from etap 11)
+# Override per chapter via spec.md > override_quantitative.
+# ────────────────────────────────────────────────────────────
+writing:
+  chapter_target_chars: 20000
+  chapter_min_chars: 15000
+  chapter_max_chars: 25000
+  writer_checkpoint_step_chars: 5000
+  emotional_addresses_per_chapter:
+    min: 3
+    max: 4
+  transition_min_chars: 1500
+  transition_min_paragraphs: 3
+  pyramid_supports_per_chapter:
+    min: 3
+    max: 4
+  concrete_anchors_per_abstract_claim:
+    min: 2
+    max: 4
+  modern_examples_year_range:
+    from: 2020
+    to: 2024
+  editor_reduction_target_percent: 10
+  audit_pass_count: 2
+  forbid_math_formulas: true
+  forbid_code_blocks: true
+  dash_type: medium
+  twitter_snippet_chars:
+    min: 140
+    max: 150
+  telegram_post_chars:
+    min: 1000
+    max: 2000
+  midjourney_prompt_words:
+    min: 50
+    max: 100
+  alternative_concepts_count:
+    min: 3
+    max: 5
+  summary_max_words: 500
+
+# ────────────────────────────────────────────────────────────
+# agents — team configuration
+# ────────────────────────────────────────────────────────────
+# Model selection cascade (from lowest to highest precedence):
+#   ${CLAUDE_PLUGIN_ROOT}/defaults.yaml.profiles.<profile>.<role>
+#     → this file's `agents.profile` selects which profile applies
+#       → this file's `agents.model_overrides.<role>` is the final word
+# A per-chapter model override (chapter spec.md) is intentionally not
+# supported — see PS-14.1-04.
+agents:
+  enabled:
+    - coordinator
+    - strategist
+    - writer
+    - factchecker
+    - editor
+    - marketer
+    - classifier
+    - synthesizer
+    - tuner
+
+  # profile — which named profile from defaults.yaml drives model choice.
+  # Allowed values: budget | balanced | quality
+  #   budget    — Claude Pro plans; creative core stays on Opus, the rest
+  #               drop to Haiku (factchecker keeps Sonnet for nuance).
+  #   balanced  — Claude Max-5x; recommended default.
+  #   quality   — Claude Max-20x or API; promotes synthesizer to Opus.
+  profile: balanced
+
+  # model_overrides — last-word per-role override on top of the profile.
+  # Empty by default. Use to pin a specific model for a specific role
+  # without changing the whole profile.
+  # Example (uncomment and edit):
+  #   model_overrides:
+  #     writer: opus            # force Opus even if profile is `budget`
+  #     factchecker: haiku      # cheap mode for a low-stakes draft pass
+  model_overrides: {}
+
+  # models — explicit per-role model pins (informational; the profile +
+  # model_overrides above are the authoritative source). Mirrors the
+  # `balanced` profile shipped with this template; recomputed by
+  # /book:update when the profile changes.
+  models:
+    coordinator: sonnet
+    strategist: opus
+    writer: opus
+    factchecker: sonnet
+    editor: sonnet
+    marketer: opus
+    classifier: haiku
+    synthesizer: sonnet
+    tuner: sonnet
+
+  loop_limits:
+    factchecker_writer_revise: 3        # DEC-03
+    editor_factchecker_recheck: 1
+
+# ────────────────────────────────────────────────────────────
+# quality_gates — pass/fail thresholds
+# ────────────────────────────────────────────────────────────
+quality_gates:
+  min_factcheck_pass_rate: 0.95
+  max_anti_cliche_violations: 0
+  min_cohesion_score: 0.7
+
+# ────────────────────────────────────────────────────────────
+# mcp_servers — per-book MCP configuration (optional)
+# Applied to book-factchecker (and optionally classifier) only.
+# Default for 0.1: fall back to built-in WebSearch/WebFetch.
+# ────────────────────────────────────────────────────────────
+mcp_servers:
+  factchecker: {}
+  # Example:
+  # factchecker:
+  #   tavily:
+  #     command: npx
+  #     args: ["-y", "@tavily/mcp-server"]
+
+# ────────────────────────────────────────────────────────────
+# compatibility — plugin version pinning (auto-managed)
+# ────────────────────────────────────────────────────────────
+compatibility:
+  created_with_bookbench: "0.1.0"
+  compatible_bookbench: "^0.1"
+  last_synced_with: "0.1.0"
+
+# ────────────────────────────────────────────────────────────
+# privacy — for evolver and cross-book sharing
+# ────────────────────────────────────────────────────────────
+privacy:
+  private: false
+  include_in_evolver: true
+
+# ────────────────────────────────────────────────────────────
+# Schema version — bumped on incompatible changes (see CFG-3)
+# ────────────────────────────────────────────────────────────
+schema_version: 1

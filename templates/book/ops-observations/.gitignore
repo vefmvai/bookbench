@@ -1,0 +1,15 @@
+# ops-observations/ — local-only telemetry. Only upgrade-candidates.md
+# is safe to commit (anonymised summary of plugin-level signals).
+#
+# Everything else is excluded by default to prevent accidental commit
+# of chapter-specific or session-specific data.
+
+rawlog.jsonl
+chapter-*-process-notes.md
+chapter-*-content-notes.md
+transcripts/
+
+# But DO commit the templates that ship with the plugin (they have N
+# literally in the filename, not a digit).
+!chapter-N-process-notes.md
+!chapter-N-content-notes.md

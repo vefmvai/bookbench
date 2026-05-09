@@ -1,0 +1,28 @@
+# audit-public-cleanliness.example.txt
+#
+# This is the public example marker list for audit-public-cleanliness.sh.
+# The real audit uses ~/.bookbench/audit-private-markers.txt — a private
+# file that is NEVER committed to the public bookbench/ repository.
+#
+# Authors of BookBench instances populate the private file with specific
+# markers from their own books that must NEVER appear in the public
+# bookbench/ tree (book titles, character names, signature phrases,
+# personal codenames, internal project handles, etc.).
+#
+# Format:
+#   - One regex pattern per line.
+#   - Lines starting with # and blank lines are ignored.
+#   - Patterns are passed to `grep -i -r -E` (case-insensitive ERE).
+#
+# Reference: PS-08.1-05 (etap 08.1, decisions-08.1.md).
+#
+# ---------------------------------------------------------------------------
+# Generic example markers (intentionally NOT real personal data — for shape
+# demonstration only). When the audit script falls back to this file because
+# no private list was found, it warns the user and still runs; these generic
+# patterns will not match anything in a clean public repository.
+# ---------------------------------------------------------------------------
+
+my-book-internal-codename
+acme-publishing-house
+draft-only-do-not-share

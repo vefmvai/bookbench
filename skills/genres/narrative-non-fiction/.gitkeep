@@ -1,0 +1,5 @@
+# Genre placeholder
+
+This genre is not bundled in BookBench 0.1. The genre researcher will generate it on demand when the author starts a book with --genre narrative-non-fiction.
+
+See skills/genre-researcher/SKILL.md.

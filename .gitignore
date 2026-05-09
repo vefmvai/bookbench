@@ -1,0 +1,52 @@
+# BookBench plugin repository — .gitignore
+#
+# Внимание: это .gitignore самого репозитория плагина BookBench.
+# Шаблон .gitignore для папок книг конечных пользователей лежит отдельно
+# в bookbench/templates/book/.gitignore — здесь его правила НЕ дублируются.
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# Vim/Emacs/IDE swap & backup
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+*~.nib
+
+# JetBrains / VSCode (на случай локальных настроек разработчика)
+.idea/
+.vscode/
+
+# Node.js (на случай будущих JS-инструментов)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (на случай будущих утилит)
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+
+# Логи и временные файлы
+*.log
+*.pid
+*.seed
+*.coverage
+.coverage
+htmlcov/

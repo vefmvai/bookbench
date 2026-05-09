@@ -1,0 +1,58 @@
+# Anti-AI-cliche pattern data file (TSV)
+# Format: id<TAB>level<TAB>regex<TAB>name<TAB>exception_rule
+# Lines starting with '#' are comments; blank lines are skipped.
+# Patterns derived from anti-ai-cliche-module.md § 2.1 (46 patterns total).
+# Levels: block (12), warn (28), info (6).
+# Regex flavour: PCRE (used via grep -P) with case-insensitive matching by default.
+#
+# Source: stage 11 design (anti-ai-cliche-module.md § 2.1).
+# Maintained by: bookbench framework.
+# Version: 0.1
+#
+# id	level	regex	name	exception_rule
+1	warn	(?i)(знаменует\s+собой|являет(ся|ются)\s+свидетельством|подчёркивает\s+(её\s+|его\s+)?важность|играет\s+(ключ|центральн|жизненн|критическ)\w+\s+роль|отражает\s+более\s+широк)	Undue emphasis on significance	Allowed in historical chapter with concrete event reference.
+2	warn	(?i)(широко\s+признан|получил\s+признание|отмечен\s+критиками|единодушно\s+назван|удостоен(\s+пр)?)	Notability and media coverage	Allowed if a concrete source (critic name + outlet) is in the same sentence.
+3	warn	(?i)(формиру\w+\s+\w+|способству\w+\s+\w+|прокладыва\w+\s+путь\s+к|открыва\w+\s+возможност\w+\s+для|закладыва\w+\s+основ\w+)	Superficial -ing endings	Allowed if the gerund clause names a concrete action and does not generalise.
+4	warn	(?i)(революцион\w+|передов\w+|инновационн\w+|прорывн\w+|бесшовн\w+|надёжн\w+\s+(решени|инструмент|систем))	Promotional language	Allowed in marketer artefacts under explicit override; forbidden in main chapter text.
+5	block	(?i)(исследован\w+\s+показыва\w+|эксперты\s+утвержда\w+|как\s+известн|принято\s+считать|общеизвестно)\s*[,.]	Vague attributions without citation	Allowed only if a concrete source (URL, DOI, ISBN, author+year) is in the same sentence.
+6	warn	(?i)(вызовы\s+и\s+перспектив|проблемы\s+и\s+будущее|возможност\w+\s+и\s+риск)	Challenges and future prospects outline	Allowed if the pair has concrete and original content, not bullet lists.
+7	warn	(?i)(погруж\w+\s+в|углуб\w+\s+в|отправ\w+\s+в\s+путешеств|ландшафт\s+\w+|экосистем\w+|полотн\w+\s+\w+)	Overused AI vocabulary	"углубиться" allowed in academic context; "погрузиться" warn in any context.
+8	warn	(?i)(выступа\w+\s+в\s+роли|являет(ся|ются)\s+воплощением|представля\w+\s+собой)	Copula avoidance	Allowed in formal academic writing.
+9	warn	(?i)(не\s+просто\s+\w+,\s+(а|но)|не\s+только\s+\w+,\s+но\s+и)	Negative parallelism	One-two per chapter is fine; systematic use is an AI marker.
+10	warn	(?i)(\w+,\s+\w+\s+и\s+\w+){3,}	Rule of three overuse	Single triple is fine; consecutive triples are an AI marker.
+11	warn	(?i)(модель\s*[/—-]\s*алгоритм\s*[/—-]\s*программа|нарратив\s*[/—-]\s*изложен\w+\s*[/—-]\s*повествован)	Elegant variation (synonym cycling)	Allowed when the synonyms refer to genuinely different concepts.
+12	warn	(?i)(от\s+\w+\s+до\s+\w+\s+и\s+всё,\s+что\s+между|на\s+каждом\s+уровне\s+—\s+от\s+\w+\s+до)	False ranges	Allowed if the author actually enumerates intermediate categories.
+13	warn	(?i)(следует\s+отметить|можно\s+наблюдать|как\s+видно|нельзя\s+не\s+отметить)\s*,	Passive subjectless	Allowed in academic genre; warn in popular-science.
+14	info	—{2,}|(\s—\s.+){3,}	Em dash overuse	Parameter-driven via voice-profile.dash_type; full check in dedicated logic.
+15	warn	(\*\*\w+\*\*\s+){4,}	Boldface overuse	Allowed for term-at-first-mention (one bold per definition), not arbitrary words.
+16	warn	(?i)(^\s*\*\*[А-ЯЁA-Z][^*]+\*\*:\s+\S){3,}	Inline-header vertical lists	Allowed in explicit glossary or summary table.
+17	info	(?i)(основн\w+\s+принцип\w+\s+построен\w+\s+систем\w+|общ\w+\s+концепц\w+\s+развит)	Title-case-style canned headings	Logged for local review; no hard block.
+18	block	[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{1F600}-\x{1F64F}]	Emojis in non-fiction	Allowed in marketer artefacts under explicit override in marketer/voice-profile.md.
+19	info	(?i)(«[^»]*"|"[^"]*»)	Mixed quotation marks	Russian elochki are the norm; rule applies only to mixed usage.
+20	block	(?i)(дайте\s+знать,\s+если|надеюсь,\s+это\s+помож|с\s+удовольствием\s+расскаж|будем\s+рады\s+обратной\s+связи)	Collaborative communication artifacts	No exceptions in main chapter text.
+21	block	(?i)(на\s+момент\s+(моего\s+)?обучени|у\s+меня\s+нет\s+доступа\s+к\s+real-time|по\s+состоянию\s+на\s+дату\s+(моих\s+)?данных)	Knowledge-cutoff disclaimer	Never appropriate in author text.
+22	block	(?i)(отличн\w+\s+вопрос|прекрасн\w+\s+наблюден|великолепн\w+\s+мысл|какое\s+замечательн\w+\s+замечан)	Sycophantic tone	Never appropriate in author text.
+23	warn	(?i)^\s*(важно\s+отметить,\s+что|стоит\s+упомянуть,\s+что|следует\s+подчеркнуть|как\s+уже\s+было\s+сказано|иными\s+словами)	Filler phrases at paragraph start	Allowed if followed by unexpected or non-trivial content.
+24	warn	(?i)(может(\s+быть)?\s+потенциально|возможно,\s+возможно|вероятно,\s+наверное|в\s+некоторых\s+случаях,\s+возможно)	Excessive hedging	One "возможно"/"вероятно" is fine; chains are AI markers.
+25	block	(?i)(в\s+заключение[,]?\s+\w+\s+—\s+это\s+мощн\w+\s+инструмент|в\s+целом,\s+будущее\s+ярк|в\s+конечном\s+счёте,\s+возможност\w+\s+безграничн)	Generic positive conclusion	Never appropriate.
+26	warn	(?i)(передов\w+|инновационн\w+|прорывн\w+|готов\w+-к-использованию|новейш\w+){4,}	Hyphenated word pair overuse	One such term is fine; four in a row is an AI marker.
+27	block	(?i)(не\s+вызывает\s+сомнен|любой\s+эксперт\s+подтверд|очевидно\s+для\s+всех|никто\s+не\s+спорит)	Persuasive authority tropes	Allowed with a concrete reference to a meta-analysis or consensus citation.
+28	warn	(?i)(в\s+эт\w+\s+раздел\w+\s+мы\s+обсуд|как\s+мы\s+увидим\s+в\s+следующ|теперь\s+обратимся\s+к|перейдём\s+к\s+рассмотрен)	Signposting	One-two per chapter for navigation is fine; in every section it's an AI marker.
+29	warn	(^#{3,4}\s+.+\n[^#\n]+\n){5,}	Fragmented headers	Allowed in technical documentation; warn for popular-science.
+30	warn	(?i)(контент|нарратив|инсайт|фреймворк|бэкграунд|челлендж)	Anglicism — generic	Allowed if the term is an established specialised term in context.
+31	info	(?i)(softmax|backpropagation|attention|transformer)\b(?![^.]*(\bаналог\w+|\bкак\b|\bпредстав\w+))	Grandmother test failed (heuristic)	Semantic check; logged only.
+32	warn	(^\d+\.\s+.+\n){7,}	Excessive structure where flow is needed	Allowed for explicit step-by-step procedures; forbidden for content thoughts.
+33	warn	(?i)(сила\s+\w+|полное\s+руководство\s+по|мастерство\s+\w+|исчерпывающий\s+обзор)	Generic titles	Allowed in tutorial genre; warn for popular-science.
+34	block	(?i)(революцион\w+\s+\w+,\s+котор\w+\s+(сплета\w+|переопредел\w+|трансформиру\w+))	AI summary sentence (3-marker compound)	Never appropriate.
+35	block	(?i)(отправ\w+\s+в\s+(увлекательн\w+\s+)?путешеств|погруж\w+\s+в\s+(мир|глубин)|нырнём\s+в\s+глубин|соверш\w+\s+(увлекательн\w+\s+)?экскурс)	Journey and immersion metaphors (Russian locale)	Allowed in marketing hook under explicit override.
+36	block	(?i)(раскрыва\w+\s+секрет|приоткрыва\w+\s+тайн|удивительн\w+\s+мир|загадочн\w+\s+мир|таинственн\w+\s+мир|секрет\w*,\s+о\s+котор\w+\s+вы\s+не\s+знал)	Secret revelation and amazing world	No exceptions.
+37	block	(\$\$[^$]+\$\$|\\\\[a-zA-Z]+\{|```[a-z]*\n.*?for\s+\w+\s+in\s+range|softmax\s*\(QK\^T)	Math formulas and code in popular-science	Genre parameter forbid_math_formulas controls; default true for popular-science, false for academic-monograph.
+38	block	(?i)(я\s+помн\w+,\s+как\s+однажд|я\s+был\s+свидетел|в\s+мо\w+\s+практик|по\s+моему\s+опыту|когда\s+я\s+работал\s+в|мой\s+коллега\s+рассказыв)	Fake personal experience	Allowed if voice-profile.author_personal_experience_allowed: true.
+39	warn	(?i)(в\s+эт\w+\s+глав\w+\s+вы\s+узнаете|сейчас\s+вы\s+поймёте|вот\s+что\s+мы\s+рассмотр|прочитав\s+эт\w+\s+глав\w+,\s+вы\s+будете\s+знать|читай\s+глав\w+\s+\d|подробнее\s+в\s+глав\w+\s+\d)	Marketing "in this chapter you will learn"	Allowed as short navigation once per chapter.
+40	block	(?i)(вы\s+не\s+поверит|шокирующ\w+\s+правд|то,\s+что\s+они\s+скрыва|учёные\s+были\s+в\s+шок|перевернёт\s+ваше\s+представлен|10\s+факт\w+,\s+котор\w+\s+перевернут)	Click-bait formulations	No exceptions.
+41	warn	(?i)(\bинференс\b|\bпаттерн\b|\bконтент\b|\bнарратив\b|\bинсайт\b|\bфреймворк\b|\bбэкграунд\b|\bчелленж\b|\bфитбэк\b|\bалайнмент\b|\bбенчмарк\b)	Anglicism replacement pairs	See exception for pattern 30; established terms allowed in technical context.
+42	info	—|–	Dash type mismatch (parameter)	Parameter-driven via voice-profile.dash_type and dash_strict.
+43	warn	(?i)^\s*(захватыва\w+|увлекательн\w+|впечатля\w+|потрясающ\w+|поразительн\w+|удивительн\w+|невероятн\w+)\s+\w+,	Marketing-positive adjective	Allowed if followed by concrete justification (number, fact, example).
+44	info	(\*\*[^*]+:\*\*\s+\S+\.\s+){4,}	Symmetric section structure	Semantic check; logged only.
+45	warn	(?i)^\s*(таким\s+образом|итак|следовательно|как\s+мы\s+видим|отсюда\s+следует|исходя\s+из\s+этого)	Excessive logicality (lack of breath)	One transition every 3-5 paragraphs is fine; in every paragraph it's AI.
+46	warn	(?i)(\bbrain[s]?\b|\bneurons\b|\bglowing\s+neural\s+pathways\b|\babstract\s+data\s+flow\b|\bgradient\s+mesh\b|\bflowing\s+energy\b|\binterconnected\s+dots\b|\bfuturistic\s+blue\s+glow\b|\bmatrix\s+code\s+rain\b)	Forbidden visual motifs (marketing)	warn in main book; block if already used in marketer/MEMORY visual_motifs_used.

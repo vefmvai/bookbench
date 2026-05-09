@@ -1,0 +1,321 @@
+# BookBench plugin defaults
+#
+# This file holds genre defaults that are inherited by a new book at /book:start.
+# After /book:start the values are copied into .book/config.yaml and into per-role
+# guideline templates; from then on the book has its own copy and is unaffected
+# by changes here. To re-pull defaults into an existing book use the optional
+# /book:update --reset-defaults (planned for 0.2+, see CFG-2).
+#
+# Schema version is bumped on incompatible changes; the loader migrates books
+# whose schema_version is older.
+
+schema_version: 1
+
+# ============================================================
+# Model profiles — strata of the nine subagent roles
+# ============================================================
+# Three named profiles map every role to a concrete Claude model alias
+# (opus | sonnet | haiku). The book picks one profile via
+# `.book/config.yaml > agents.profile`; a per-role override can be
+# applied via `.book/config.yaml > agents.model_overrides`.
+#
+# Cascade of precedence (lowest to highest):
+#   defaults.yaml.profiles.<profile_name>.<role>
+#     → .book/config.yaml.agents.profile (selects the profile)
+#       → .book/config.yaml.agents.model_overrides.<role>  (last word)
+#
+# Hard constraints — enforced in every profile:
+#   • strategist / writer / marketer = opus  (creative core, untouchable)
+#   • classifier = haiku  (the task is trivial and high-volume)
+#
+# Why profiles exist at all: a flat `inherit` policy makes every Task
+# inherit Opus from the main thread, which exhausts a Pro plan after
+# 1–2 chapters. Profiles spread the load across model tiers so the
+# framework stays usable on smaller subscriptions.
+
+default_profile: balanced
+
+profiles:
+
+  # ----------------------------------------------------------
+  # budget — Claude Pro and similarly constrained plans
+  # ----------------------------------------------------------
+  # Goal: fit the chapter micro-cycle into a Pro plan's daily Opus
+  # quota. Creative core stays on Opus (those are the roles whose
+  # output the reader actually sees). Verify / orchestrate / classify
+  # roles drop to Haiku, EXCEPT factchecker — fact verification
+  # demands more nuance than Haiku can reliably deliver
+  # (see PS-14.1-02). The tuner runs rarely (only on /book:tune)
+  # and analyses logs, so Haiku is sufficient there.
+  budget:
+    coordinator: haiku        # orchestrates file passes; no creative load
+    strategist: opus          # creative core — untouchable
+    writer: opus              # creative core — untouchable
+    factchecker: sonnet       # verification needs nuance (PS-14.1-02)
+    editor: haiku             # mechanical compaction + cliché check
+    marketer: opus            # creative core — untouchable
+    classifier: haiku         # trivial classification
+    synthesizer: haiku        # mechanical compose for import
+    tuner: haiku              # rare batch analysis of TUNING-LOG
+
+  # ----------------------------------------------------------
+  # balanced — Claude Max-5x (recommended default)
+  # ----------------------------------------------------------
+  # Goal: comfortable quality on a typical paid plan. Mirrors the
+  # baseline distribution shipped in agent body frontmatter.
+  # Creative core on Opus, verify/compose roles on Sonnet,
+  # classifier on Haiku.
+  balanced:
+    coordinator: sonnet       # orchestrate
+    strategist: opus          # creative core
+    writer: opus              # creative core
+    factchecker: sonnet       # verify
+    editor: sonnet            # verify / compact
+    marketer: opus            # creative core
+    classifier: haiku         # classify
+    synthesizer: sonnet       # compose
+    tuner: sonnet             # analyse
+
+  # ----------------------------------------------------------
+  # quality — Claude Max-20x or API access
+  # ----------------------------------------------------------
+  # Goal: maximum quality where budget is not a constraint.
+  # Synthesizer is promoted to Opus because it composes import
+  # materials whose quality bottlenecks every later phase.
+  # Other Sonnet roles (coordinator/editor/factchecker/tuner)
+  # stay on Sonnet — promoting verify/orchestrate roles to Opus
+  # rarely yields measurable gains for the cost (see PS-14.1-03).
+  # Classifier stays on Haiku in every profile — promoting it
+  # would waste tokens on a deterministic task.
+  quality:
+    coordinator: sonnet       # orchestrate (Opus brings no value here)
+    strategist: opus          # creative core
+    writer: opus              # creative core
+    factchecker: sonnet       # verify
+    editor: sonnet            # verify / compact
+    marketer: opus            # creative core
+    classifier: haiku         # classify (NEVER promote — PS-14.1-03)
+    synthesizer: opus         # promoted: import compose is upstream of all later phases
+    tuner: sonnet             # analyse
+
+genres:
+
+  # ============================================================
+  # Genre: popular-science (full support, default for 0.1)
+  # ============================================================
+  popular-science:
+
+    # writing — quantitative parameters of the writing process
+    # (mirrors Q1..Q19 from quantitative-checklists.md, etap 11)
+    writing:
+
+      # Q1 — target chapter length (chars). Range: 15000-25000.
+      chapter_target_chars: 20000
+
+      # Q2 — minimum chapter length (chars). Editor returns revise if below.
+      chapter_min_chars: 15000
+
+      # Q3 — maximum chapter length (chars). Editor cuts if above.
+      chapter_max_chars: 25000
+
+      # Q4 — writer self-check checkpoint, every N chars.
+      writer_checkpoint_step_chars: 5000
+
+      # Q5 — emotional addresses to the reader per chapter.
+      emotional_addresses_per_chapter:
+        min: 3
+        max: 4
+
+      # Q6 — minimum chars in a chapter-to-chapter transition.
+      transition_min_chars: 1500
+
+      # Q7 — minimum paragraphs in a transition.
+      transition_min_paragraphs: 3
+
+      # Q8 — pyramid supports per chapter.
+      pyramid_supports_per_chapter:
+        min: 3
+        max: 4
+
+      # Q9 — concrete anchors per abstract claim.
+      concrete_anchors_per_abstract_claim:
+        min: 2
+        max: 4
+
+      # Q10 — modern examples year window. Override per book.
+      modern_examples_year_range:
+        from: 2020
+        to: 2024
+
+      # Q11 — editor's "ten-percent rule" target reduction.
+      editor_reduction_target_percent: 10
+
+      # Q12 — number of editor anti-cliche audit passes.
+      audit_pass_count: 2
+
+      # Q13 — forbid math formulas in the body of the chapter.
+      forbid_math_formulas: true
+
+      # Q14 — forbid code blocks in the body of the chapter.
+      forbid_code_blocks: true
+
+      # Q15 — dash typography for the voice profile.
+      # medium = "–" (U+2013); long = "—" (U+2014).
+      dash_type: medium
+
+      # Q16 — Twitter snippet length range (chars).
+      twitter_snippet_chars:
+        min: 140
+        max: 150
+
+      # Q17 — Telegram post length range (chars).
+      telegram_post_chars:
+        min: 1000
+        max: 2000
+
+      # Q18 — Midjourney prompt length range (words).
+      midjourney_prompt_words:
+        min: 50
+        max: 100
+
+      # Q19 — alternative concepts when the marketer hits creative block.
+      alternative_concepts_count:
+        min: 3
+        max: 5
+
+      # Summary length per chapter (words).
+      summary_max_words: 500
+
+    # agents — composition and limits of the team for this genre
+    agents:
+      enabled:
+        - coordinator
+        - strategist
+        - writer
+        - factchecker
+        - editor
+        - marketer
+        - classifier      # /book:import only
+        - synthesizer     # /book:import only
+        - tuner           # /book:tune only
+      # models — informational fallback for older books that pin a model
+      # per role at the genre level. Modern books rely on profiles above
+      # (see `default_profile` and `profiles:`); this map mirrors the
+      # `balanced` profile and is kept for backward compatibility only.
+      models:
+        coordinator: sonnet
+        strategist: opus
+        writer: opus
+        factchecker: sonnet
+        editor: sonnet
+        marketer: opus
+        classifier: haiku
+        synthesizer: sonnet
+        tuner: sonnet
+      loop_limits:
+        factchecker_writer_revise: 3        # DEC-03
+        editor_factchecker_recheck: 1
+
+    # quality_gates — pass/fail thresholds for the chapter micro-cycle
+    quality_gates:
+      min_factcheck_pass_rate: 0.95
+      max_anti_cliche_violations: 0
+      min_cohesion_score: 0.7
+
+    # guidelines — starting content for .book/agent-guidelines/<role>/<file>.md
+    guidelines:
+      writer:
+        forbidden-phrases:
+          # The 12 highest-priority Russian patterns from anti-ai-cliche corpus
+          # (full corpus lives in skills/anti-ai-cliche/references/).
+          - "удивительный мир"
+          - "погружаемся в"
+          - "раскроем тайны"
+          - "приоткрываем тайну"
+          - "Вы не поверите"
+          - "Шокирующая правда"
+          - "отправимся в путешествие"
+          - "Отличный вопрос"
+          - "В заключение"
+          - "Не вызывает сомнений"
+          - "Учёные были в шоке"
+          - "В этой главе вы узнаете"
+          # English/promotional standards from the 34-pattern English corpus
+          - "delve into"
+          - "as of my last training"
+          - "I hope this helps"
+          - "Let me know if"
+          - "stands as a testament"
+          - "shaping the future"
+          - "groundbreaking"
+        favorite-metaphors: []   # author fills during the book
+      factchecker:
+        trusted-sources:
+          - "Peer-reviewed journals indexed in Web of Science"
+          - "Textbooks of the last five years from established academic publishers"
+          - "Books by recognised specialists with multiple reprints"
+          - "Field-specific authoritative databases (per topic, see book guidelines)"
+        outdated-sources:
+          - "Pre-prints older than five years without follow-up publications"
+          - "Articles in non-indexed or predatory journals"
+        claim-tags-rules:
+          - "VERIFIED — only when matched against ≥2 independent trusted sources"
+          - "ASSUMED requires hedging in the chapter body"
+      editor:
+        cohesion-rules:
+          - "An adjacent chapter may forward-reference the next only via an explicit teaser"
+          - "Red-thread keywords appear at least once in the first and last paragraph"
+        author-deviations: []
+      strategist:
+        structural-rules:
+          - "Five-act structure for chapters longer than 5000 words"
+          - "Foreshadowing required in the first third of the book"
+        chapter-checklist:
+          - "spec.md has a single governing thought (tagline)"
+          - "spec.md lists 3–4 supports each with 2+ concrete anchor proposals"
+          - "spec.md includes a plot connector to chapter N-1"
+      marketer:
+        telegram-tone:
+          - "Use emojis sparingly; avoid call-to-action verbs"
+          - "Post length: 1000–2000 chars"
+        brand-voice: []
+        visual-blacklist-extras: []
+      classifier: {}
+      synthesizer: {}
+      tuner:
+        analysis-rules:
+          - "Count a pattern only when it has at least three same-kind REJECTIONS"
+          - "Ignore single typos"
+        sensitivity-thresholds:
+          min_occurrences_for_pattern: 3
+          critical_threshold: 0.8
+          important_threshold: 0.4
+
+  # ============================================================
+  # Genre: fiction (placeholder for 0.2+, generated by genre-researcher)
+  # ============================================================
+  fiction:
+    # TODO 0.2+ — generated by genre-researcher on demand or shipped in 0.2.
+    writing: {}
+    agents: {}
+    quality_gates: {}
+    guidelines: {}
+
+  # ============================================================
+  # Genre: monograph (placeholder for 0.2+)
+  # ============================================================
+  monograph:
+    # TODO 0.2+ — generated by genre-researcher on demand or shipped in 0.2.
+    writing: {}
+    agents: {}
+    quality_gates: {}
+    guidelines: {}
+
+  # ============================================================
+  # Genre template — used by genre-researcher to generate new genres
+  # ============================================================
+  .template:
+    writing: {}
+    agents: {}
+    quality_gates: {}
+    guidelines: {}
