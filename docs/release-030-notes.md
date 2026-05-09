@@ -14,8 +14,8 @@
 
 ## Sha коммитов
 
-- **Структурный коммит:** `<TBD T7>` — 161 modified + 29 added + 20 deleted = ~210 файловых операций. Bump версий 0.2.0 → 0.3.0 в трёх manifest-файлах + CHANGELOG + release-030-notes + upgrade-guide + накопленные изменения этапов 19-22.
-- **Sha-pin коммит:** `<TBD T8>` — единственная правка в `.claude-plugin/marketplace.json` поля `source.sha` на sha структурного коммита.
+- **Структурный коммит:** `075761dcb28916046fbd9ac3221e53228eea558b` — 174 файла (3818+/1831−). Bump версий 0.2.0 → 0.3.0 в трёх manifest-файлах + CHANGELOG + release-030-notes + upgrade-guide + накопленные изменения этапов 19-22.
+- **Sha-pin коммит:** `2a9019c9c41be7c673493e487d239b790f4a3877` — единственная правка в `.claude-plugin/marketplace.json` поля `source.sha` на sha структурного коммита.
 - **Тег:** `v0.3.0` указывает на sha-pin коммит.
 
 ## URL Release
