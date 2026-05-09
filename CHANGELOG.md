@@ -6,7 +6,22 @@
 
 ## [Unreleased]
 
-_n/a — все изменения текущего цикла вошли в 0.1.1._
+_n/a — все изменения текущего цикла вошли в 0.1.2._
+
+---
+
+## [0.1.2] — 2026-05-09
+
+Hot-fix. Исправляет формат `source` в `marketplace.json`, без которого `/plugin install` падал с ошибкой «This plugin uses a source type your Claude Code version does not support».
+
+### Fixed
+
+- **`marketplace.json` поле `source`** — было `"source": "."` (плоская строка, Claude Code 2.1.x не понимает), стало объект `{"source": "github", "repo": "vefmvai/bookbench"}` (стандарт по `https://anthropic.com/claude-code/marketplace.schema.json`).
+
+### Changed
+
+- Добавлен `$schema` в `marketplace.json` (соответствие официальному JSON-schema Anthropic).
+- Добавлено поле `author` в описание плагина.
 
 ---
 
@@ -104,6 +119,7 @@ _n/a — первый публичный релиз._
 
 ---
 
-[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.2
 [0.1.1]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.1
 [0.1.0]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.0

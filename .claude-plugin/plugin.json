@@ -1,6 +1,6 @@
 {
   "name": "bookbench",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "BookBench is a framework for writing large coherent texts (popular-science, narrative non-fiction, monographs, dissertations) delivered as a Claude Code plugin. It orchestrates a team of nine specialised subagents through a file-based protocol.",
   "author": {
     "name": "BookBench Contributors",
