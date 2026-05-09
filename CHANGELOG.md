@@ -6,7 +6,25 @@
 
 ## [Unreleased]
 
-_n/a — все изменения текущего цикла вошли в 0.1.3._
+_n/a — все изменения текущего цикла вошли в 0.1.4._
+
+---
+
+## [0.1.4] — 2026-05-09
+
+Hot-fix №3 — главный фикс установки. В версиях 0.1.1–0.1.3 при `/plugin install` плагин «устанавливался успешно», но Claude Code применял к нему sparse-checkout фильтр (`/*` + `!/*/`) и **отбрасывал ВСЕ подпапки** — `commands/`, `skills/`, `agent-templates/`, `lib/`, `.claude-plugin/` и т.д. В кэше `~/.claude/plugins/cache/bookbench/.../<sha>/` оставались только корневые `.md`-файлы и `manifest.json` — и поэтому ни одна команда `/book:*` не появлялась после `/plugin install`.
+
+### Fixed
+
+- **`marketplace.json` поле `source.source`** — было `"git-subdir"` с `path: "."` (Claude Code понял это как «склонировать sparse, без подпапок»). Стало `"url"` с `url: "https://github.com/vefmvai/bookbench.git"` и `sha: "<commit>"` — это формат, который у Anthropic в их официальном маркетплейсе используют **все 82 url-плагина**. Полный клон коммита, без sparse-checkout.
+
+### Технические детали отладки
+
+При диагностике обнаружено:
+- 168 плагинов в `claude-plugins-official` используют 4 типа `source`: `git-subdir` (35), `url` (82), `string-shorthand` (49), `github` (2).
+- Из них **ни один git-subdir-плагин не использует `path: "."`** — все указывают подпапку. Это значит, `git-subdir` рассчитан на монорепы маркетплейсов с несколькими плагинами в одном репо, а не на отдельные плагины-репо.
+- Для плагина, который **сам себе репозиторий** (как `bookbench`), правильный тип — `url` с обязательным `sha` (закрепление за конкретным коммитом).
+- Все 82 url-плагина у Anthropic имеют `sha` — это безопасностно-обязательное поле.
 
 ---
 
@@ -129,7 +147,8 @@ _n/a — первый публичный релиз._
 
 ---
 
-[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.4
 [0.1.3]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.3
 [0.1.2]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.2
 [0.1.1]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.1

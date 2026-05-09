@@ -7,7 +7,7 @@
     "url": "https://github.com/vefmvai"
   },
   "metadata": {
-    "version": "0.1.3"
+    "version": "0.1.4"
   },
   "plugins": [
     {
@@ -19,13 +19,19 @@
       },
       "category": "writing",
       "source": {
-        "source": "git-subdir",
+        "source": "url",
         "url": "https://github.com/vefmvai/bookbench.git",
-        "path": "."
+        "sha": "032f45ec1b67c9cfb486a74ed1d5390c0508af92"
       },
       "homepage": "https://github.com/vefmvai/bookbench",
       "license": "MIT",
-      "tags": ["writing", "books", "ai-writing", "popular-science", "russian"]
+      "tags": [
+        "writing",
+        "books",
+        "ai-writing",
+        "popular-science",
+        "russian"
+      ]
     }
   ]
 }
