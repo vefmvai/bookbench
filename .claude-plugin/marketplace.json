@@ -23,7 +23,7 @@
         "url": "https://github.com/vefmvai/bookbench.git",
         "path": "plugins/bookbench",
         "ref": "main",
-        "sha": "0418a7e6b05ae753618ef5ca1b82c6f94c8310f2"
+        "sha": "075761dcb28916046fbd9ac3221e53228eea558b"
       },
       "homepage": "https://github.com/vefmvai/bookbench",
       "license": "MIT",
