@@ -21,7 +21,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/vefmvai/bookbench.git",
-        "sha": "a907313b6026e5747f9184ae38f578b55561fa93"
+        "sha": "99a7d0eef6f999ed0f9d5c835daef33a59c02676"
       },
       "homepage": "https://github.com/vefmvai/bookbench",
       "license": "MIT",
