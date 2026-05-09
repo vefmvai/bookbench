@@ -20,7 +20,7 @@ This command is **not implemented in the 0.1 release**.
 For now, to add a block to `.book/workflow.md`:
 
 1. Run `/book:workflow:edit` to open the file in `$EDITOR`.
-2. Insert a new block in the right section (`book_level`, `chapter_loop`, `cross_cutting`, or `post_book`):
+2. Insert a new block in the right section (`book_level`, `section_loop`, `cross_cutting`, or `post_book`):
    ```yaml
    - block: <block-name>
      params:

@@ -7,7 +7,7 @@ description: Описывает adversarial-протокол факт-чекин
 
 ## When to use
 
-Injected into `book-factchecker`. Activated in Phase 3 (full chapter factcheck after writer) and Phase 4b (one-shot re-check of editor-flagged `[NEEDS_RECHECK]` blocks). Also invoked during `/book:audit-chapter` and `/book:audit-book` in audit-mode (no revise-loop).
+Injected into `book-factchecker`. Activated in Phase 3 (full section factcheck after writer) and Phase 4b (one-shot re-check of editor-flagged `[NEEDS_RECHECK]` blocks). Also invoked during `/book:audit-section` and `/book:audit-book` in audit-mode (no revise-loop).
 
 ## Core principle — adversarial stance
 
@@ -17,7 +17,7 @@ This stance is inherited from `gsd-verifier` (etap 04) but **without** mentor-mo
 
 ## Claim provenance tags
 
-Every factual claim in a chapter receives one of four tags in `factcheck.md`:
+Every factual claim in a section receives one of four tags in `factcheck.md`:
 
 | Tag | Meaning | Behaviour |
 |-----|---------|-----------|
@@ -28,13 +28,13 @@ Every factual claim in a chapter receives one of four tags in `factcheck.md`:
 
 ## Claim extraction procedure
 
-1. Read `chapters/<N>/draft.md` end-to-end.
+1. Read `sections/<N>/draft.md` end-to-end.
 2. Tag every sentence containing a factual claim with `[CLAIM]` mentally.
 3. Categorise each claim:
    - Hard fact (date, number, name, event) → must be VERIFIED.
    - Citation (quote attributed to someone) → must be CITED.
    - Soft claim ("most experts agree", "it is widely held") → must be VERIFIED with citation OR rewritten as ASSUMED with hedging.
-   - Cross-chapter claim ("as we saw in chapter 3") → check against `chapters/<3>/edited.md` for inconsistency.
+   - Cross-section claim ("as we saw in section 3") → check against `sections/<3>/edited.md` for inconsistency.
 4. For each claim, attempt verification using:
    - Trusted sources from `agent-guidelines/factchecker/trusted-sources.md`.
    - WebSearch or WebFetch with explicit query.
@@ -53,13 +53,13 @@ The coordinator drives the loop; the factchecker only writes the report.
 
 Loop cap: `factcheck.max_iterations` (default 3, from DEC-03). On iteration 4 the coordinator triggers ESCALATE-flow with REJECTIONS-LOG entry.
 
-## Cross-chapter inconsistency detection
+## Cross-section inconsistency detection
 
 Maintain `factchecker/MEMORY.md` registries:
 
-- `verified_sources` — list of (claim, source, chapter) tuples. Used to check if the same fact is cited consistently across chapters.
+- `verified_sources` — list of (claim, source, section) tuples. Used to check if the same fact is cited consistently across sections.
 - `outdated_sources` — sources that worked once but should not be re-used (e.g., a study from 2008 superseded by a 2020 meta-analysis).
-- `cross_chapter_inconsistencies` — pairs of chapters where the same fact is stated differently.
+- `cross_section_inconsistencies` — pairs of sections where the same fact is stated differently.
 
 Read this registry at the start of every Phase 3 invocation; flag any new inconsistency in `factcheck.md`.
 
@@ -71,7 +71,7 @@ The editor occasionally activates `consistency-check` or other skill-modes. The 
 
 - Test 1 — given a draft.md with a soft claim and no citation, factcheck.md returns `revise-required` and proposes hedging.
 - Test 2 — given a draft.md with a verifiable hard fact and a real source URL, factcheck.md tags it `VERIFIED` and proceeds.
-- Test 3 — given a draft.md with a fact that contradicts a previously-verified fact in chapter 3 (per `factchecker/MEMORY.md`), factcheck.md flags `cross_chapter_inconsistency` and proposes resolution.
+- Test 3 — given a draft.md with a fact that contradicts a previously-verified fact in section 3 (per `factchecker/MEMORY.md`), factcheck.md flags `cross_section_inconsistency` and proposes resolution.
 
 ## Files
 

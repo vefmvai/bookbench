@@ -2,7 +2,7 @@
 
 ## Input
 
-Coordinator calls editor in base-mode for chapter 4. While editing, a
+Coordinator calls editor in base-mode for section 4. While editing, a
 sentence containing a numerical claim is rewritten for clarity. The editor
 realises the rewriting may have implicitly changed the meaning of the claim.
 

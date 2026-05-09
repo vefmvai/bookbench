@@ -1,14 +1,14 @@
-# Chapter N — process notes (template)
+# Section N — process notes (template)
 
 > Template populated by `book-observer` on `/book:analyze-session
-> --chapter N`. Replace `N` with the actual chapter number.
+> --section N`. Replace `N` with the actual section number.
 >
 > **Privacy:** abstract author replies, NEVER quote them verbatim. NEVER
-> include text from `chapters/<N>/draft.md` or `edited.md`.
+> include text from `sections/<N>/draft.md` or `edited.md`.
 
 ## Session metadata
 
-- chapter: <N>
+- section: <N>
 - session_id: <from rawlog>
 - started: <ISO 8601 UTC>
 - ended: <ISO 8601 UTC>
@@ -17,7 +17,7 @@
 
 ## Summary
 
-<2-3 sentences abstract description of how the chapter session went, in
+<2-3 sentences abstract description of how the section session went, in
 abstract terms: "fast / slow / blocked", "many / few revise loops",
 "factchecker rejected K assertions", "marketer skipped".>
 
@@ -51,17 +51,17 @@ abstract terms: "fast / slow / blocked", "many / few revise loops",
 | writer→editor | <N> | <voice / structure / style / cliche> |
 | writer→factchecker | <N> | <fact / source / year> |
 
-## Cross-chapter memory misses (if any)
+## Cross-section memory misses (if any)
 
 > The observer flags here every author reply that essentially asks
-> "look at chapter X again" — meaning the registry didn't surface what
+> "look at section X again" — meaning the registry didn't surface what
 > was needed. Each entry feeds `upgrade-candidates.md` under
 > `memory-gaps`.
 
 - <abstract description of the miss>
 - <abstract description of the miss>
 
-## Recommendations for next chapter (local, not BookBench-level)
+## Recommendations for next section (local, not BookBench-level)
 
 > Suggestions about THIS book's local guidelines / registries. NOT about
 > the plugin. Plugin-level suggestions go to `upgrade-candidates.md`.
@@ -69,4 +69,4 @@ abstract terms: "fast / slow / blocked", "many / few revise loops",
 - <e.g., "add character X's introduction date to intel/timeline.md to
   prevent repeated questions">
 - <e.g., "extend writer/forbidden-phrases.md with pattern observed
-  three times this chapter">
+  three times this section">

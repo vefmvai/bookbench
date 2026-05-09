@@ -2,15 +2,15 @@
 
 ## Input
 
-Coordinator calls factchecker for chapter 4 (initial pass, iteration 0).
-chapters/004/draft.md contains:
+Coordinator calls factchecker for section 4 (initial pass, iteration 0).
+sections/004/draft.md contains:
 - 4 numerical claims (e.g. "plants convert about 1% of incoming light").
 - 2 historical attributions ("Calvin discovered the cycle in 1950").
 - 1 vague attribution ("studies show that ...").
 - 0 outdated-source citations.
 
 Guidelines provide a trusted-sources list including major science encyclopedias.
-agent-memory/factchecker/MEMORY.md has 3 prior verified sources, 0 cross-chapter
+agent-memory/factchecker/MEMORY.md has 3 prior verified sources, 0 cross-section
 inconsistencies.
 
 ## Expected behaviors
@@ -24,13 +24,13 @@ inconsistencies.
 - Tags claims: most VERIFIED/CITED, the vague-attribution gets [UNVERIFIABLE]
   and is logged in Vague-attributions.
 - Decides status: revise-required (because at least 1 [UNVERIFIABLE] exists).
-- Writes chapters/004/factcheck.md with frontmatter, claims tagged, vague
+- Writes sections/004/factcheck.md with frontmatter, claims tagged, vague
   list, recommendation for the writer.
 - Updates factchecker/MEMORY.md.
 
 ## Acceptance criteria
 
-- chapters/004/factcheck.md has frontmatter with status, iteration: 0.
+- sections/004/factcheck.md has frontmatter with status, iteration: 0.
 - Each claim appears with line number, tag, and (where present) source URL.
 - Vague-attribution at the indicated line is detected and logged.
 - factchecker/MEMORY.md has new "Verified sources" entries for any new sources.

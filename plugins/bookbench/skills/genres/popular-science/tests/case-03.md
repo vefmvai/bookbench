@@ -2,7 +2,7 @@
 
 ## Input
 
-A draft chapter that contains LaTeX-style equations and a Python code block.
+A draft section that contains LaTeX-style equations and a Python code block.
 The skill is invoked during write-time methodology check.
 
 ## Expected behaviors

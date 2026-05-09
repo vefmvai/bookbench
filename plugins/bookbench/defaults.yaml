@@ -30,7 +30,7 @@ schema_version: 1
 #
 # Why profiles exist at all: a flat `inherit` policy makes every Task
 # inherit Opus from the main thread, which exhausts a Pro plan after
-# 1–2 chapters. Profiles spread the load across model tiers so the
+# 1–2 sections. Profiles spread the load across model tiers so the
 # framework stays usable on smaller subscriptions.
 
 default_profile: balanced
@@ -40,7 +40,7 @@ profiles:
   # ----------------------------------------------------------
   # budget — Claude Pro and similarly constrained plans
   # ----------------------------------------------------------
-  # Goal: fit the chapter micro-cycle into a Pro plan's daily Opus
+  # Goal: fit the section micro-cycle into a Pro plan's daily Opus
   # quota. Creative core stays on Opus (those are the roles whose
   # output the reader actually sees). Verify / orchestrate / classify
   # roles drop to Haiku, EXCEPT factchecker — fact verification
@@ -105,35 +105,40 @@ genres:
   # ============================================================
   popular-science:
 
+    # compatible_formats — D-30 (etap 20): formats this genre is normally
+    # paired with. Used by /book:start coach-mode to narrow format hypothesis,
+    # and by /book:doctor to validate consistency. See formats-design.md.
+    compatible_formats: ["book", "article", "long-read"]
+
     # writing — quantitative parameters of the writing process
     # (mirrors Q1..Q19 from quantitative-checklists.md, etap 11)
     writing:
 
-      # Q1 — target chapter length (chars). Range: 15000-25000.
-      chapter_target_chars: 20000
+      # Q1 — target section length (chars). Range: 15000-25000.
+      section_target_chars: 20000
 
-      # Q2 — minimum chapter length (chars). Editor returns revise if below.
-      chapter_min_chars: 15000
+      # Q2 — minimum section length (chars). Editor returns revise if below.
+      section_min_chars: 15000
 
-      # Q3 — maximum chapter length (chars). Editor cuts if above.
-      chapter_max_chars: 25000
+      # Q3 — maximum section length (chars). Editor cuts if above.
+      section_max_chars: 25000
 
       # Q4 — writer self-check checkpoint, every N chars.
       writer_checkpoint_step_chars: 5000
 
-      # Q5 — emotional addresses to the reader per chapter.
-      emotional_addresses_per_chapter:
+      # Q5 — emotional addresses to the reader per section.
+      emotional_addresses_per_section:
         min: 3
         max: 4
 
-      # Q6 — minimum chars in a chapter-to-chapter transition.
+      # Q6 — minimum chars in a section-to-section transition.
       transition_min_chars: 1500
 
       # Q7 — minimum paragraphs in a transition.
       transition_min_paragraphs: 3
 
-      # Q8 — pyramid supports per chapter.
-      pyramid_supports_per_chapter:
+      # Q8 — pyramid supports per section.
+      pyramid_supports_per_section:
         min: 3
         max: 4
 
@@ -153,10 +158,10 @@ genres:
       # Q12 — number of editor anti-cliche audit passes.
       audit_pass_count: 2
 
-      # Q13 — forbid math formulas in the body of the chapter.
+      # Q13 — forbid math formulas in the body of the section.
       forbid_math_formulas: true
 
-      # Q14 — forbid code blocks in the body of the chapter.
+      # Q14 — forbid code blocks in the body of the section.
       forbid_code_blocks: true
 
       # Q15 — dash typography for the voice profile.
@@ -183,7 +188,7 @@ genres:
         min: 3
         max: 5
 
-      # Summary length per chapter (words).
+      # Summary length per section (words).
       summary_max_words: 500
 
     # agents — composition and limits of the team for this genre
@@ -216,7 +221,7 @@ genres:
         factchecker_writer_revise: 3        # DEC-03
         editor_factchecker_recheck: 1
 
-    # quality_gates — pass/fail thresholds for the chapter micro-cycle
+    # quality_gates — pass/fail thresholds for the section micro-cycle
     quality_gates:
       min_factcheck_pass_rate: 0.95
       max_anti_cliche_violations: 0
@@ -260,20 +265,20 @@ genres:
           - "Articles in non-indexed or predatory journals"
         claim-tags-rules:
           - "VERIFIED — only when matched against ≥2 independent trusted sources"
-          - "ASSUMED requires hedging in the chapter body"
+          - "ASSUMED requires hedging in the section body"
       editor:
         cohesion-rules:
-          - "An adjacent chapter may forward-reference the next only via an explicit teaser"
+          - "An adjacent section may forward-reference the next only via an explicit teaser"
           - "Red-thread keywords appear at least once in the first and last paragraph"
         author-deviations: []
       strategist:
         structural-rules:
-          - "Five-act structure for chapters longer than 5000 words"
+          - "Five-act structure for sections longer than 5000 words"
           - "Foreshadowing required in the first third of the book"
-        chapter-checklist:
+        section-checklist:
           - "spec.md has a single governing thought (tagline)"
           - "spec.md lists 3–4 supports each with 2+ concrete anchor proposals"
-          - "spec.md includes a plot connector to chapter N-1"
+          - "spec.md includes a plot connector to section N-1"
       marketer:
         telegram-tone:
           - "Use emojis sparingly; avoid call-to-action verbs"
@@ -295,6 +300,11 @@ genres:
   # Genre: fiction (placeholder for 0.2+, generated by genre-researcher)
   # ============================================================
   fiction:
+    # compatible_formats — D-30 (etap 20). On 0.3.0 only [book].
+    # TODO 0.4+ — once short-story / novella / novel formats land in defaults.yaml > formats:
+    # (per RD-20-C: "novel/novella/short-story are formats, not genres"), expand to
+    # [short-story, novella, novel, book].
+    compatible_formats: ["book"]
     # TODO 0.2+ — generated by genre-researcher on demand or shipped in 0.2.
     writing: {}
     agents: {}
@@ -305,6 +315,11 @@ genres:
   # Genre: monograph (placeholder for 0.2+)
   # ============================================================
   monograph:
+    # compatible_formats — D-30 (etap 20).
+    # TODO 0.2+ — refine when this genre is fully implemented.
+    # NOTE: "dissertation" added to keep symmetry with formats.dissertation.compatible_genres
+    # (academic monograph as a genre is a natural target for the dissertation format).
+    compatible_formats: ["monograph", "book", "dissertation"]
     # TODO 0.2+ — generated by genre-researcher on demand or shipped in 0.2.
     writing: {}
     agents: {}
@@ -315,7 +330,111 @@ genres:
   # Genre template — used by genre-researcher to generate new genres
   # ============================================================
   .template:
+    # compatible_formats — D-30 (etap 20). Empty by default;
+    # /book:research-genre fills this when generating a new genre preset.
+    compatible_formats: []
     writing: {}
     agents: {}
     quality_gates: {}
     guidelines: {}
+
+# ============================================================
+# Formats — physical-form library (D-30, etap 20)
+# ============================================================
+# Four orthogonal dimensions of any text are: genre / style / format / audience
+# (see decisions-20.md). This section is the format library — a first-class
+# extensible registry alongside genres above.
+#
+# Each format preset describes the physical form of the work:
+#   • section_word        — the unit-of-work word used in author dialogues
+#                           (section / part / paragraph)
+#   • section_chars_range — typical length of one section in chars
+#   • document_sections_range — typical number of sections per document
+#   • structure_skeleton  — structural skeleton (whether plan-book.md is needed,
+#                           standard layout, narrative arc requirements)
+#   • factcheck_density   — standard | enhanced
+#   • marketing_mode      — one-promo-per-document | promo-per-section | minimal
+#   • compatible_genres   — reverse link for library consistency
+#                           (must match genres.<name>.compatible_formats)
+#
+# Extensibility: extra formats are generated via /book:research-format
+# (specced in stage 20, implemented in stage 22 per RD-20-A) and saved to
+# ${CLAUDE_PLUGIN_DATA}/user-formats/<name>.yaml. Local user formats override
+# built-in formats with the same name (cascade per D-17).
+#
+# All numeric defaults below are tagged default_for: "0.3.0" — they reflect
+# typical publishing conventions and may be tuned by feedback without bumping
+# schema_version.
+#
+# Flat dictionary, no grouping (RD-20-D). Group short_form / long_form may be
+# introduced in 0.4+ if the registry exceeds ~10 formats.
+formats:
+
+  article:
+    display_name_ru: "статья"
+    section_word: "раздел"
+    section_chars_range: { min: 5000, max: 12000 }
+    document_sections_range: { min: 3, max: 7 }
+    structure_skeleton: "сквозная мысль через все разделы; plan-book.md не обязателен (короткий план в STATE.md достаточен)"
+    factcheck_density: "standard"
+    marketing_mode: "one-promo-per-document"
+    compatible_genres: ["popular-science"]
+    default_for: "0.3.0"
+
+  long-read:
+    display_name_ru: "лонгрид"
+    section_word: "часть"
+    section_chars_range: { min: 12000, max: 25000 }
+    document_sections_range: { min: 4, max: 8 }
+    structure_skeleton: "краткий план (2-3 уровня), сквозной нарратив; plan-book.md рекомендуется в коротком виде"
+    factcheck_density: "standard"
+    marketing_mode: "one-promo-per-document"
+    compatible_genres: ["popular-science"]
+    default_for: "0.3.0"
+
+  book:
+    display_name_ru: "книга"
+    section_word: "глава"
+    section_chars_range: { min: 20000, max: 40000 }
+    document_sections_range: { min: 7, max: 15 }
+    structure_skeleton: "обязательный plan-book.md с сюжетной или тематической аркой; пять-актная структура для художки или классическая трёхактная для нон-фикшна"
+    factcheck_density: "standard"
+    marketing_mode: "promo-per-section"
+    compatible_genres: ["popular-science", "fiction", "monograph"]
+    default_for: "0.3.0"
+
+  monograph:
+    display_name_ru: "монография"
+    section_word: "глава"
+    section_chars_range: { min: 35000, max: 60000 }
+    document_sections_range: { min: 8, max: 12 }
+    structure_skeleton: "жёсткий научный план; обязательный plan-book.md с теоретической базой, методологией, разделами анализа, выводами"
+    factcheck_density: "enhanced"
+    marketing_mode: "promo-per-section"
+    compatible_genres: ["monograph"]
+    default_for: "0.3.0"
+
+  dissertation:
+    display_name_ru: "диссертация"
+    section_word: "глава"
+    section_chars_range: { min: 40000, max: 70000 }
+    document_sections_range: { min: 4, max: 7 }
+    structure_skeleton: "стандартная академическая структура: введение / обзор литературы / методология / результаты / обсуждение / заключение / список источников"
+    factcheck_density: "enhanced"
+    marketing_mode: "minimal"
+    compatible_genres: ["monograph"]
+    default_for: "0.3.0"
+
+  # ============================================================
+  # Format template — used by /book:research-format to generate new formats
+  # ============================================================
+  .template:
+    display_name_ru: ""
+    section_word: ""
+    section_chars_range: { min: 0, max: 0 }
+    document_sections_range: { min: 0, max: 0 }
+    structure_skeleton: ""
+    factcheck_density: "standard"
+    marketing_mode: "one-promo-per-document"
+    compatible_genres: []
+    default_for: ""

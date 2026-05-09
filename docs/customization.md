@@ -28,12 +28,12 @@ BookBench читает значения параметров из четырёх
         ↓
 3. Книга (.book/config.yaml)
         ↓
-4. Override per-chapter (chapters/<N>/spec.md > parameters)
+4. Override per-section (sections/<N>/spec.md > parameters)
 ```
 
-Что побеждает: чем ниже в списке, тем выше приоритет. Параметр в `chapters/07/spec.md` перебивает значение из `.book/config.yaml`; `config.yaml` перебивает `settings.yaml`; `settings.yaml` перебивает `defaults.yaml`.
+Что побеждает: чем ниже в списке, тем выше приоритет. Параметр в `sections/07/spec.md` перебивает значение из `.book/config.yaml`; `config.yaml` перебивает `settings.yaml`; `settings.yaml` перебивает `defaults.yaml`.
 
-Каскад работает per-параметр, а не «всё или ничего». Если `chapters/07/spec.md` задаёт только `target_length`, остальные параметры берутся из `config.yaml`.
+Каскад работает per-параметр, а не «всё или ничего». Если `sections/07/spec.md` задаёт только `target_length`, остальные параметры берутся из `config.yaml`.
 
 > **Зачем четыре уровня.** Один уровень становится нечитаемым (сотни параметров). Четыре дают чистое разделение: что общее для жанра, что общее для пользователя, что важно для всей книги, что специфично для главы. См. `D-17` в `PROJECT.md`.
 
@@ -56,7 +56,7 @@ book:
   language: ru
   target_audience: "широкая аудитория без специальной подготовки"
 
-chapter:
+section:
   target_length:
     min: 6500          # знаков в edited.md
     max: 8500
@@ -97,7 +97,7 @@ agents:
 
 memory:
   compaction_threshold_kb: 10    # двухуровневая компакция: live + archive
-  cross_chapter_strategy: N-1_N-2_N-5   # стратег читает summary глав N-1, N-2, N-5
+  cross_section_strategy: N-1_N-2_N-5   # стратег читает summary разделов N-1, N-2, N-5
 
 hooks:
   anti_ai_cliche:
@@ -119,7 +119,7 @@ privacy:
 Интерактивный редактор:
 
 ```
-> /book:config chapter.target_length.min
+> /book:config section.target_length.min
 🤖 Текущее значение: 6500
    Новое: 7000
    Записать? (y/n)
@@ -142,7 +142,7 @@ privacy:
 ├── strategist/
 │   ├── README.md
 │   ├── structural-rules.md
-│   └── chapter-checklist.md
+│   └── section-checklist.md
 ├── writer/
 │   ├── README.md
 │   ├── voice-samples.md          ← примеры стиля автора
@@ -219,7 +219,7 @@ privacy:
 После 5-10 написанных глав. Tuner смотрит на:
 
 - `TUNING-LOG.md` — все ручные правки гайдлайнов и конфига.
-- `REJECTIONS-LOG.md` — все случаи, когда автор после `/book:write-chapter` правил готовую главу руками (координатор фиксирует это автоматически на финальном гейте).
+- `REJECTIONS-LOG.md` — все случаи, когда автор после `/book:write-section` правил готовую главу руками (координатор фиксирует это автоматически на финальном гейте).
 
 И ищет **систематические паттерны** (≥3 повторений). Например:
 
@@ -301,10 +301,10 @@ Tuner **не правит сам** — только предлагает. При
 
 Иногда нужно изменить параметр только для одной главы. Например, глава-пролог должна быть короче обычного, или глава-эпилог — длиннее.
 
-В `chapters/<N>/spec.md` есть секция `## Параметры`, и значения из неё перебивают `config.yaml`:
+В `sections/<N>/spec.md` есть секция `## Параметры`, и значения из неё перебивают `config.yaml`:
 
 ```markdown
-# chapters/01/spec.md (пролог)
+# sections/01/spec.md (пролог)
 
 ## Цель главы
 ...
@@ -355,7 +355,7 @@ Tuner **не правит сам** — только предлагает. При
 Эти вещи захардкожены архитектурно и менять их можно только контрибуцией в код плагина (см. [`contributing.md`](contributing.md)):
 
 - **23 инварианта `base-methodology`.** Универсальные принципы (структура, связность, черновик, нон-фикшн, анти-ИИ-клише) — общие для всех жанров. Если они блокируют твой кейс — это сигнал, что либо жанр требует своего скилла (`/book:research-genre`), либо нужна контрибуция в `base-methodology` через issue.
-- **Структура микро-цикла главы (`chapter-loop` block).** Состав фаз `strategist → writer → factchecker → editor → marketer` фиксирован для научпопа. Параметризуется через `workflow.md > chapter_loop.params` (можно отключать factchecker / marketer; нельзя поменять порядок). См. `WF-02` в `PROJECT.md`.
+- **Структура микро-цикла главы (`section-loop` block).** Состав фаз `strategist → writer → factchecker → editor → marketer` фиксирован для научпопа. Параметризуется через `workflow.md > section_loop.params` (можно отключать factchecker / marketer; нельзя поменять порядок). См. `WF-02` в `PROJECT.md`.
 - **`tools` и `disallowedTools` ролей.** Например, фактчекер не имеет `Edit` (адверсариальная стойка); writer имеет `WebSearch` только если включён в `config.yaml`. Эти ограничения — структурные гарантии (`DEC-10`, `MEM-01`, `MEM-07` в `PROJECT.md`); меняются только через PR в `agent-templates/`.
 - **9 ролей команды.** Состав ролей фиксирован для 0.x (`TR-06`). Новые роли — это мажорное архитектурное решение, не настройка под книгу.
 
@@ -363,7 +363,7 @@ Tuner **не правит сам** — только предлагает. При
 
 ## Что дальше
 
-- [`chapter-cycle.md`](chapter-cycle.md) — какие параметры на какой фазе срабатывают
+- [`section-cycle.md`](section-cycle.md) — какие параметры на какой фазе срабатывают
 - [`voice-management.md`](voice-management.md) — голос как отдельная настраиваемая сущность
 - [`dev-mode.md`](dev-mode.md) — `/book:evolve` для меж-книжного анализа паттернов
 - [`upgrade-guide.md`](upgrade-guide.md) — что не трогается при `/book:update`

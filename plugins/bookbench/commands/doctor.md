@@ -157,6 +157,6 @@ Recommended next:
 - **MUST** tolerate missing `scan-paths.yaml` (warn, do not fail).
 - **MUST** request confirmation before pruning any registry entry.
 - **NEVER** delete the actual `.book/` folder on disk — only update the registry.
-- **NEVER** read inside any book's `chapters/` or `inputs/` — only structural / config files.
+- **NEVER** read inside any book's `sections/` or `inputs/` — only structural / config files.
 
 </execution>

@@ -2,7 +2,7 @@
 
 ## Input
 
-A chapter where every invariant passes except one (e.g., "uniqueness registry
+A section where every invariant passes except one (e.g., "uniqueness registry
 not updated"). The skill is invoked.
 
 ## Expected behaviors

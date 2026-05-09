@@ -2,7 +2,7 @@
 
 ## Input
 
-Coordinator calls marketer for chapter 8. The first draft Telegram post
+Coordinator calls marketer for section 8. The first draft Telegram post
 contains the phrase "Вы не поверите, что обнаружили учёные ...".
 
 ## Expected behaviors

@@ -2,7 +2,7 @@
 
 ## Input
 
-A chapter where the central thesis hinges on a counter-intuitive fact (e.g.,
+A section where the central thesis hinges on a counter-intuitive fact (e.g.,
 "plants spend more energy on respiration than on photosynthesis at night").
 
 ## Expected behaviors

@@ -1,5 +1,5 @@
 ---
-description: Manages persistent debug sessions for long investigations into chapters, registries or guidelines that span multiple Claude Code sessions. State lives in .book/debug/<slug>.md. Without arguments lists active sessions; with a slug resumes; --new <slug> creates; --close <slug> marks resolved with a final note.
+description: Manages persistent debug sessions for long investigations into sections, registries or guidelines that span multiple Claude Code sessions. State lives in .book/debug/<slug>.md. Without arguments lists active sessions; with a slug resumes; --new <slug> creates; --close <slug> marks resolved with a final note.
 argument-hint: "[<slug>] [--new] [--close]"
 allowed-tools: [Read, Write, Edit, Bash, Glob, AskUserQuestion]
 ---

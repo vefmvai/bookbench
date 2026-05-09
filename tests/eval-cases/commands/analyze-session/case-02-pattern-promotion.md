@@ -2,35 +2,35 @@
 
 > Verifies that `book-observer` promotes a recurring signal to
 > `upgrade-candidates.md` only when it appears ≥3 times across distinct
-> chapters.
+> sections.
 
 ## Setup
 
 `.book/ops-observations/` already contains process-notes from earlier
-chapters that recorded a recurring complaint:
+sections that recorded a recurring complaint:
 
-### `chapter-1-process-notes.md`
+### `section-1-process-notes.md`
 
 Contains a Friction event:
 - pattern: "editor aggressively rewrites the writer's voice on each pass"
 - affected_role: book-editor
 - impact: revise loop, token waste
 
-### `chapter-2-process-notes.md`
+### `section-2-process-notes.md`
 
 Same pattern recorded again:
 - pattern: "editor aggressively rewrites the writer's voice on each pass"
 - affected_role: book-editor
 - impact: revise loop, token waste
 
-### `chapter-3-process-notes.md`
+### `section-3-process-notes.md`
 
 Same pattern recorded a third time:
 - pattern: "editor aggressively rewrites the writer's voice on each pass"
 - affected_role: book-editor
 - impact: revise loop, token waste
 
-### `rawlog.jsonl` (current session, chapter 4)
+### `rawlog.jsonl` (current session, section 4)
 
 Mock event stream confirms a fourth occurrence of the same pattern:
 multiple Task calls to `book-editor` with `tool_status:"ok"` followed by
@@ -39,15 +39,15 @@ a `UserPromptSubmit` event whose paraphrased content is
 
 ## Expected observer output
 
-### Chapter 4 notes
+### Section 4 notes
 
-`chapter-4-process-notes.md` records the fourth occurrence with the
+`section-4-process-notes.md` records the fourth occurrence with the
 same `pattern` text.
 
 ### `upgrade-candidates.md`
 
 The observer **promotes** this pattern, since occurrences across
-distinct chapters now equals 4 (≥3 threshold met). Append-only YAML
+distinct sections now equals 4 (≥3 threshold met). Append-only YAML
 entry:
 
 ```yaml
@@ -59,7 +59,7 @@ entry:
   occurrences: 4
   signal_pattern: |
     Editor agent overrides the writer's voice on each revise pass.
-    Recurs across multiple chapters; suggests insufficient guidance
+    Recurs across multiple sections; suggests insufficient guidance
     in agent-guidelines/editor/author-deviations.md or in the
     writer's voice-samples that the editor consults.
   affected_role: book-editor
@@ -75,7 +75,7 @@ entry:
 
 ## Acceptance criteria
 
-- The fourth occurrence is recorded in `chapter-4-process-notes.md`.
+- The fourth occurrence is recorded in `section-4-process-notes.md`.
 - The pattern is promoted to `upgrade-candidates.md` exactly once
   (idempotency test: second invocation must NOT create a duplicate
   uc-0001 entry; instead it updates `last_seen` and `occurrences`).

@@ -2,7 +2,7 @@
 
 ## Input
 
-Coordinator calls writer for chapter 6. chapters/006/spec.md exists but
+Coordinator calls writer for section 6. sections/006/spec.md exists but
 is missing the "Hook-strategy" section AND the three-theses block;
 the file has only the frontmatter and "Цели" bullets.
 
@@ -17,7 +17,7 @@ the file has only the frontmatter and "Цели" bullets.
 
 ## Acceptance criteria
 
-- No Write tool call on chapters/006/draft.md.
+- No Write tool call on sections/006/draft.md.
 - Return message names the missing sections explicitly.
 - writer/MEMORY.md is unchanged.
 

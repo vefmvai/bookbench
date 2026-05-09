@@ -2,7 +2,7 @@
 
 ## Input
 
-A chapter on data flow. Default visual blacklist contains "abstract data
+A section on data flow. Default visual blacklist contains "abstract data
 flow", "matrix code rain", "interconnected dots".
 
 ## Expected behaviors

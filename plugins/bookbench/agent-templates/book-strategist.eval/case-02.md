@@ -2,7 +2,7 @@
 
 ## Input
 
-Coordinator calls strategist for chapter 7. chapters/007/spec.md already
+Coordinator calls strategist for section 7. sections/007/spec.md already
 exists (created in a previous session) with phase ≠ planning.
 The prompt does NOT explicitly say "revise-mode".
 
@@ -13,11 +13,11 @@ The prompt does NOT explicitly say "revise-mode".
   → refuse to overwrite.
 - Returns a message to coordinator: "spec.md уже создан; revise-mode требует
   явного указания координатора".
-- Does NOT call Write on chapters/007/spec.md.
+- Does NOT call Write on sections/007/spec.md.
 
 ## Acceptance criteria
 
-- No Write tool call on chapters/007/spec.md.
+- No Write tool call on sections/007/spec.md.
 - Return message references the existing file and the missing revise-mode flag.
 - strategist/MEMORY.md is unchanged (no new entries for this attempt).
 

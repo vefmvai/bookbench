@@ -146,7 +146,7 @@ my-book/
     ├── TUNING-LOG.md, REJECTIONS-LOG.md, UPDATE-LOG.md
     ├── context/           ← parameters, voice-profile, glossary, ...
     ├── agent-guidelines/  ← гайдлайны на 9 ролей (индивидуальность книги)
-    ├── chapters/          ← главы (spec, draft, factcheck, edited, marketing, summary)
+    ├── sections/          ← главы (spec, draft, factcheck, edited, marketing, summary)
     ├── agent-memory/      ← реестры памяти 5 ролей цикла
     ├── intel/, debug/, inputs/, final/, .backup/
     ├── .claude/
@@ -249,7 +249,7 @@ $ rsync -av ~/.bookbench/voices/ user@host:~/.bookbench/voices/
 $ rm -rf my-book/
 ```
 
-Подумай дважды — `chapters/` и `context/` не восстанавливаются.
+Подумай дважды — `sections/` и `context/` не восстанавливаются.
 
 ### Переустановка после случайного `rm -rf`
 

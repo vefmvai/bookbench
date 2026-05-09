@@ -7,7 +7,7 @@
 ## Setup
 
 - Trigger: `book-writer` finds `.book/context/voice-profile.md` empty for
-  the first chapter; coordinator invokes `voice-builder` and the author
+  the first section; coordinator invokes `voice-builder` and the author
   picks path **B1**.
 - Book artefacts (mock): genre = popular-science about photosynthesis;
   audience = broad / non-specialist; plan thread = personal stories +

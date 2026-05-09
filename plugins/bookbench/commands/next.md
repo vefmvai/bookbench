@@ -16,7 +16,7 @@ Single navigation entrypoint of BookBench: «what should I do right now?». Read
 
 - `.book/workflow.md` — DAG-config for the book.
 - `.book/STATE.md` — current section, last action, history.
-- `.book/chapters/*/` — listing + chapter-state.yaml per chapter.
+- `.book/sections/*/` — listing + section-state.yaml per section.
 - `.book/INGEST-DECISIONS.md` (if exists) — for unresolved competing variants.
 - `.book/config.yaml` — defaults.
 
@@ -66,8 +66,8 @@ LAST_ACTION=$(awk -F: '/^- `last_action`/ { sub(/^[^:]*:[^:]*: */, ""); print; e
 # Last touched timestamp (for the "long break" heuristic)
 LAST_TOUCHED=$(awk -F: '/^- `last_touched_at`/ { sub(/^[^:]*:[^:]*: */, ""); print; exit }' .book/STATE.md)
 
-# Chapter directory listing
-CHAPTER_DIRS=$(find .book/chapters -maxdepth 1 -type d -name 'chapter-*' 2>/dev/null | sort)
+# Section directory listing
+SECTION_DIRS=$(find .book/sections -maxdepth 1 -type d -name 'section-*' 2>/dev/null | sort)
 ```
 
 ### Step 3 — Apply Decision Tree (rule-based)
@@ -87,16 +87,16 @@ if last_touched > 14 days ago:
 
 case CURRENT_SECTION:
     "unknown" | "":
-        if no chapter dirs and no ROADMAP.md:
+        if no section dirs and no ROADMAP.md:
             RECOMMENDATION = "/book:plan-book"
-            REASON = "Book just initialised. Plan the chapters list first."
+            REASON = "Book just initialised. Plan the sections list first."
         else:
             RECOMMENDATION = "/book:status"
             REASON = "State unclear. Check status to see where we are."
     "book_level":
         if all book_level blocks done:
-            RECOMMENDATION = "/book:plan-chapter 1"
-            REASON = "Book-level done. Move into chapter loop."
+            RECOMMENDATION = "/book:plan-section 1"
+            REASON = "Book-level done. Move into section loop."
         elif pending gate awaiting_author:
             RECOMMENDATION = "respond at the gate"
             REASON = "Author gate <gate-name> is pending. Approve / revise."
@@ -111,20 +111,20 @@ case CURRENT_SECTION:
             else:
                 RECOMMENDATION = block_to_command(unresolved-require)
                 REASON = "Block <X> requires <Y>. Run <Y> first."
-    "chapter_loop":
-        determine current_chapter (first chapter without summary.md)
-        if no chapters started:
-            RECOMMENDATION = "/book:plan-chapter 1"
-        elif chapter has spec.md but no draft.md:
-            RECOMMENDATION = "/book:write-chapter <N>"
-        elif chapter has draft.md but no edited.md:
-            RECOMMENDATION = "/book:write-chapter <N>  (resumes from factcheck-post)"
-        elif chapter has edited.md but no summary.md:
-            RECOMMENDATION = "/book:write-chapter <N>  (finalises)"
-        elif chapter has summary.md (chapter complete):
-            if last chapter and ROADMAP indicates more chapters:
-                RECOMMENDATION = "/book:plan-chapter <N+1>"
-            elif all chapters done:
+    "section_loop":
+        determine current_section (first section without summary.md)
+        if no sections started:
+            RECOMMENDATION = "/book:plan-section 1"
+        elif section has spec.md but no draft.md:
+            RECOMMENDATION = "/book:write-section <N>"
+        elif section has draft.md but no edited.md:
+            RECOMMENDATION = "/book:write-section <N>  (resumes from factcheck-post)"
+        elif section has edited.md but no summary.md:
+            RECOMMENDATION = "/book:write-section <N>  (finalises)"
+        elif section has summary.md (section complete):
+            if last section and ROADMAP indicates more sections:
+                RECOMMENDATION = "/book:plan-section <N+1>"
+            elif all sections done:
                 CURRENT_SECTION = "post_book"   # promote
                 RECOMMENDATION = "/book:audit-book"
     "post_book":
@@ -166,7 +166,7 @@ Task(
     .book/STATE.md,
     .book/workflow.md,
     .book/ROADMAP.md (if exists),
-    .book/chapters/*/chapter-state.yaml (compact: only the active chapter)
+    .book/sections/*/section-state.yaml (compact: only the active section)
   ]
 )
 ```
@@ -215,7 +215,7 @@ Executing: <RECOMMENDATION>...
 - **MUST** be deterministic in the rule-based core — same state must yield same recommendation.
 - **MUST** never override the rule-based decision via the LLM-augmentation step (that step only fills the explanation).
 - **MUST** detect long breaks (>14 days) and recommend `/book:resume` first.
-- **NEVER** edit `workflow.md`, `chapter-state.yaml`, or `chapters/` content.
+- **NEVER** edit `workflow.md`, `section-state.yaml`, or `sections/` content.
 - **NEVER** invoke writer / factchecker / editor — only at most `book-coordinator` for explanation expansion.
 
 </execution>

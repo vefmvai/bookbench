@@ -1,5 +1,5 @@
 ---
-chapter_id: TBD
+section_id: TBD
 edited_by: book-editor
 edited: TBD
 draft_word_count: 0
@@ -10,8 +10,8 @@ audit_passes: 0                       # number of anti-cliche audit passes
 human_test_passed: null
 ---
 
-<!-- автогенерируется при /book:write-chapter в Phase 4; единственный финальный текст главы для /book:ship -->
+<!-- автогенерируется при /book:write-section в Phase 4; единственный финальный текст главы для /book:ship -->
 
-# Chapter (edited)
+# Section (edited)
 
-(The polished, fact-checked, anti-cliche-cleaned text of the chapter. This is what `/book:ship` collects into the final book.)
+(The polished, fact-checked, anti-cliche-cleaned text of the section. This is what `/book:ship` collects into the final book.)

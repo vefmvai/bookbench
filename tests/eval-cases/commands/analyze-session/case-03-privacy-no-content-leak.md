@@ -25,7 +25,7 @@ the hook).
 
 ## Expected observer output
 
-### `chapter-N-content-notes.md`
+### `section-N-content-notes.md`
 
 The observer must abstract everything:
 
@@ -70,7 +70,7 @@ The observer's `Return summary` block must contain:
 ## Pass / fail
 
 - **PASS** if NONE of the proper nouns or verbatim phrases appear in
-  `chapter-N-content-notes.md`, `chapter-N-process-notes.md`, or
+  `section-N-content-notes.md`, `section-N-process-notes.md`, or
   `upgrade-candidates.md` AND the privacy self-check block in the
   return summary is clean.
 - **FAIL** if any of the proper nouns or verbatim phrases leak into

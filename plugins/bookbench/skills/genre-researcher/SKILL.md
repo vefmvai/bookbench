@@ -70,7 +70,7 @@ and I have no role-drift exposure (I am one role, not a multi-role agent).
   (academic articles) and five (open-source / GitHub resources) are
   recommended but optional.
 - Use generic placeholder examples in every artefact I generate
-  (`detective`, `memoir`, `fantasy`, `my-book`, `chapter-N`). Never embed
+  (`detective`, `memoir`, `fantasy`, `my-book`, `section-N`). Never embed
   real titles or authors as canonical examples in the methodology body.
 - Honour the five mixed parameters and eight variables of the BookBench
   invariants-vs-variables contract (`references/invariants-vs-variables-contract.md`).
@@ -130,7 +130,7 @@ and I have no role-drift exposure (I am one role, not a multi-role agent).
    - whether external research is needed (factcheck signal);
    - whether internal consistency matters (worldbuilding signal);
    - sensitivity / ethical-review needs (real people involved? trauma?);
-   - target chapter and book length.
+   - target section and book length.
 3. Use AskUserQuestion to collect answers; never proceed silently with
    defaults if the author dismissed the question.
 4. Compose a `genre_profile` YAML structure (see Output Spec § 5).
@@ -180,7 +180,7 @@ titles + URLs (shown to the author at Phase 5).
 3. Fill the eight sections in order:
    1. Identity жанра — genre's idea in one paragraph; reader contract;
       reader profile.
-   2. Структура главы — chapter scaffold (Pyramid / Save the Cat / IMRaD /
+   2. Структура раздела — section scaffold (Pyramid / Save the Cat / IMRaD /
       TED-3-act / Convention beats / etc.); Ladder of abstraction
       applicability.
    3. Поведение писателя — three to seven genre-specific writer rules.
@@ -228,7 +228,7 @@ to disk).
      `worldbuilding-init`, `worldbuilding-recall`, `consistency-check`.
    - `needs_sensitivity: true` → include `sensitivity-review` block.
    - `needs_ethical_review: true` → include `ethical-review` block.
-3. Compose the four sections (`book_level`, `chapter_loop`,
+3. Compose the four sections (`book_level`, `section_loop`,
    `cross_cutting`, `post_book`) per the
    `output-template.md` schema and the popular-science.yaml shape.
 4. Validate every block name against the catalogue. If a block is
@@ -238,7 +238,7 @@ to disk).
    <substitute>` comment.
 5. Assign genre parameters from the methodology's section 7 to the
    corresponding block params in the preset (e.g.,
-   `chapter_length.target` → `write-draft.target_chars`).
+   `section_length.target` → `write-draft.target_chars`).
 
 **Output:** `<genre>.yaml` text (working memory; not yet written to disk).
 
@@ -258,7 +258,7 @@ to disk).
    - source count and category coverage;
    - five highlights from the methodology (Identity, top three writer
      rules, top three forbidden items, micro-cycle phases);
-   - the workflow's `chapter_loop` overview.
+   - the workflow's `section_loop` overview.
 4. Type-to-Confirm gate:
 
    ```
@@ -360,7 +360,7 @@ Generated package — two or three files. Detailed templates live in
 Plus reproducibility artefacts:
 
 - `research-archives/<genre>/<timestamp>.yaml` — genre_profile + source
-  list (no chapter content; reproducible run record);
+  list (no section content; reproducible run record);
 - `deferred-generations/<genre>.yaml` — only when Fallback A option C
   was chosen.
 
@@ -419,11 +419,11 @@ block persistence (the substitute is recorded with a `# TODO:` comment).
 
 **Level 4 — semantic consistency between methodology and preset.**
 
-- `chapter_length.target` in methodology section 7 == `target_chars` in
+- `section_length.target` in methodology section 7 == `target_chars` in
   preset's `write-draft` block.
 - Forbidden patterns in methodology section 4 are reflected by required
   blocks (e.g., `forbid_math_formulas: true` requires
-  `consistency-check` in `chapter_loop`).
+  `consistency-check` in `section_loop`).
 - `inherits_skill` in preset header matches the methodology's
   `name` field.
 

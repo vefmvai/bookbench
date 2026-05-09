@@ -1,22 +1,22 @@
-# Chapter N — content notes (template)
+# Section N — content notes (template)
 
 > Template populated by `book-observer` on `/book:analyze-session
-> --chapter N`. Replace `N` with the actual chapter number.
+> --section N`. Replace `N` with the actual section number.
 >
 > Content notes capture meaning-related signals: author feedback about
 > facts, metaphors, voice, structure, thesis. They feed back into the
-> NEXT chapter's `intel/`, `agent-guidelines/`, and writer briefing.
+> NEXT section's `intel/`, `agent-guidelines/`, and writer briefing.
 >
 > **Privacy contract.** The observer abstracts every author reply. It
 > NEVER quotes verbatim. It NEVER paraphrases anything that contains
 > unique character / place / brand names from the book. If the author
 > wrote "the metaphor 'whirlwind of synapses' is forced", the observer
-> records "metaphor for chapter's central concept rejected as forced".
+> records "metaphor for section's central concept rejected as forced".
 > The original phrase NEVER appears here.
 
 ## Session metadata
 
-- chapter: <N>
+- section: <N>
 - session_id: <from rawlog>
 - author_replies_observed: <int>
 - author_replies_classified_as_content: <int>
@@ -52,13 +52,13 @@
 
 ### Thesis / argument (semantic concerns)
 
-- <abstract; role: book-strategist or book-writer; local fix: chapter
+- <abstract; role: book-strategist or book-writer; local fix: section
   spec.md or strategist guidelines>
 
-## Aggregate summary for the next chapter writer
+## Aggregate summary for the next section writer
 
 > 2-3 sentences a coordinator can paste into the next
-> `chapters/<N+1>/spec.md` briefing as a reminder of the author's
+> `sections/<N+1>/spec.md` briefing as a reminder of the author's
 > latest stylistic / structural / factual preferences. Abstract,
 > generic, no spoilers.
 
@@ -66,7 +66,7 @@
 
 ## Patterns to escalate to `upgrade-candidates.md`
 
-> Listed here only when 3+ recurrences across distinct chapters indicate
+> Listed here only when 3+ recurrences across distinct sections indicate
 > a BookBench-level issue (not a per-book guideline issue).
 
 - <reference to candidate id uc-NNNN if promoted>

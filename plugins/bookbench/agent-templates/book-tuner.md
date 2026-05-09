@@ -44,6 +44,12 @@ memory: project
 
 **MUST:**
 
+MUST: При упоминании единицы работы (глава / раздел / часть) в репликах автору —
+  прочитай поле `book.format` из `.book/config.yaml`,
+  найди `formats[<format>].section_word` в `${CLAUDE_PLUGIN_ROOT}/defaults.yaml`,
+  используй ЭТО СЛОВО. Дефолт при отсутствии `book.format`: «раздел».
+  В технических контекстах (имена файлов, полей, путей) всегда используй «section».
+
 - Прочитать `.book/agent-guidelines/tuner/README.md` и все файлы (index-driven; особенно `analysis-rules.md`, `sensitivity-thresholds.md`).
 - Прочитать `.book/TUNING-LOG.md` и `.book/REJECTIONS-LOG.md`.
 - Прочитать `agent-memory/tuner/MEMORY.md` — `Rejected tuning suggestions`, `Applied tuning history`, `Cooldown timers`, `Recurring signal categories`.

@@ -1,5 +1,5 @@
 ---
-description: Resumes work on the current book after a pause. Reads STATE.md and recent chapter summaries, recaps the last session, lists open items (revise loops, unresolved variants, debug sessions) and proposes the next concrete step.
+description: Resumes work on the current book after a pause. Reads STATE.md and recent section summaries, recaps the last session, lists open items (revise loops, unresolved variants, debug sessions) and proposes the next concrete step.
 argument-hint: ""
 allowed-tools: [Read, Edit, Bash, Glob, Grep]
 ---
@@ -15,7 +15,7 @@ Re-enter the project after a break — give the author a short situational brief
 ## Inputs
 
 - `.book/STATE.md`, `.book/ROADMAP.md`.
-- Last 3 entries in `.book/chapters/<id>/summary.md` (the most recent chapter only).
+- Last 3 entries in `.book/sections/<id>/summary.md` (the most recent section only).
 - Active debug sessions in `.book/debug/`.
 - `INGEST-DECISIONS.md` if any unresolved competing-variants exist.
 
@@ -41,30 +41,30 @@ This command is a short read + brief. PS-13-03: a very small write is allowed (o
 
 Read:
 
-- `.book/STATE.md` — `current_section`, `current_chapter`, `last_action`, last 3 History entries.
-- `.book/ROADMAP.md` — count of planned chapters (best-effort).
+- `.book/STATE.md` — `current_section`, `current_section`, `last_action`, last 3 History entries.
+- `.book/ROADMAP.md` — count of planned sections (best-effort).
 
 ```bash
 LAST_HISTORY=$(grep -E '^[0-9]{4}-' .book/STATE.md | tail -n 3 || true)
-CURRENT_CHAPTER=$(awk -F'`' '/current_chapter/{print $3; exit}' .book/STATE.md | sed -E 's/^: //; s/^[[:space:]]+//; s/[[:space:]]+$//')
+CURRENT_SECTION=$(awk -F'`' '/current_section/{print $3; exit}' .book/STATE.md | sed -E 's/^: //; s/^[[:space:]]+//; s/[[:space:]]+$//')
 LAST_ACTION=$(awk -F'`' '/last_action/{print $3; exit}' .book/STATE.md | sed -E 's/^: //; s/^[[:space:]]+//; s/[[:space:]]+$//')
-PLANNED_CHAPTERS=$(grep -cE '^## (Chapter|Глава)' .book/ROADMAP.md 2>/dev/null || echo 0)
+PLANNED_SECTIONS=$(grep -cE '^## (Section|Раздел)' .book/ROADMAP.md 2>/dev/null || echo 0)
 ```
 
-### Step 3 — Read latest chapter context (if any)
+### Step 3 — Read latest section context (if any)
 
-If `CURRENT_CHAPTER` is non-empty, normalise to a chapter folder name (`chapter-${N}` where `${N}` is zero-padded to three digits):
+If `CURRENT_SECTION` is non-empty, normalise to a section folder name (`section-${N}` where `${N}` is zero-padded to three digits):
 
 ```bash
-if [ -n "$CURRENT_CHAPTER" ]; then
-  N=$(printf '%s' "$CURRENT_CHAPTER" | sed -E 's/[^0-9]//g')
+if [ -n "$CURRENT_SECTION" ]; then
+  N=$(printf '%s' "$CURRENT_SECTION" | sed -E 's/[^0-9]//g')
   PADDED=$(printf '%03d' "$N" 2>/dev/null || echo "$N")
-  CHDIR=".book/chapters/chapter-${PADDED}"
-  if [ -d "$CHDIR" ]; then
-    LOOP_COUNT=$(awk '/^loop_count:/{print $2; exit}' "$CHDIR/chapter-state.yaml" 2>/dev/null || echo 0)
-    PHASE=$(awk '/^phase:/{print $2; exit}' "$CHDIR/chapter-state.yaml" 2>/dev/null || echo unknown)
-    COMPLETED=$(awk '/^completed:/{print $2; exit}' "$CHDIR/chapter-state.yaml" 2>/dev/null || echo false)
-    SUMMARY_HEAD=$(head -n 12 "$CHDIR/summary.md" 2>/dev/null || true)
+  CHDIR=".book/sections/section-${PADDED}"
+  if [ -d "$SECDIR" ]; then
+    LOOP_COUNT=$(awk '/^loop_count:/{print $2; exit}' "$SECDIR/section-state.yaml" 2>/dev/null || echo 0)
+    PHASE=$(awk '/^phase:/{print $2; exit}' "$SECDIR/section-state.yaml" 2>/dev/null || echo unknown)
+    COMPLETED=$(awk '/^completed:/{print $2; exit}' "$SECDIR/section-state.yaml" 2>/dev/null || echo false)
+    SUMMARY_HEAD=$(head -n 12 "$SECDIR/summary.md" 2>/dev/null || true)
   fi
 fi
 ```
@@ -89,14 +89,14 @@ fi
 
 Print 5–12 lines, neutral partner tone. Recommendation logic (Trigger → Action):
 
-- If `PLANNED_CHAPTERS == 0` → recommend `/book:plan-book`.
-- Else if no `chapters/chapter-*` directories — recommend `/book:plan-chapter 1`.
-- Else if `CURRENT_CHAPTER` set and `COMPLETED == false` and `PHASE` known — recommend resuming the appropriate phase. The phase-to-command mapping:
-  - `planning|spec-review` → `/book:plan-chapter ${N}` (re-run / continue spec).
-  - `writing|factcheck|editing|reviewing` → `/book:write-chapter ${N}` (the coordinator will pick up at the right phase based on which artefacts exist).
-  - `marketing|review|approval-pending` → `/book:write-chapter ${N}` (coordinator finalises).
-  - `done` → recommend `/book:audit-chapter ${N}` or `/book:plan-chapter $((N+1))`.
-- Else if `CURRENT_CHAPTER` set and `COMPLETED == true` — recommend `/book:plan-chapter $((N+1))`.
+- If `PLANNED_SECTIONS == 0` → recommend `/book:plan-book`.
+- Else if no `sections/section-*` directories — recommend `/book:plan-section 1`.
+- Else if `CURRENT_SECTION` set and `COMPLETED == false` and `PHASE` known — recommend resuming the appropriate phase. The phase-to-command mapping:
+  - `planning|spec-review` → `/book:plan-section ${N}` (re-run / continue spec).
+  - `writing|factcheck|editing|reviewing` → `/book:write-section ${N}` (the coordinator will pick up at the right phase based on which artefacts exist).
+  - `marketing|review|approval-pending` → `/book:write-section ${N}` (coordinator finalises).
+  - `done` → recommend `/book:audit-section ${N}` or `/book:plan-section $((N+1))`.
+- Else if `CURRENT_SECTION` set and `COMPLETED == true` — recommend `/book:plan-section $((N+1))`.
 - If `PENDING_INGEST > 0` — add a separate line: «You have ${PENDING_INGEST} pending ingest decisions in INGEST-DECISIONS.md».
 
 Sample format:
@@ -109,7 +109,7 @@ Resume — "${BOOK_TITLE}"
     <line 2>
     <line 3>
 
-Current chapter: ${CURRENT_CHAPTER:-none}
+Current section: ${CURRENT_SECTION:-none}
   Phase:        ${PHASE:-n/a}
   Loop count:   ${LOOP_COUNT:-n/a}
   Completed:    ${COMPLETED:-n/a}
@@ -132,10 +132,10 @@ Use the Edit tool (replace `last_action:` line) and Bash append (for History) to
 
 ### Constitutional rules for this command
 
-- **MUST** print the briefing even if `current_chapter` is `null`.
+- **MUST** print the briefing even if `current_section` is `null`.
 - **MUST** finish in ≤ 3 seconds on a small book.
 - **MUST** make exactly one append to `STATE.md`. No other mutations.
-- **NEVER** open chapter draft.md or edited.md (that would inflate context). Only the chapter-state.yaml + summary.md (head 12 lines).
+- **NEVER** open section draft.md or edited.md (that would inflate context). Only the section-state.yaml + summary.md (head 12 lines).
 - **NEVER** call any subagent.
 
 </execution>

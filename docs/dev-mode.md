@@ -107,7 +107,7 @@ installed_at: 2026-05-08T14:32:11Z
    файл: agent-templates/book-writer.md
    diff:
    + secondary_memory.constitution:
-   +   - "NEVER start a chapter with direct reader address ('Dear reader',
+   +   - "NEVER start a section with direct reader address ('Dear reader',
    +      'Imagine yourself', 'Have you ever wondered'). Start with scene,
    +      fact, or quote."
 
@@ -183,7 +183,7 @@ installed_at: 2026-05-08T14:32:11Z
 В каждой книге:
 
 - `TUNING-LOG.md` — все правки гайдлайнов и конфига (через `/book:tune apply`, через `/book:guidelines`, через ручные правки).
-- `REJECTIONS-LOG.md` — все случаи, когда автор после `/book:write-chapter` правил готовую главу руками.
+- `REJECTIONS-LOG.md` — все случаи, когда автор после `/book:write-section` правил готовую главу руками.
 
 Это происходит автоматически по ходу работы.
 
@@ -201,7 +201,7 @@ Maintainer (в local-dev) запускает анализ. Evolver читает 
 
 ### Шаг 5. Тестирование
 
-На синтетической книге (или на одной из реальных книг maintainer'а) — `/book:write-chapter` с обновлённым телом субагента. Если работает корректно — продолжаем.
+На синтетической книге (или на одной из реальных книг maintainer'а) — `/book:write-section` с обновлённым телом субагента. Если работает корректно — продолжаем.
 
 ### Шаг 6. PR в основной репозиторий
 
@@ -219,7 +219,7 @@ Maintainer'ы фреймворка собирают накопленные пр�
 
 ### Что evolver НЕ читает (никогда)
 
-- `chapters/<N>/spec.md`, `draft.md`, `factcheck.md`, `edited.md`, `marketing.md`, `summary.md`.
+- `sections/<N>/spec.md`, `draft.md`, `factcheck.md`, `edited.md`, `marketing.md`, `summary.md`.
 - `inputs/` (исходные материалы автора).
 - `intel/classifications/` (результат импорта).
 - `debug/` (debug-сессии автора).
@@ -256,7 +256,7 @@ privacy:
 
 В `bookbench/tests/eval-cases/commands/evolve/`:
 
-- `privacy-test-01.md` — evolver не читает `chapters/`.
+- `privacy-test-01.md` — evolver не читает `sections/`.
 - `privacy-test-02.md` — evolver не читает `inputs/`.
 - `privacy-test-03.md` — evolver не читает `intel/`, `debug/`.
 - `privacy-test-04.md` — evolver не читает `agent-memory/<role>/MEMORY.md`.

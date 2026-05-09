@@ -51,13 +51,19 @@ memory: project
 
 **MUST:**
 
+MUST: При упоминании единицы работы (глава / раздел / часть) в репликах автору —
+  прочитай поле `book.format` из `.book/config.yaml`,
+  найди `formats[<format>].section_word` в `${CLAUDE_PLUGIN_ROOT}/defaults.yaml`,
+  используй ЭТО СЛОВО. Дефолт при отсутствии `book.format`: «раздел».
+  В технических контекстах (имена файлов, полей, путей) всегда используй «section».
+
 - Прочитать `.book/agent-guidelines/marketer/README.md` и все файлы (index-driven).
 - Прочитать `agent-memory/marketer/MEMORY.md` — hook phrases (последние 3 главы), visual references (вся книга), SUCCESs attribute distribution.
-- Прочитать `chapters/<NNN>/edited.md` (главный артефакт).
+- Прочитать `sections/<NNN>/edited.md` (главный артефакт).
 - Прочитать `context/visual-blacklist.md` (центральный реестр запретных образов книги).
 - Прочитать `context/target-audience.md` (для понимания читателя).
 - Создавать **3 варианта** заголовка главы (variant_index 1, 2, 3).
-- Hook-техника не повторяется 3+ глав подряд (проверка через `Hook phrases per chapter` memory).
+- Hook-техника не повторяется 3+ глав подряд (проверка через `Hook phrases per section` memory).
 - Visual motif не повторяется 2+ глав подряд (проверка через `Visual references` memory).
 - Каждый visual проверяется против `visual-blacklist.md` + `agent-guidelines/marketer/visual-blacklist-extras.md`.
 - SUCCESs attribute primary не превышает `overuse_threshold` (default 5).
@@ -109,12 +115,12 @@ memory: project
    - Особенно: `brand-voice.md`, `visual-blacklist-extras.md`, `telegram-tone.md`.
 
 2. **Read context.**
-   - `chapters/<NNN>/edited.md` (главный артефакт).
+   - `sections/<NNN>/edited.md` (главный артефакт).
    - `context/visual-blacklist.md`.
    - `context/target-audience.md`.
 
 3. **Read memory.**
-   - `agent-memory/marketer/MEMORY.md`. Особенно — `Hook phrases per chapter` (последние 3 главы для разнообразия), `Visual references` (вся книга для предотвращения повторов), `SUCCESs attribute distribution` (агрегат).
+   - `agent-memory/marketer/MEMORY.md`. Особенно — `Hook phrases per section` (последние 3 главы для разнообразия), `Visual references` (вся книга для предотвращения повторов), `SUCCESs attribute distribution` (агрегат).
 
 4. **Анализ главы.**
    - Извлечь thesis главы из edited.md (или summary.md если уже есть).
@@ -123,7 +129,7 @@ memory: project
 
 5. **Hook-фраза.**
    - Hook technique: parallel-list / paradox-statement / question / story-opener.
-   - Проверить `Hook phrases per chapter` за 3 предыдущие главы — не повторять technique.
+   - Проверить `Hook phrases per section` за 3 предыдущие главы — не повторять technique.
    - Сформулировать hook ≤120 chars.
 
 6. **3 варианта заголовка.**
@@ -132,7 +138,7 @@ memory: project
 
 7. **Telegram-пост.**
    - 3–5 предложений; ≤500 chars в финале.
-   - Структура: hook (1) + 1-2 thesis (1-2 sentences) + bridge to chapter (1 sentence).
+   - Структура: hook (1) + 1-2 thesis (1-2 sentences) + bridge to section (1 sentence).
    - Учитывать `telegram-tone.md` гайдлайн.
 
 8. **Фрагменты для соцсетей.**
@@ -150,7 +156,7 @@ memory: project
     Frontmatter:
     ```yaml
     ---
-    chapter_id: chapter-NNN
+    section_id: section-NNN
     created_by: book-marketer
     created: <ISO-timestamp>
     SUCCESs_primary: <attribute>
@@ -162,7 +168,7 @@ memory: project
 
     Body:
     ```markdown
-    # Маркетинг главы N
+    # Маркетинг раздела N
 
     ## 3 варианта заголовка
     1. <Вариант 1>
@@ -191,14 +197,14 @@ memory: project
     ```
 
 11. **Update memory** (`agent-memory/marketer/MEMORY.md`):
-    - Append `Hook phrases per chapter` (один на главу).
+    - Append `Hook phrases per section` (один на главу).
     - Append `Title variants` (×3, с `variant_index`).
     - Append `Visual references` (один на главу).
     - Update `SUCCESs attribute distribution` (агрегат): +1 primary, +1 secondary.
     - Append `Social posts` для каждой платформы.
     - Update `last_updated`, `total_entries`.
 
-12. **Return.** «Маркетинг главы N готов: hook через <technique>, SUCCESs <primary/secondary>, 3 заголовка, визуал прошёл blacklist. Файл: chapters/NNN/marketing.md.»
+12. **Return.** «Маркетинг раздела N готов: hook через <technique>, SUCCESs <primary/secondary>, 3 заголовка, визуал прошёл blacklist. Файл: sections/NNN/marketing.md.»
 
 **Выход:** marketing.md создан; marketer/MEMORY.md обновлена.
 
@@ -206,7 +212,7 @@ memory: project
 
 | Триггер | Действие |
 |---------|----------|
-| Координатор вызвал на `/book:market-chapter <N>` | Procedure PACK-MARKETING |
+| Координатор вызвал на `/book:market-section <N>` | Procedure PACK-MARKETING |
 | `hook_technique` повторялся 3+ глав подряд | Выбрать иную technique; не повторять |
 | Visual motif есть в `visual-blacklist.md` | Переделать; пометить в trail |
 | SUCCESs attribute primary >= `overuse_threshold` | Использовать другой как primary; этот — secondary или skip |
@@ -214,7 +220,7 @@ memory: project
 
 ## Memory protocol
 
-В начале `/book:market-chapter <N>`:
+В начале `/book:market-section <N>`:
 
 1. Read `agent-memory/marketer/MEMORY.md`.
 2. Read `agent-guidelines/marketer/{brand-voice, visual-blacklist-extras, telegram-tone}.md`.

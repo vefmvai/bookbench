@@ -1,13 +1,13 @@
 ---
-description: Searches inside the book — chapters, glossary, registries, worldbuilding — for a query. Read-only. Uses Glob and Grep to find every occurrence; assembles a concise report grouped by source. UX-05 from stage 7.2. Distinct from /book:research-external (internet search) and /book:research-genre (genre methodology research).
-argument-hint: "<query> [--chapter <N>] [--scope chapters|context|memory|all]"
+description: Searches inside the book — sections, glossary, registries, worldbuilding — for a query. Read-only. Uses Glob and Grep to find every occurrence; assembles a concise report grouped by source. UX-05 from stage 7.2. Distinct from /book:research-external (internet search) and /book:research-genre (genre methodology research).
+argument-hint: "<query> [--section <N>] [--scope sections|context|memory|all]"
 allowed-tools: [Read, Glob, Grep, Bash, Write]
 ---
 
 # /book:research-internal
 
 <purpose>
-Internal research — searching inside what is already written or imported into the book. For checking cross-references, finding earlier mentions of a concept, locating where a character appeared first, etc. Read-only search through chapters, context files, and (optionally) agent memory.
+Internal research — searching inside what is already written or imported into the book. For checking cross-references, finding earlier mentions of a concept, locating where a character appeared first, etc. Read-only search through sections, context files, and (optionally) agent memory.
 </purpose>
 
 <!-- ЭТАП 14: реализовано — см. <execution> ниже; полный дизайн — `research-design.md` § 3 этапа 7.2 -->
@@ -15,12 +15,12 @@ Internal research — searching inside what is already written or imported into 
 ## Inputs
 
 - `<query>` — required; the search string or simple regex.
-- `--chapter <N>` — optional; restrict to one chapter.
-- `--scope chapters|context|memory|all` — default `chapters+context` (a.k.a. "user-visible content").
+- `--section <N>` — optional; restrict to one section.
+- `--scope sections|context|memory|all` — default `sections+context` (a.k.a. "user-visible content").
 
 ## Outputs
 
-- A formatted report on stdout grouped by source: chapter, context file, memory file.
+- A formatted report on stdout grouped by source: section, context file, memory file.
 - Optional `.book/research/internal/<slug>.md` with the same content (only if the result is large; default — stdout only).
 
 <execution>
@@ -34,19 +34,19 @@ Read-only command. Six-step pattern (no AskUserQuestion, no state mutation by de
 
 if [ -z "${ARGUMENTS:-}" ]; then
   echo "Error: /book:research-internal requires a query."
-  echo "Usage: /book:research-internal \"<query>\" [--chapter <N>] [--scope <scope>]"
+  echo "Usage: /book:research-internal \"<query>\" [--section <N>] [--scope <scope>]"
   exit 0
 fi
 
 # Parse arguments
 QUERY=""
-CHAPTER_N=""
-SCOPE="chapters+context"
+SECTION_N=""
+SCOPE="sections+context"
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    --chapter)        CHAPTER_N="$2"; shift 2 ;;
-    --chapter=*)      CHAPTER_N="${1#--chapter=}"; shift ;;
+    --section)        SECTION_N="$2"; shift 2 ;;
+    --section=*)      SECTION_N="${1#--section=}"; shift ;;
     --scope)          SCOPE="$2"; shift 2 ;;
     --scope=*)        SCOPE="${1#--scope=}"; shift ;;
     *)                QUERY="${QUERY:+$QUERY }$1"; shift ;;
@@ -61,30 +61,30 @@ done
 ```bash
 PATHS=""
 case "$SCOPE" in
-  chapters)
-    PATHS=".book/chapters" ;;
+  sections)
+    PATHS=".book/sections" ;;
   context)
     PATHS=".book/context" ;;
   memory)
     PATHS=".book/agent-memory" ;;
-  chapters+context|"")
-    PATHS=".book/chapters .book/context" ;;
+  sections+context|"")
+    PATHS=".book/sections .book/context" ;;
   all)
-    PATHS=".book/chapters .book/context .book/agent-memory" ;;
+    PATHS=".book/sections .book/context .book/agent-memory" ;;
   *)
     echo "Error: unknown scope '$SCOPE'."
-    echo "Valid: chapters | context | memory | chapters+context | all."
+    echo "Valid: sections | context | memory | sections+context | all."
     exit 0 ;;
 esac
 
-# Restrict to one chapter
-if [ -n "$CHAPTER_N" ]; then
-  CHAPTER_DIR=$(printf '.book/chapters/chapter-%03d' "$CHAPTER_N")
-  [ -d "$CHAPTER_DIR" ] || {
-    echo "Error: chapter $CHAPTER_N does not exist ($CHAPTER_DIR)."
+# Restrict to one section
+if [ -n "$SECTION_N" ]; then
+  SECTION_DIR=$(printf '.book/sections/section-%03d' "$SECTION_N")
+  [ -d "$SECTION_DIR" ] || {
+    echo "Error: section $SECTION_N does not exist ($SECTION_DIR)."
     exit 0
   }
-  PATHS="$CHAPTER_DIR"
+  PATHS="$SECTION_DIR"
 fi
 ```
 
@@ -116,20 +116,20 @@ done
 
 ### Step 4 — Group and render
 
-Build a report grouped by file. Sort: chapter directories first (in chapter order), then `context/`, then `agent-memory/`. For each file: print path + line numbers + 2-line context per hit.
+Build a report grouped by file. Sort: section directories first (in section order), then `context/`, then `agent-memory/`. For each file: print path + line numbers + 2-line context per hit.
 
 ```
 == Internal research: «<QUERY>» ==
 
-Scope: <SCOPE> (chapter <N>)
+Scope: <SCOPE> (section <N>)
 Total hits: <TOTAL_HITS> across <FILE_COUNT> files
 
-── chapters/chapter-001/edited.md (3 hits) ──
+── sections/section-001/edited.md (3 hits) ──
   L:42-44   ...context...
   L:118-120 ...context...
   L:201-203 ...context...
 
-── chapters/chapter-005/spec.md (1 hit) ──
+── sections/section-005/spec.md (1 hit) ──
   L:18-20   ...context...
 
 ── context/glossary.md (2 hits) ──
@@ -168,7 +168,7 @@ Hits: <TOTAL_HITS> across <FILE_COUNT> files.
 Recommended next:
   /book:research-internal "<refined query>"  — refine.
   /book:research-external "<topic>"           — branch into external research.
-  /book:plan-chapter <N>                       — use findings in a chapter spec.
+  /book:plan-section <N>                       — use findings in a section spec.
 ```
 
 ### Constitutional rules
@@ -177,6 +177,6 @@ Recommended next:
 - **MUST** tolerate missing directories — empty scope is not an error.
 - **MUST** support both literal strings and simple regex (default: ERE — extended regex).
 - **NEVER** invoke any subagent — pure search.
-- **NEVER** read inputs that are not under the requested scope (e.g. with `--scope chapters`, do not read context).
+- **NEVER** read inputs that are not under the requested scope (e.g. with `--scope sections`, do not read context).
 
 </execution>

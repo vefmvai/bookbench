@@ -2,7 +2,7 @@
 
 ## Input
 
-A chapter on a common myth. The most "viral" Telegram framing is clickbait
+A section on a common myth. The most "viral" Telegram framing is clickbait
 ("Вы не поверите, что обнаружили учёные ...").
 
 ## Expected behaviors

@@ -11,12 +11,12 @@ and time. Without continuous lightweight tracking we cannot answer:
 
 - Where does the team spend most tokens — writer or factchecker?
 - Which steps trigger repeat passes (revise loops)?
-- When the author types "actually, look at chapter 12 again" — is it a
+- When the author types "actually, look at section 12 again" — is it a
   one-off or a recurring memory miss that signals a missing registry?
 - Which roles produced false-positive blocks and which produced silent
   good work?
 
-`book-observer` (a sibling 10th role, not part of the chapter micro-cycle)
+`book-observer` (a sibling 10th role, not part of the section micro-cycle)
 turns those questions from anecdotes into evidence. This folder is the
 storage layer for that evidence.
 
@@ -25,8 +25,8 @@ storage layer for that evidence.
 | File | Producer | Consumer | Sensitivity |
 |---|---|---|---|
 | `rawlog.jsonl` | `ops-telemetry-hook.sh` (auto, on every Claude Code event) | `book-observer` | Local-only, gitignored |
-| `chapter-N-process-notes.md` | `book-observer` (on `/book:analyze-session`) | author + future `bookbench-evolver` | Local-only, gitignored |
-| `chapter-N-content-notes.md` | `book-observer` | author + writer/editor (next chapter) | Local-only, gitignored |
+| `section-N-process-notes.md` | `book-observer` (on `/book:analyze-session`) | author + future `bookbench-evolver` | Local-only, gitignored |
+| `section-N-content-notes.md` | `book-observer` | author + writer/editor (next section) | Local-only, gitignored |
 | `upgrade-candidates.md` | `book-observer` (append-only) | author + maintainers of BookBench plugin | Anonymised, may be shared |
 | `transcripts/` (optional) | author may symlink session transcripts here | `book-observer` | Local-only |
 
@@ -42,8 +42,8 @@ The hook and the observer follow a strict no-content-leak policy:
   text, or any artefact body** to `rawlog.jsonl`. Only metadata is
   captured: timestamps, tool names, durations, token counts, plus
   truncated SHA-256 hashes of file paths and prompt prefixes.
-- **The observer agent NEVER reads** `chapters/<N>/draft.md` or
-  `chapters/<N>/edited.md`. It only consumes `rawlog.jsonl` and the
+- **The observer agent NEVER reads** `sections/<N>/draft.md` or
+  `sections/<N>/edited.md`. It only consumes `rawlog.jsonl` and the
   Claude Code session transcript stored by Claude Code itself.
 - **The observer NEVER quotes the author's replies verbatim** in the
   notes files. It abstracts: "author requested fact-correction, year
@@ -62,29 +62,29 @@ line; it never blocks Claude Code.
    `/book:start`), every Claude Code action in this book directory is
    recorded in `rawlog.jsonl`. You don't need to do anything.
 
-2. **On-demand digest.** Run `/book:analyze-session [--chapter N]` to
+2. **On-demand digest.** Run `/book:analyze-session [--section N]` to
    activate the observer agent. It reads `rawlog.jsonl`, classifies
    author replies as `content` (about meanings, facts, voice, structure)
    vs `process` (about workflow, model speed, repeated passes), and
    writes:
 
-   - `chapter-N-process-notes.md` — workflow signals scoped to that chapter.
-   - `chapter-N-content-notes.md` — meaning-related signals scoped to that chapter.
+   - `section-N-process-notes.md` — workflow signals scoped to that section.
+   - `section-N-content-notes.md` — meaning-related signals scoped to that section.
    - Updates `upgrade-candidates.md` when the same signal recurs ≥3 times.
 
-3. **Inspect.** Read the produced notes after each chapter to confirm
+3. **Inspect.** Read the produced notes after each section to confirm
    the observer captured what you remember.
 
 ## Categories in `upgrade-candidates.md`
 
 The observer promotes a recurring signal to a candidate if it appears in
-≥3 distinct chapter sessions. Candidates are filed under one of four
+≥3 distinct section sessions. Candidates are filed under one of four
 categories:
 
 - **Token efficiency** — wasted budget; e.g., factchecker ran twice on
   the same statement, writer regenerated a long passage after one-line
   feedback.
-- **Memory gaps** — author asked "look at chapter X again" or a duplicate
+- **Memory gaps** — author asked "look at section X again" or a duplicate
   example slipped past the editor; signals the registry layer
   (`agent-memory/`, `intel/`) missed something. Sub-signal: extra `Read`
   calls beyond the minimal `files_to_read` of the role.
@@ -105,8 +105,8 @@ each of which is a clear input for the next BookBench iteration:
 1. **Extra `Read` calls beyond `files_to_read`.** A subagent fetching
    files outside its declared input set is a sign that the input set was
    too narrow. Filed under **Memory gaps**.
-2. **Author asking "look at chapter X again."** The registry layer
-   should already give the writer/editor whatever from chapter X is
+2. **Author asking "look at section X again."** The registry layer
+   should already give the writer/editor whatever from section X is
    relevant. A manual ask means the registry missed it. Filed under
    **Memory gaps**.
 3. **Duplicates caught by editor/factchecker.** The editor catching a
@@ -119,7 +119,7 @@ each of which is a clear input for the next BookBench iteration:
 
 | Folder | What it is | Lifetime |
 |---|---|---|
-| `intel/` | Permanent registries (characters, places, voice samples, facts already verified) | Lives forever; cross-chapter |
+| `intel/` | Permanent registries (characters, places, voice samples, facts already verified) | Lives forever; cross-section |
 | `agent-memory/<role>/` | Per-role private state (cooldowns, applied-tuning history, recent rejections) | Lives forever; per-role |
 | `ops-observations/` | Operational telemetry; observation about HOW the team worked, not WHAT they wrote | Local-only; consumed by observer + maintainers; safe to delete and regenerate |
 
@@ -131,7 +131,7 @@ The observer never mixes these layers. It writes only to
 This folder ships a `.gitignore` that excludes:
 
 - `rawlog.jsonl` (sensitive raw event stream)
-- `chapter-*-notes.md` (may include role names / chapter numbers, which
+- `section-*-notes.md` (may include role names / section numbers, which
   is fine, but content-notes may abstract sensitive author intent)
 
 Only `upgrade-candidates.md` is committed by default — that is the

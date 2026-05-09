@@ -1,14 +1,14 @@
-# chapter-state.yaml — runtime state of one chapter
-# Authored and updated by book-coordinator. Stays inside the chapter folder.
+# section-state.yaml — runtime state of one section
+# Authored and updated by book-coordinator. Stays inside the section folder.
 
-chapter_id: TBD
+section_id: TBD
 phase: planning                       # planning | spec-review | writing | factcheck | editing | reviewing | marketing | review | approval-pending | done | cancelled | failed | escalated | abandoned-import
 factcheck_iteration_count: 0
 factcheck_status: null                # null | pass | revise-required | escalate
 loop_count: 0
 completed: false
 
-# import metadata (set when chapter has imported origin)
+# import metadata (set when section has imported origin)
 origin: native                        # native | imported
 original_source: null                 # path to imported draft if origin: imported
 imported_writer_mode: null            # null | skip | voice-revise | full-rewrite (selected at Phase 0g GATE-IMPORT-MODE)

@@ -29,7 +29,7 @@ The 23 invariants belong to the base methodology and are imported into every wri
 
 | # | Parameter | Principle (invariant) | Genre-specific value (popular-science default) |
 |---|-----------|------------------------|--------------------------------------------------|
-| 1 | Pyramid supports per chapter | top-down structure | 3–4 |
+| 1 | Pyramid supports per section | top-down structure | 3–4 |
 | 2 | SUCCESs proportion | every key idea uses ≥2 attributes from SUCCESs | emotional + concrete dominant |
 | 3 | Anchor density per abstract claim | every abstract claim has ≥1 concrete anchor | 2–4 |
 | 4 | LongBench-Write critical weights | quality is multi-axis | length 0.3, coherence 0.3, clarity 0.4 |
@@ -39,7 +39,7 @@ The 23 invariants belong to the base methodology and are imported into every wri
 
 - The 23 invariants in any form. They live in the base.
 - The 46 anti-AI-cliche patterns. They live in `skills/anti-ai-cliche/`.
-- The chapter micro-cycle structure. It lives in `chapter-loop` block (block 31 in `blocks-catalog.md`).
+- The section micro-cycle structure. It lives in `section-loop` block (block 31 in `blocks-catalog.md`).
 - The two-tier architecture (plugin code vs book folder). It lives in the plugin docs.
 
 ## How the contract is enforced

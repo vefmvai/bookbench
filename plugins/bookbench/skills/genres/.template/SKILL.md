@@ -11,7 +11,7 @@ This file is a structural placeholder. The genre researcher (`skills/genre-resea
 
 [One paragraph.]
 
-## 2. Chapter structure
+## 2. Section structure
 
 [Skeleton: Pyramid / TED-3-act / Save the Cat / IMRaD / Hero's Journey / something else.]
 
@@ -27,7 +27,7 @@ This file is a structural placeholder. The genre researcher (`skills/genre-resea
 
 [Voice formula, humanity checklist, trigger → action.]
 
-## 6. Chapter micro-cycle
+## 6. Section micro-cycle
 
 [Numbered procedure of 4–6 steps.]
 

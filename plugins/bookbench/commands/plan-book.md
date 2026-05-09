@@ -7,7 +7,7 @@ allowed-tools: [Task, Read, Write, Edit, AskUserQuestion]
 # /book:plan-book
 
 <purpose>
-Plan the whole book — number and order of chapters, parts, red-thread keywords. Stops at the chapter-spec level (`/book:plan-chapter` does that).
+Plan the whole book — number and order of sections, parts, red-thread keywords. Stops at the section-spec level (`/book:plan-section` does that).
 </purpose>
 
 <!-- ЭТАП 13: реализовано — см. <execution> ниже -->
@@ -45,12 +45,12 @@ This is the first command at stage 13 that delegates to a subagent. The 8-step o
 
 # Detect existing ROADMAP
 EXISTING_PLANNED=0
-[ -f .book/ROADMAP.md ] && EXISTING_PLANNED=$(grep -cE '^## (Chapter|Глава)' .book/ROADMAP.md || echo 0)
+[ -f .book/ROADMAP.md ] && EXISTING_PLANNED=$(grep -cE '^## (Section|Раздел)' .book/ROADMAP.md || echo 0)
 ```
 
 If `EXISTING_PLANNED > 0` — present an `AskUserQuestion`:
 
-- Title: «ROADMAP already has ${EXISTING_PLANNED} chapters»
+- Title: «ROADMAP already has ${EXISTING_PLANNED} sections»
 - Options: `Replace (re-plan from scratch)` / `Refine (strategist reads existing ROADMAP and refines)` / `Cancel`.
 - On `Cancel` — exit. The selected mode is passed to the strategist via prompt.
 
@@ -88,14 +88,14 @@ If `FROM_IMPORTS=1`, also include:
 .book/INGEST-DECISIONS.md
 ```
 
-Do NOT pass any chapter directories or memory files (the book has no chapters yet).
+Do NOT pass any section directories or memory files (the book has no sections yet).
 
 ### Step 5 — Call the strategist via `Task`
 
 Invoke the Task tool exactly once:
 
 - `subagent_type`: `book-strategist`
-- `description`: `Plan book in book-mode (chapters list and red-thread keywords)`
+- `description`: `Plan book in book-mode (sections list and red-thread keywords)`
 - `prompt`: a structured instruction (~ 25–40 lines) consisting of:
 
   ```
@@ -106,21 +106,21 @@ Invoke the Task tool exactly once:
   ${MODE == "from-imports" ? "Use INGEST-DECISIONS.md as a hint. Do NOT include any unverified claims; flag with [NEEDS_FACTCHECK]." : ""}
 
   Required outputs (write directly to disk):
-    1. .book/ROADMAP.md — chapter-by-chapter plan with at minimum: title, one-line thesis,
+    1. .book/ROADMAP.md — section-by-section plan with at minimum: title, one-line thesis,
        red-thread keywords used, expected_word_count, prerequisites, status: planned.
-       Aim for the chapter count given in PROJECT.md "scope" or, if unspecified, 8–12 chapters.
+       Aim for the section count given in PROJECT.md "scope" or, if unspecified, 8–12 sections.
     2. .book/context/red-thread-keywords.md — 5–10 keywords with one-line definitions and
-       intended distribution across chapters.
+       intended distribution across sections.
 
   Constraints (from base-methodology and ${BOOK_GENRE_SKILL_NAME}):
     - 3-act or pyramid structure (specify which in ROADMAP frontmatter).
-    - Each chapter has 1 thesis only.
-    - red_thread_keywords must appear in at least 3 chapters total.
+    - Each section has 1 thesis only.
+    - red_thread_keywords must appear in at least 3 sections total.
     - Use the author's voice as captured in voice-profile.md (do not invent persona).
 
   Files to read are listed below. Read them once. Do not browse the filesystem; rely on the list.
 
-  After writing the two files, return a 5-line summary (chapter count, red-thread keywords,
+  After writing the two files, return a 5-line summary (section count, red-thread keywords,
   open questions if any). Do NOT return the full ROADMAP body in your answer; the
   coordinator reads the file from disk.
   ```
@@ -134,8 +134,8 @@ After the Task returns, do not trust the return text. Read from disk:
 ```bash
 [ -s .book/ROADMAP.md ] || { echo "Strategist did not write ROADMAP.md"; exit 1; }
 [ -s .book/context/red-thread-keywords.md ] || { echo "Strategist did not write red-thread-keywords.md"; exit 1; }
-PLANNED=$(grep -cE '^## (Chapter|Глава)' .book/ROADMAP.md)
-[ "$PLANNED" -ge 3 ] || { echo "ROADMAP has <3 chapters; rejecting."; exit 1; }
+PLANNED=$(grep -cE '^## (Section|Раздел)' .book/ROADMAP.md)
+[ "$PLANNED" -ge 3 ] || { echo "ROADMAP has <3 sections; rejecting."; exit 1; }
 ```
 
 If verification fails — present an `AskUserQuestion`: «Strategist returned an incomplete ROADMAP. Options: retry / accept partial / cancel.»
@@ -145,7 +145,7 @@ If verification fails — present an `AskUserQuestion`: «Strategist returned an
 Read the head of the new `ROADMAP.md` (first ~ 60 lines). Show the author a 5–8 line summary plus an `AskUserQuestion`:
 
 - Title: «Book plan ready»
-- Question: «${PLANNED} chapters drafted with red-thread keywords [${KEYWORD_LIST}]. Proceed?»
+- Question: «${PLANNED} sections drafted with red-thread keywords [${KEYWORD_LIST}]. Proceed?»
 - Options:
   - `Accept` — finalise.
   - `Refine (provide guidance)` — follow up with a free-text question, then re-call the strategist with `revise-mode` and the author note.
@@ -161,20 +161,20 @@ On `Accept`:
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 # Update last_action and current_section
 sed -i.bak -E "s/^- \`current_section\`:.*/- \`current_section\`: book_level/" .book/STATE.md
-sed -i.bak -E "s/^- \`last_action\`:.*/- \`last_action\`: plan-book completed (${PLANNED} chapters)/" .book/STATE.md
+sed -i.bak -E "s/^- \`last_action\`:.*/- \`last_action\`: plan-book completed (${PLANNED} sections)/" .book/STATE.md
 rm -f .book/STATE.md.bak
 # Append History line
-printf '\n%s — `/book:plan-book` — wrote ROADMAP.md (%d chapters) and red-thread-keywords.md\n' "$NOW" "$PLANNED" >> .book/STATE.md
+printf '\n%s — `/book:plan-book` — wrote ROADMAP.md (%d sections) and red-thread-keywords.md\n' "$NOW" "$PLANNED" >> .book/STATE.md
 ```
 
 ### Step 9 — Next-step message
 
 ```
-Book plan accepted: ${PLANNED} chapters in .book/ROADMAP.md
+Book plan accepted: ${PLANNED} sections in .book/ROADMAP.md
 Red-thread keywords: ${KEYWORD_LIST}
 
 Recommended next:
-  /book:plan-chapter 1     — draft the spec for chapter 1.
+  /book:plan-section 1     — draft the spec for section 1.
   /book:status             — see current progress.
 ```
 

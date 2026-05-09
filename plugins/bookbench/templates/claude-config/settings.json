@@ -10,7 +10,7 @@
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
-        "filePathPattern": ".book/chapters/**/draft.md|.book/chapters/**/edited.md|.book/chapters/**/marketing.md",
+        "filePathPattern": ".book/sections/**/draft.md|.book/sections/**/edited.md|.book/sections/**/marketing.md",
         "command": ".book/.hooks/anti-ai-cliche-lint.sh"
       },
       {

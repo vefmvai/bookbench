@@ -3,7 +3,7 @@
 > Verifies that `voice-builder` does **not** silently fill defaults when
 > the author cannot answer most questions, but instead offers to switch to
 > path B3 (agent proposes from book artefacts). The TOV-08 strictness rule
-> is preserved: no chapter prose is generated until a real profile exists.
+> is preserved: no section prose is generated until a real profile exists.
 
 ## Setup
 
@@ -40,14 +40,14 @@ You answered "I don't know" to several questions. Three options:
 2. continue B1 — I keep asking and we accept "I don't know" defaults at
    the end, with a low-confidence note in Reasoning.
 3. stop — I leave voice-profile.md empty; book-writer will block again
-   on the next /book:write-chapter, and you can come back via
+   on the next /book:write-section, and you can come back via
    /book:voice build in a fresh session.
 ```
 
 The expected author choice for this eval is **option 1** (switch to B3).
 
 After the switch, the skill executes B3 — reads book artefacts, maps
-signals to six parameters, generates a trial paragraph on the chapter
+signals to six parameters, generates a trial paragraph on the section
 spec, and shows everything to the author per the standard B3 flow.
 
 ## Expected output (after B3 completes)
@@ -77,7 +77,7 @@ fallback)`.
   steps 1-4) and produces a complete profile.
 - The `## Source signals` section logs the path transition.
 - TOV-08 strictness preserved: at no point does `book-writer` generate
-  any draft.md content for any chapter; the skill either returns a
+  any draft.md content for any section; the skill either returns a
   populated profile, or returns control to the coordinator with the
   `voice_pending` flag still set.
 

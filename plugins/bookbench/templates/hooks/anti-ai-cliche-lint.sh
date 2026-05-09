@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # anti-ai-cliche-lint.sh
 #
-# PostToolUse hook for Write|Edit on chapter artefacts (draft.md, edited.md,
+# PostToolUse hook for Write|Edit on section artefacts (draft.md, edited.md,
 # marketing.md). Loads the 46-pattern corpus from
 # skills/anti-ai-cliche/references/patterns.tsv, applies per-role overrides
-# from .book/agent-guidelines/<role>/forbidden-phrases.md and per-chapter
-# overrides from chapters/<NNN>/spec.md (anti_cliche_overrides), and reacts
+# from .book/agent-guidelines/<role>/forbidden-phrases.md and per-section
+# overrides from sections/<NNN>/spec.md (anti_cliche_overrides), and reacts
 # according to policy: block (exit 2), warn (exit 0 + stderr), info (exit 0
 # + log).
 #
@@ -154,7 +154,7 @@ ROLE="$(detect_role)"
 # Override resolution.
 #
 # Sources of override (priority high → low):
-#   (a) Per-chapter:  chapters/<NNN>/spec.md, anti_cliche_overrides block.
+#   (a) Per-section:  sections/<NNN>/spec.md, anti_cliche_overrides block.
 #   (b) Per-role:     .book/agent-guidelines/<role>/forbidden-phrases.md.
 #   (c) Default:      level from patterns.tsv.
 #
@@ -220,13 +220,13 @@ if [[ -n "$ROLE" ]]; then
     parse_override_file "$BOOK_ROOT/agent-guidelines/$ROLE/forbidden-phrases.md"
 fi
 
-# (a) Per-chapter overrides — extract chapter dir from FILE_PATH, then read
+# (a) Per-section overrides — extract section dir from FILE_PATH, then read
 # spec.md if it exists. We look for an anti_cliche_overrides: block.
-chapter_dir=""
+section_dir=""
 if [[ -n "$FILE_PATH" ]]; then
-    chapter_dir="$(dirname "$FILE_PATH")"
+    section_dir="$(dirname "$FILE_PATH")"
 fi
-if [[ -n "$chapter_dir" && -f "$chapter_dir/spec.md" ]]; then
+if [[ -n "$section_dir" && -f "$section_dir/spec.md" ]]; then
     inside_block=0
     while IFS= read -r line; do
         if [[ "$line" =~ ^anti_cliche_overrides: ]]; then
@@ -242,7 +242,7 @@ if [[ -n "$chapter_dir" && -f "$chapter_dir/spec.md" ]]; then
                 override_set "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
             fi
         fi
-    done < "$chapter_dir/spec.md"
+    done < "$section_dir/spec.md"
 fi
 
 # -----------------------------------------------------------------------------
@@ -318,7 +318,7 @@ if [[ ${#WARN_HITS[@]} -gt 0 ]]; then
     {
         printf 'anti-ai-cliche WARN [%s]:\n' "$FILE_PATH"
         printf '  - %s\n' "${WARN_HITS[@]}"
-        printf '  Decide for yourself: rewrite or keep deliberately (1-2 per chapter is fine for warn-level).\n'
+        printf '  Decide for yourself: rewrite or keep deliberately (1-2 per section is fine for warn-level).\n'
     } >&2
 fi
 

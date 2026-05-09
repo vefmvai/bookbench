@@ -171,6 +171,6 @@ Recommended next:
 - **MUST** be idempotent at the disk-content level — the `.book/` folder is never touched.
 - **MUST** verify the removal actually committed before claiming success.
 - **NEVER** invoke this destructively from automation — Type-to-Confirm is an explicit human gate.
-- **NEVER** read inside the book's chapters / inputs / agent-memory — pure registry operation.
+- **NEVER** read inside the book's sections / inputs / agent-memory — pure registry operation.
 
 </execution>

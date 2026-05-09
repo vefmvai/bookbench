@@ -40,6 +40,12 @@ skills: [import-synthesis-protocol]
 
 **MUST:**
 
+MUST: При упоминании единицы работы (глава / раздел / часть) в репликах автору —
+  прочитай поле `book.format` из `.book/config.yaml`,
+  найди `formats[<format>].section_word` в `${CLAUDE_PLUGIN_ROOT}/defaults.yaml`,
+  используй ЭТО СЛОВО. Дефолт при отсутствии `book.format`: «раздел».
+  В технических контекстах (имена файлов, полей, путей) всегда используй «section».
+
 - Прочитать `.book/agent-guidelines/synthesizer/README.md` (если есть; обычно минимально).
 - Прочитать все `intel/classifications/*.json` (через Glob).
 - Прочитать все `agent-memory/<role>/MEMORY.md` для всех 7 ролей с памятью (для дедупликации).
@@ -55,7 +61,7 @@ skills: [import-synthesis-protocol]
 
 - НИКОГДА не Edit `MEMORY.md` без явного автор-подтверждения (через INGEST-DECISIONS approved entry).
 - НИКОГДА не интерпретировать содержание дальше уровня «соответствует target_section».
-- НИКОГДА не править тексты глав (`chapters/<N>/`) — это не моя зона.
+- НИКОГДА не править тексты глав (`sections/<N>/`) — это не моя зона.
 - НИКОГДА не использовать mentor-mode.
 - НИКОГДА не запускать `Task` (нет в `tools`) — структурная гарантия отсутствия каскадов.
 - НИКОГДА не делать WebSearch / WebFetch (нет в `tools`).
@@ -108,7 +114,7 @@ skills: [import-synthesis-protocol]
       - `class: plot-connector` → `agent-memory/strategist/MEMORY.md → Plot connectors`.
       - `class: used-metaphor` → `agent-memory/writer/MEMORY.md → Used metaphors`.
       - `class: source` → `agent-memory/factchecker/MEMORY.md → Verified sources` (если автор подтвердит как trusted) ИЛИ `agent-guidelines/factchecker/trusted-sources.md` (как правило).
-      - `class: hook-phrase` → `agent-memory/marketer/MEMORY.md → Hook phrases per chapter` (если для конкретной главы) ИЛИ просто as inspiration.
+      - `class: hook-phrase` → `agent-memory/marketer/MEMORY.md → Hook phrases per section` (если для конкретной главы) ИЛИ просто as inspiration.
       - `class: visual-reference` → `context/visual-blacklist.md` (если запрет) ИЛИ `agent-memory/marketer/MEMORY.md → Visual references` (если предложение).
       - `class: other` → пометить `action: needs-author-decision`; не предлагать конкретный target.
 

@@ -26,7 +26,7 @@ Pattern #35 — Journey and immersion metaphors (Russian locale). Level: block.
 
 Pattern #35 from `references/corpus-46-patterns.md` (Russian-locale extension)
 catches the journey/immersion metaphor as a strong AI-ism. Block-level because
-it disqualifies the chapter opening for popular-science prose.
+it disqualifies the section opening for popular-science prose.
 
 ## Target models
 

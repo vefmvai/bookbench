@@ -1,4 +1,4 @@
-# Cross-references between chapters
+# Cross-references between sections
 
 > Filled at `/book:start` (skeleton) and updated by the relevant role over the life of the book. See `book-folder-structure.md` § 3.2 (etap 06) for the contract.
 

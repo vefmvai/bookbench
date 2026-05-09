@@ -153,7 +153,7 @@ Task(
     - ${BOOK_ROOT}/PROJECT.md
     - ${BOOK_ROOT}/ROADMAP.md
     - ${BOOK_ROOT}/context/target-audience.md
-    - ${BOOK_ROOT}/chapters/*/spec.md (if any)
+    - ${BOOK_ROOT}/sections/*/spec.md (if any)
     - ${CLAUDE_PLUGIN_ROOT}/skills/voice-profile/SKILL.md (the 6-parameter contract)
 
   Files you may Write (whitelist):
@@ -162,7 +162,7 @@ Task(
     - ${BOOK_ROOT}/agent-guidelines/writer/voice-samples.md (only if the author provided samples)
 
   NEVER write inside ${CLAUDE_PLUGIN_ROOT}.
-  NEVER write inside ${BOOK_ROOT}/chapters/, ${BOOK_ROOT}/agent-memory/, or ${BOOK_ROOT}/inputs/.
+  NEVER write inside ${BOOK_ROOT}/sections/, ${BOOK_ROOT}/agent-memory/, or ${BOOK_ROOT}/inputs/.
 
   Apply the algorithm in § Algorithm of SKILL.md (5 steps). The voice-profile.md
   output MUST contain a `## Reasoning` section (TOV-12 transparency).
@@ -220,13 +220,13 @@ Files written:
   - .book/voice-profile.yaml         (six values for the anti-cliche module)
   - .book/agent-guidelines/writer/voice-samples.md  (only if you provided samples)
 
-Голос настроен. Возвращайтесь в исходную сессию и продолжите `/book:write-chapter <N>`
+Голос настроен. Возвращайтесь в исходную сессию и продолжите `/book:write-section <N>`
 — writer-gate (TOV-08) больше не сработает, voice-pending flag снят.
 
 Optional next steps:
   /book:voice save-as <name>   — save this profile to your personal library at
                                  ~/.bookbench/voices/<name>.md for reuse in future books.
-  /book:tune                   — refine the profile after writing 1-2 chapters
+  /book:tune                   — refine the profile after writing 1-2 sections
                                  if voice-drift signals appear in REJECTIONS.
 ```
 

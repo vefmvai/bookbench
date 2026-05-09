@@ -87,7 +87,7 @@ Configuration cascade for «My Book»
   bookbench_version:     0.1.0             (book)
 
 [writing]
-  chapter_target_chars:  20000             (book)        defaults: 25000      effective: 20000
+  section_target_chars:  20000             (book)        defaults: 25000      effective: 20000
   voice_strictness:      strict            (book)        defaults: standard   effective: strict
 
 [quality_gates]
@@ -192,6 +192,6 @@ echo "  /book:config             — full cascade view."
 - **MUST** create a backup before any edit.
 - **MUST** verify the edit committed by re-reading the file.
 - **NEVER** edit `defaults.yaml` (genre defaults) or `settings.yaml` (global) — those are `/plugin update` and `/book:settings` territory.
-- **NEVER** retroactively re-process existing chapters when `language` or `genre` change — only future blocks see the new value.
+- **NEVER** retroactively re-process existing sections when `language` or `genre` change — only future blocks see the new value.
 
 </execution>

@@ -183,6 +183,6 @@ Recommended next:
 - **MUST** be idempotent on `path` — running twice in the same directory is a no-op except for `last_touched`.
 - **MUST** ask the author before writing (Brief-Then-Execute pattern, Part VII methodology).
 - **NEVER** create or modify any file inside `<path>/.book/` — only the global registry.
-- **NEVER** read chapter content. Only frontmatter / metadata files.
+- **NEVER** read section content. Only frontmatter / metadata files.
 
 </execution>

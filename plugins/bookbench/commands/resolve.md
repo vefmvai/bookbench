@@ -1,5 +1,5 @@
 ---
-description: Resolves a competing-variant from INGEST-DECISIONS.md after /book:import. Without an action argument runs an interactive dialog with the variant context; with a|b|merge|reject applies the choice directly. Updates the destination file (chapter draft, glossary entry, voice sample, agent memory) and records the resolution in INGEST-DECISIONS.md.
+description: Resolves a competing-variant from INGEST-DECISIONS.md after /book:import. Without an action argument runs an interactive dialog with the variant context; with a|b|merge|reject applies the choice directly. Updates the destination file (section draft, glossary entry, voice sample, agent memory) and records the resolution in INGEST-DECISIONS.md.
 argument-hint: "<variant-id> [a|b|merge|reject]"
 allowed-tools: [Task, Read, Write, Edit, Bash, AskUserQuestion]
 ---
@@ -21,7 +21,7 @@ Finalise a single competing-variant after import. Without an argument: dialog wi
 ## Outputs
 
 - `.book/INGEST-DECISIONS.md` — variant moved from `Competing-variants` into `Auto-resolved` or `Rejected`.
-- Destination file updated (chapter draft, glossary entry, agent memory) per the chosen action.
+- Destination file updated (section draft, glossary entry, agent memory) per the chosen action.
 
 <execution>
 

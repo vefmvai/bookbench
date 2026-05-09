@@ -13,7 +13,7 @@
   - genre = popular-science about computational biology;
   - audience = mix of biologists who know computing poorly and computer
     scientists who know biology poorly;
-  - plan thread = case-study heavy; chapter 1 = a vignette about a single
+  - plan thread = case-study heavy; section 1 = a vignette about a single
     research lab.
 - Skill executes B3 steps 1-4 and produces a proposal.
 
@@ -37,7 +37,7 @@ Reasoning section (mock):
   but not deep digressions."
 - (etc.)
 
-Trial paragraph on the topic of chapter 1 (a research-lab vignette) is
+Trial paragraph on the topic of section 1 (a research-lab vignette) is
 shown to the author together with the profile and reasoning.
 
 ## Author feedback

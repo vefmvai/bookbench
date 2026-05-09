@@ -3,8 +3,8 @@
 ## Input
 
 Coordinator calls factchecker in `mode=re-check-fragments`. Inputs:
-- chapters/004/edited.md with 2 [NEEDS_RECHECK] blocks at lines 30 and 88.
-- chapters/004/factcheck.md (current version with status: pass).
+- sections/004/edited.md with 2 [NEEDS_RECHECK] blocks at lines 30 and 88.
+- sections/004/factcheck.md (current version with status: pass).
 
 ## Expected behaviors
 
@@ -13,7 +13,7 @@ Coordinator calls factchecker in `mode=re-check-fragments`. Inputs:
 - Does NOT re-read the entire draft or re-run the whole pipeline.
 - APPENDS a section `## Re-check (после editor)` to factcheck.md
   WITHOUT overwriting the prior body.
-- Does NOT modify chapter-state.yaml's factcheck_iteration_count
+- Does NOT modify section-state.yaml's factcheck_iteration_count
   (this is a one-off pass, not a loop iteration).
 - Returns a one-line summary: "Re-check главы 4: проверено 2 блоков, K1
   verified, K2 require attention."
@@ -22,7 +22,7 @@ Coordinator calls factchecker in `mode=re-check-fragments`. Inputs:
 
 - factcheck.md prior body is preserved.
 - New section "## Re-check (после editor)" exists at the end.
-- factcheck_iteration_count in chapter-state.yaml is unchanged.
+- factcheck_iteration_count in section-state.yaml is unchanged.
 - No Task tool call (factchecker has no Task in its tools).
 
 ## Target models

@@ -1,5 +1,5 @@
 ---
-chapter_id: TBD
+section_id: TBD
 checked_by: book-factchecker
 checked: TBD
 status: null                          # pass | revise-required | escalate
@@ -8,10 +8,10 @@ sources_checked: 0
 claims_verified: 0
 claims_assumed: 0
 claims_unverifiable: 0
-cross_chapter_inconsistencies: 0
+cross_section_inconsistencies: 0
 ---
 
-<!-- автогенерируется при /book:write-chapter в Phase 3; не трогается ни писателем, ни редактором — оба читают, фактчекер пишет -->
+<!-- автогенерируется при /book:write-section в Phase 3; не трогается ни писателем, ни редактором — оба читают, фактчекер пишет -->
 
 # Factcheck report
 
@@ -33,15 +33,15 @@ cross_chapter_inconsistencies: 0
 
 ## Assumed (need hedging)
 
-(Plausible but unverifiable claims; require hedging in the chapter body.)
+(Plausible but unverifiable claims; require hedging in the section body.)
 
 ## Unverifiable
 
 (Claims that cannot be confirmed with the available sources. Each requires a writer revise: hedge / drop / supply manual source.)
 
-## Cross-chapter inconsistencies
+## Cross-section inconsistencies
 
-(Claims that contradict previously verified facts in earlier chapters.)
+(Claims that contradict previously verified facts in earlier sections.)
 
 ## Suggested revisions
 

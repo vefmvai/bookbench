@@ -1,6 +1,6 @@
 # Guidelines for book-writer
 
-> The writer reads this file at the start of every chapter and the listed files in order.
+> The writer reads this file at the start of every section and the listed files in order.
 
 ## Index
 

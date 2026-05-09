@@ -134,7 +134,7 @@ The model uses AskUserQuestion to ask 5–10 short questions covering:
 - whether external research / factcheck is needed;
 - whether internal consistency / worldbuilding matters;
 - sensitivity / ethical review needs;
-- target chapter and book length.
+- target section and book length.
 
 The questions are skill-driven — the genre-researcher's body
 (`${CLAUDE_PLUGIN_ROOT}/skills/genre-researcher/SKILL.md` § 4 Phase 1)
@@ -269,4 +269,4 @@ Next steps:
   `/book:tune:guidelines` later.
 - Privacy guarantee: the researcher reads from the public web and from
   built-in plugin sources only. It does not read any book directory's
-  `chapters/`, `inputs/`, `intel/`, `debug/`, or `agent-memory/`.
+  `sections/`, `inputs/`, `intel/`, `debug/`, or `agent-memory/`.

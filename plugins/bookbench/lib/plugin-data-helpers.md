@@ -216,7 +216,7 @@ plugin_version_from_manifest() {
 - `/book:start` — H1 + H2 + H6 + H3 + H4 (full chain).
 - `/book:status` — H1 + H6 (compares plugin version with `.book/config.yaml.compatibility.last_synced_with`).
 - `/book:help` — H1 + H5 (filters dev-only commands like `/book:evolve`).
-- `/book:plan-book`, `/book:plan-chapter`, `/book:write-chapter`, `/book:audit-chapter` — usually do not touch `${CLAUDE_PLUGIN_DATA}` (they work inside `.book/`); they may call H2 to read `defaults.yaml` or genre skill if needed.
+- `/book:plan-book`, `/book:plan-section`, `/book:write-section`, `/book:audit-section` — usually do not touch `${CLAUDE_PLUGIN_DATA}` (they work inside `.book/`); they may call H2 to read `defaults.yaml` or genre skill if needed.
 
 ## Border with stage 14
 

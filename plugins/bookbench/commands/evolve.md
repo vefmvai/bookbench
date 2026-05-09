@@ -1,5 +1,5 @@
 ---
-description: Cross-book pattern miner for the plugin maintainer. Reads metadata only (TUNING-LOG, REJECTIONS-LOG, agent-guidelines, config) from opted-in registered books, finds patterns recurring in three or more books, then proposes a diff or applies it to plugin sources with a git commit (apply is local-dev only). Status mode lists pending, applied and conflicts. Never reads chapters, inputs, intel, debug, or agent-memory.
+description: Cross-book pattern miner for the plugin maintainer. Reads metadata only (TUNING-LOG, REJECTIONS-LOG, agent-guidelines, config) from opted-in registered books, finds patterns recurring in three or more books, then proposes a diff or applies it to plugin sources with a git commit (apply is local-dev only). Status mode lists pending, applied and conflicts. Never reads sections, inputs, intel, debug, or agent-memory.
 argument-hint: "<propose|apply|status> [<change-id>] [--no-commit] [--genre <name>] [--books <id-list>] [--min-books <N>]"
 allowed-tools: [Read, Write, Bash, Glob, Grep, Task, AskUserQuestion]
 ---
@@ -218,7 +218,7 @@ For each eligible book, the model reads **only** these paths via the Read tool:
 
 The model **must not** Read any of these:
 
-- `<book.path>/.book/chapters/**`
+- `<book.path>/.book/sections/**`
 - `<book.path>/.book/inputs/**`
 - `<book.path>/.book/intel/**`
 - `<book.path>/.book/debug/**`
@@ -412,7 +412,7 @@ End of `apply`.
 
 This command **never** reads from any of the following paths in any registered book:
 
-- `<book>/.book/chapters/**`
+- `<book>/.book/sections/**`
 - `<book>/.book/inputs/**`
 - `<book>/.book/intel/**`
 - `<book>/.book/debug/**`
@@ -421,7 +421,7 @@ This command **never** reads from any of the following paths in any registered b
 Enforcement is layered:
 
 1. The pseudocode in Step 7P explicitly enumerates allowed paths.
-2. The Task delegation in Step 8P passes only metadata-derived payloads, never raw chapter content.
+2. The Task delegation in Step 8P passes only metadata-derived payloads, never raw section content.
 3. Privacy unit tests live under `bookbench/tests/eval-cases/commands/evolve/privacy-test-{01..04}.md` and assert that any path traversal into the forbidden list produces a `conflicts/<TS>-privacy-violation.md` record and aborts.
 
 ## CI mode (EV-6)

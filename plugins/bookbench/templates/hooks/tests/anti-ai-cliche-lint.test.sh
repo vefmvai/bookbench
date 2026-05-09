@@ -6,7 +6,7 @@
 #   - 5 warn-level cases.
 #   - 3 info-level cases.
 #   - 2 per-book overrides.
-#   - 1 per-chapter override.
+#   - 1 per-section override.
 #
 # Usage:
 #   bash bookbench/templates/hooks/tests/anti-ai-cliche-lint.test.sh
@@ -203,27 +203,27 @@ run_case "override #18 block→warn via per-book file" 0 \
 
 rm -rf "$TMP_BOOK_1"
 
-# (2) Per-chapter override via spec.md anti_cliche_overrides block.
-TMP_BOOK_2="$(mktemp -d -t bb-override-chapter.XXXXXX)"
-mkdir -p "$TMP_BOOK_2/chapters/001"
-cat > "$TMP_BOOK_2/chapters/001/spec.md" <<'SPEC'
+# (2) Per-section override via spec.md anti_cliche_overrides block.
+TMP_BOOK_2="$(mktemp -d -t bb-override-section.XXXXXX)"
+mkdir -p "$TMP_BOOK_2/sections/001"
+cat > "$TMP_BOOK_2/sections/001/spec.md" <<'SPEC'
 ---
-chapter_id: chapter-001
+section_id: section-001
 created_by: book-strategist
 ---
 
-# Chapter spec
+# Section spec
 
 anti_cliche_overrides:
   pattern_35: skip
   pattern_22: warn
 SPEC
 
-# pattern 35 (journey metaphor) is normally block; with chapter-level "skip"
+# pattern 35 (journey metaphor) is normally block; with section-level "skip"
 # the hook passes.
-run_case "override #35 block→skip via chapter spec" 0 \
+run_case "override #35 block→skip via section spec" 0 \
     "В этой главе мы отправимся в увлекательное путешествие в мир знаний." \
-    "$TMP_BOOK_2/chapters/001/draft.md" "$TMP_BOOK_2"
+    "$TMP_BOOK_2/sections/001/draft.md" "$TMP_BOOK_2"
 
 rm -rf "$TMP_BOOK_2"
 

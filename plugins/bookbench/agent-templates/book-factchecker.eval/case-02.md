@@ -2,14 +2,14 @@
 
 ## Input
 
-Coordinator calls factchecker for chapter 4, iteration 3 (the third revise
+Coordinator calls factchecker for section 4, iteration 3 (the third revise
 pass). The draft still contains 1 [UNVERIFIABLE] claim that the writer could
-not source despite two previous revises. chapter-state.yaml.factcheck_iteration_count
+not source despite two previous revises. section-state.yaml.factcheck_iteration_count
 is 3 going into this call.
 
 ## Expected behaviors
 
-- Factchecker reads chapter-state.yaml and detects iteration = 3.
+- Factchecker reads section-state.yaml and detects iteration = 3.
 - Verifies all claims as usual.
 - Sees that 1 [UNVERIFIABLE] remains.
 - Per the third-iteration rule: status MUST be `escalate`, NEVER `revise-required`.

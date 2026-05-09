@@ -1,33 +1,48 @@
-# .book/config.yaml — dashboard of this book
-# All parameters can be edited via /book:config (interactive) or by hand.
-# Inheritance cascade:
-#   ${CLAUDE_PLUGIN_ROOT}/defaults.yaml > this file > overrides in chapter spec.md
-# After /book:start the values below are merged from defaults.yaml of the chosen genre.
+# .book/config.yaml — конфигурация этой книги
+# Все параметры можно изменить через /book:config (интерактивно) или вручную.
+# Иерархия наследования:
+#   ${CLAUDE_PLUGIN_ROOT}/defaults.yaml > этот файл > переопределения в spec.md раздела
+# После /book:start значения ниже заполняются из defaults.yaml выбранного жанра.
 
 # ────────────────────────────────────────────────────────────
-# book — basic characteristics of the book
+# book — основные характеристики книги
+# Четыре ортогональных измерения любого текста (D-30, см. .bpd/stages/20-.../decisions-20.md):
+#   genre    — что пишется (тип работы со стабильными конвенциями)
+#   format   — физическая форма (статья / книга / монография / диссертация)
+#   audience — кто читает (свободный текст-портрет, не enum)
+#   style    — голос автора (собирается при первом разделе, не на /book:start; см. TOV-08)
+# Каждое измерение — первоклассная сущность фреймворка.
 # ────────────────────────────────────────────────────────────
 book:
-  title: "TBD"               # human-readable title; used in marketing artefacts
-  genre: popular-science     # selects defaults from defaults.yaml; only popular-science ships built-in
-  language: ru               # affects language-specific anti-cliche, voice profile, marketing
-  registry_id: "TBD"         # auto-filled by /book:start
+  title: "TBD"               # читаемое название; используется в маркетинговых артефактах
+  genre: popular-science     # выбирает дефолты из defaults.yaml; только popular-science поставляется встроенным
+  format: book               # одно из: article | long-read | book | monograph | dissertation
+                             # Расширяется через /book:research-format (сохраняет пресет в ${CLAUDE_PLUGIN_DATA}/user-formats/).
+                             # Определяет слово для единицы работы (глава / раздел / часть) и типичные объёмы.
+                             # См. decisions-20.md (D-30) и formats-design.md для полных параметров.
+  audience: ""               # свободный текст-портрет целевого читателя (от одного предложения до нескольких абзацев)
+                             # Заполняется в коуч-режиме /book:start или вручную. По умолчанию пусто.
+                             # Для длинных портретов — хранить полный текст в .book/context/audience.md,
+                             # а здесь оставить краткое резюме. Влияет на примеры, метафоры, уровень сложности.
+                             # См. decisions-20.md (Измерение 4: Аудитория).
+  language: ru               # влияет на языковые антиклише, профиль голоса, маркетинг
+  registry_id: "TBD"         # заполняется автоматически через /book:start
 
 # ────────────────────────────────────────────────────────────
-# writing — quantitative parameters (Q1..Q19 from etap 11)
-# Override per chapter via spec.md > override_quantitative.
+# writing — количественные параметры (Q1..Q19 из этапа 11)
+# Переопределяются на уровне раздела через spec.md > override_quantitative.
 # ────────────────────────────────────────────────────────────
 writing:
-  chapter_target_chars: 20000
-  chapter_min_chars: 15000
-  chapter_max_chars: 25000
+  section_target_chars: 20000
+  section_min_chars: 15000
+  section_max_chars: 25000
   writer_checkpoint_step_chars: 5000
-  emotional_addresses_per_chapter:
+  emotional_addresses_per_section:
     min: 3
     max: 4
   transition_min_chars: 1500
   transition_min_paragraphs: 3
-  pyramid_supports_per_chapter:
+  pyramid_supports_per_section:
     min: 3
     max: 4
   concrete_anchors_per_abstract_claim:
@@ -56,14 +71,14 @@ writing:
   summary_max_words: 500
 
 # ────────────────────────────────────────────────────────────
-# agents — team configuration
+# agents — конфигурация команды
 # ────────────────────────────────────────────────────────────
-# Model selection cascade (from lowest to highest precedence):
+# Иерархия выбора модели (от наименьшего к наибольшему приоритету):
 #   ${CLAUDE_PLUGIN_ROOT}/defaults.yaml.profiles.<profile>.<role>
-#     → this file's `agents.profile` selects which profile applies
-#       → this file's `agents.model_overrides.<role>` is the final word
-# A per-chapter model override (chapter spec.md) is intentionally not
-# supported — see PS-14.1-04.
+#     → поле `agents.profile` этого файла выбирает профиль
+#       → поле `agents.model_overrides.<role>` этого файла — последнее слово
+# Переопределение модели на уровне раздела (spec.md) намеренно не поддерживается —
+# см. PS-14.1-04.
 agents:
   enabled:
     - coordinator
@@ -76,27 +91,26 @@ agents:
     - synthesizer
     - tuner
 
-  # profile — which named profile from defaults.yaml drives model choice.
-  # Allowed values: budget | balanced | quality
-  #   budget    — Claude Pro plans; creative core stays on Opus, the rest
-  #               drop to Haiku (factchecker keeps Sonnet for nuance).
-  #   balanced  — Claude Max-5x; recommended default.
-  #   quality   — Claude Max-20x or API; promotes synthesizer to Opus.
+  # profile — какой именованный профиль из defaults.yaml управляет выбором модели.
+  # Допустимые значения: budget | balanced | quality
+  #   budget    — планы Claude Pro; творческое ядро на Opus, остальные
+  #               на Haiku (factchecker сохраняет Sonnet для нюансов).
+  #   balanced  — Claude Max-5x; рекомендуемый дефолт.
+  #   quality   — Claude Max-20x или API; переводит synthesizer на Opus.
   profile: balanced
 
-  # model_overrides — last-word per-role override on top of the profile.
-  # Empty by default. Use to pin a specific model for a specific role
-  # without changing the whole profile.
-  # Example (uncomment and edit):
+  # model_overrides — последнее слово, переопределение по роли поверх профиля.
+  # По умолчанию пусто. Используется для фиксации конкретной модели для конкретной роли
+  # без изменения всего профиля.
+  # Пример (раскомментировать и отредактировать):
   #   model_overrides:
-  #     writer: opus            # force Opus even if profile is `budget`
-  #     factchecker: haiku      # cheap mode for a low-stakes draft pass
+  #     writer: opus            # принудительно Opus даже если профиль `budget`
+  #     factchecker: haiku      # дешёвый режим для черновой проверки
   model_overrides: {}
 
-  # models — explicit per-role model pins (informational; the profile +
-  # model_overrides above are the authoritative source). Mirrors the
-  # `balanced` profile shipped with this template; recomputed by
-  # /book:update when the profile changes.
+  # models — явные пины модели по роли (информационно; профиль + model_overrides выше —
+  # авторитетный источник). Отражает профиль `balanced`, поставляемый с шаблоном;
+  # пересчитывается /book:update при смене профиля.
   models:
     coordinator: sonnet
     strategist: opus
@@ -113,7 +127,23 @@ agents:
     editor_factchecker_recheck: 1
 
 # ────────────────────────────────────────────────────────────
-# quality_gates — pass/fail thresholds
+# workflow — параметры процесса работы над книгой
+# ────────────────────────────────────────────────────────────
+# completion_format — когда секция считается «готовой».
+# Дефолт editor_pass_plus_author_approval (этап 22, T8): секция готова когда
+# 1) book-editor отдал edited.md и 2) автор явно подтвердил «готово».
+# Закрывает I-06: вопрос «когда глава готова» больше не задаётся на /book:start.
+# Изменить можно через /book:config workflow.completion_format <value>.
+# Допустимые значения:
+#   editor_pass_plus_author_approval — дефолт; редактор + явное подтверждение автора
+#   editor_only                       — достаточно прохода редактора
+#   factcheck_only                    — достаточно прохода фактчекера (для художки без фактов)
+#   custom                            — описывается в .book/agent-guidelines/coordinator/
+workflow:
+  completion_format: editor_pass_plus_author_approval
+
+# ────────────────────────────────────────────────────────────
+# quality_gates — пороги pass/fail
 # ────────────────────────────────────────────────────────────
 quality_gates:
   min_factcheck_pass_rate: 0.95
@@ -121,20 +151,20 @@ quality_gates:
   min_cohesion_score: 0.7
 
 # ────────────────────────────────────────────────────────────
-# mcp_servers — per-book MCP configuration (optional)
-# Applied to book-factchecker (and optionally classifier) only.
-# Default for 0.1: fall back to built-in WebSearch/WebFetch.
+# mcp_servers — конфигурация MCP для конкретной книги (опционально)
+# Применяется к book-factchecker (и опционально classifier) только.
+# Дефолт для 0.1: возвращается к встроенным WebSearch/WebFetch.
 # ────────────────────────────────────────────────────────────
 mcp_servers:
   factchecker: {}
-  # Example:
+  # Пример:
   # factchecker:
   #   tavily:
   #     command: npx
   #     args: ["-y", "@tavily/mcp-server"]
 
 # ────────────────────────────────────────────────────────────
-# compatibility — plugin version pinning (auto-managed)
+# compatibility — привязка версии плагина (управляется автоматически)
 # ────────────────────────────────────────────────────────────
 compatibility:
   created_with_bookbench: "0.1.0"
@@ -142,13 +172,13 @@ compatibility:
   last_synced_with: "0.1.0"
 
 # ────────────────────────────────────────────────────────────
-# privacy — for evolver and cross-book sharing
+# privacy — для evolver и межкнижного обмена
 # ────────────────────────────────────────────────────────────
 privacy:
   private: false
   include_in_evolver: true
 
 # ────────────────────────────────────────────────────────────
-# Schema version — bumped on incompatible changes (see CFG-3)
+# Schema version — увеличивается при несовместимых изменениях (см. CFG-3)
 # ────────────────────────────────────────────────────────────
 schema_version: 1

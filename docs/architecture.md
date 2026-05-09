@@ -29,7 +29,7 @@
         ┌── commands/ ──────┐    │ default_genre,    │    │ inputs/, ... │
         │ /book:start       │    │ default_language  │    └──────────────┘
         │ /book:write-      │    └───────────────────┘
-        │   chapter         │                              ┌── .book/ ────────────┐
+        │   section         │                              ┌── .book/ ────────────┐
         │ /book:guidelines  │    ┌── registry.yaml ──┐    │ PROJECT.md, ROADMAP  │
         │ /book:config      │    │ - my-book-2026... │    │ STATE.md, config.yaml│
         │ /book:tune        │ ── │ - dotu-2026...    │ ── │ INGEST-DECISIONS.md  │
@@ -60,7 +60,7 @@
         │ voice-profile     │                              │ │ tuner/         ★ │ │
         │ factcheck-prot.   │                              │ └──────────────────┘ │
         │ marketing-prot.   │                              │                      │
-        │ import-classif.   │                              │ ┌── chapters/<id>/ ┐ │
+        │ import-classif.   │                              │ ┌── sections/<id>/ ┐ │
         │ import-synth.     │                              │ │ spec, draft,     │ │
         │ genre-researcher  │                              │ │ factcheck,       │ │
         │ genres/popular-   │                              │ │ edited,          │ │
@@ -123,7 +123,7 @@
         │ внутри книги       │  ── selective ──▶  .book/.claude/agents/  (9 L)
         │ сравнивает шаблоны │   с подтвержд.    .book/.hooks/anti-ai-cliche
         │ с локальными       │                   .book/agent-guidelines/  — НЕ трогает
-        │ копиями            │                   .book/context/, chapters/  — НЕ трогает
+        │ копиями            │                   .book/context/, sections/  — НЕ трогает
         └────────────────────┘                   логи (TUNING/REJECTIONS/UPDATE) — НЕ трогает
 
         ┌── /book:start ─────┐  
@@ -164,7 +164,7 @@
 | 14 | `/plugin update` → папки книг | **no-touch** (×) | контракт совместимости |
 | 15 | `/plugin uninstall` → `${CLAUDE_PLUGIN_DATA}/` | conditional | спрашивает пользователя; `--keep-data` сохраняет |
 | 16 | `/book:update` → `.book/.claude/agents/`, `.book/.hooks/` | 3-way merge с подтверждением | внутри папки книги |
-| 17 | `/book:update` → `.book/agent-guidelines/`, `.book/context/`, `.book/chapters/`, логи | **no-touch** (×) | никогда не трогает индивидуальность книги |
+| 17 | `/book:update` → `.book/agent-guidelines/`, `.book/context/`, `.book/sections/`, логи | **no-touch** (×) | никогда не трогает индивидуальность книги |
 | 18 | `/book:update` → `.book/.backup/<timestamp>/` | snapshot before update | автоматически перед обновлением |
 | 19 | `/book:update` → `.book/UPDATE-LOG.md` | append-only | после успешного обновления |
 | 20 | `/book:tune` → `book-tuner` (Task) → `.book/agent-guidelines/<role>/` | suggested diff | внутри сессии работы над книгой |
@@ -196,7 +196,7 @@ graph TB
 
     subgraph "my-book/ (папка книги)"
         CL[CLAUDE.md]
-        BK[.book/<br/>PROJECT, ROADMAP, STATE,<br/>config.yaml, context/,<br/>chapters/, agent-guidelines/,<br/>logs, .backup/, .hooks/]
+        BK[.book/<br/>PROJECT, ROADMAP, STATE,<br/>config.yaml, context/,<br/>sections/, agent-guidelines/,<br/>logs, .backup/, .hooks/]
         AL[.book/.claude/agents/<br/>9 локальных тел]
         AM[.book/.claude/agent-memory/<br/>реальные реестры]
     end
@@ -229,7 +229,7 @@ graph TB
 
   ПОЛЬЗОВАТЕЛЬ                                              GATE (✋ — пользователь)
        │
-       │ /book:write-chapter <N>
+       │ /book:write-section <N>
        ▼
   ┌────────────────────────────────────────────────────────────────────────────┐
   │  [book-coordinator]  (главный диалог в роли — agent: в settings.json)      │
@@ -265,12 +265,12 @@ graph TB
   │  Procedure:         │
   │  1. Read agent-     │ ── reads ──▶ .book/agent-guidelines/strategist/  ★
   │     guidelines/     │              README.md + structural-rules.md +
-  │     strategist/  ★  │              chapter-checklist.md
+  │     strategist/  ★  │              section-checklist.md
   │  2. Read context    │ ── reads ──▶ ROADMAP.md, parameters.md,
   │  3. Write spec.md   │              red-thread-keywords.md, prev summary.md,
   │                     │              .book/.claude/agent-memory/strategist/
   │                     │
-  │                     │ ── writes ──▶ chapters/<N>/spec.md
+  │                     │ ── writes ──▶ sections/<N>/spec.md
   └─────────────────────┘
        │
        │ ✋ approve spec.md
@@ -292,7 +292,7 @@ graph TB
   │                     │     │ если найдены клише → блок exit code
   │                     │     │ → writer revise → новый Write → повторно hook
   │                     │     ▼
-  │                     │ ── writes ──▶ chapters/<N>/draft.md
+  │                     │ ── writes ──▶ sections/<N>/draft.md
   └─────────────────────┘
        │
        ▼
@@ -309,7 +309,7 @@ graph TB
   │     factchecker/  ★ │              outdated-sources.md + claim-tags-rules.md
   │  2. Read draft.md   │
   │  3. Verify facts    │ + WebSearch / MCP калls для верификации
-  │  4. Write factcheck │ ── writes ──▶ chapters/<N>/factcheck.md
+  │  4. Write factcheck │ ── writes ──▶ sections/<N>/factcheck.md
   │     .md             │              (claim provenance: VERIFIED/CITED/
   │                     │               ASSUMED/OUTDATED/SPECULATIVE)
   └─────────────────────┘
@@ -332,7 +332,7 @@ graph TB
   │     factcheck +     │
   │     prev edited     │
   │  3. Write edited.md │ ── hook ──▶ anti-ai-cliche-lint.sh
-  │                     │ ── writes ──▶ chapters/<N>/edited.md
+  │                     │ ── writes ──▶ sections/<N>/edited.md
   └─────────────────────┘
        │
        │  if editor changed facts:
@@ -348,13 +348,13 @@ graph TB
   │     guidelines/     │              README + brand-voice.md + telegram-tone.md
   │     marketer/  ★    │
   │  2. Read edited.md  │
-  │  3. Write marketing │ ── writes ──▶ chapters/<N>/marketing.md
+  │  3. Write marketing │ ── writes ──▶ sections/<N>/marketing.md
   └─────────────────────┘
        │
        ▼
   ┌─────────────────────────────────────────────┐
   │  [book-coordinator] — финализация            │
-  │   ── writes ──▶ chapters/<N>/summary.md     │
+  │   ── writes ──▶ sections/<N>/summary.md     │
   │   ── update ──▶ agent-memory/<role>/         │
   │                 MEMORY.md per role          │
   │   ── update ──▶ STATE.md                    │
@@ -367,7 +367,7 @@ graph TB
   └─────────────────────────────────────────────┘
        │
        ▼
-  ✅ chapters/<N>/ готова: spec, draft, factcheck, edited, marketing, summary
+  ✅ sections/<N>/ готова: spec, draft, factcheck, edited, marketing, summary
 
   ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
 
@@ -414,18 +414,18 @@ graph TB
 
 | # | Откуда → Куда | Артефакт | Зачем |
 |---|---------------|----------|-------|
-| 1 | пользователь → координатор | `/book:write-chapter <N>` | старт цикла |
-| 2 | strategist → `chapters/<N>/spec.md` | spec.md | ТЗ главы |
+| 1 | пользователь → координатор | `/book:write-section <N>` | старт цикла |
+| 2 | strategist → `sections/<N>/spec.md` | spec.md | ТЗ главы |
 | 3 | координатор → пользователь | gate ✋ approve | пользовательский гейт |
-| 4 | writer → `chapters/<N>/draft.md` | draft.md | драфт |
+| 4 | writer → `sections/<N>/draft.md` | draft.md | драфт |
 | 5 | writer (через hook) → anti-ai-cliche-lint.sh | каждый Write | блокирующая валидация |
 | 6 | factchecker → WebSearch / MCP | каждое утверждение | верификация |
-| 7 | factchecker → `chapters/<N>/factcheck.md` | factcheck.md | отчёт |
+| 7 | factchecker → `sections/<N>/factcheck.md` | factcheck.md | отчёт |
 | 8 | координатор → writer revise (Task) | при BLOCKER | loop verification |
-| 9 | editor → `chapters/<N>/edited.md` | edited.md | финальная редактура |
+| 9 | editor → `sections/<N>/edited.md` | edited.md | финальная редактура |
 | 10 | координатор → factchecker re-check | если editor изменил факты | second loop |
-| 11 | marketer → `chapters/<N>/marketing.md` | marketing.md | маркетинговая упаковка |
-| 12 | координатор → `chapters/<N>/summary.md` | summary.md | сводка |
+| 11 | marketer → `sections/<N>/marketing.md` | marketing.md | маркетинговая упаковка |
+| 12 | координатор → `sections/<N>/summary.md` | summary.md | сводка |
 | 13 | координатор → memory: project per role | MEMORY.md | реестры уникальности |
 | 14 | координатор → пользователь | финальный gate ✋ | обзор готовой главы |
 

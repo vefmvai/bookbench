@@ -7,13 +7,13 @@ description: Описывает протокол маркетинговой уп
 
 ## When to use
 
-Injected into `book-marketer`. Activated in Phase 6 of the chapter micro-cycle (after editor) when `workflow.md > chapter_loop.enable_marketer: true`. Not active for fiction or academic-monograph genres by default.
+Injected into `book-marketer`. Activated in Phase 6 of the section micro-cycle (after editor) when `workflow.md > section_loop.enable_marketer: true`. Not active for fiction or academic-monograph genres by default.
 
 ## What the marketer produces
 
-Output: `chapters/<N>/marketing.md`. Sections:
+Output: `sections/<N>/marketing.md`. Sections:
 
-1. **Three title variants** — the chapter title that will be tested in social-media posts.
+1. **Three title variants** — the section title that will be tested in social-media posts.
 2. **Hook phrase** (≤120 chars) — the one-line emotional grabber.
 3. **Annotation (TED-3-act)** — three-paragraph annotation: paradox → idea → memorable close.
 4. **Social posts** — one per platform listed in `config.yaml > social_platforms`.
@@ -33,7 +33,7 @@ All numerical bounds come from `config.yaml > social_platforms.<platform>` or fr
 
 Marketing copy is held to a relaxed corpus subset — but four patterns remain hard `block` regardless:
 
-- Pattern #18 — emojis-in-prose is `block` for the body of the chapter; for marketing posts emojis are allowed only in `agent-guidelines/marketer/telegram-tone.md` if explicitly enabled.
+- Pattern #18 — emojis-in-prose is `block` for the body of the section; for marketing posts emojis are allowed only in `agent-guidelines/marketer/telegram-tone.md` if explicitly enabled.
 - Pattern #25 — generic-positive-conclusion (no "BookBench is a powerful framework that transforms…").
 - Pattern #34 — AI-summary-sentence (no "X is a revolutionary framework that weaves a tapestry of…").
 - Pattern #40 — click-bait (no "Shocking truth…").
@@ -52,10 +52,10 @@ If a metaphor matches any of the three lists, the marketer must propose a differ
 
 ## Procedure for Phase 6
 
-1. Read `chapters/<N>/edited.md`.
+1. Read `sections/<N>/edited.md`.
 2. Read `agent-guidelines/marketer/`, `context/visual-blacklist.md`, `context/target-audience.md`.
 3. Read `agent-memory/marketer/MEMORY.md`.
-4. Read `chapters/<N-1>/marketing.md` if present (avoid hook-phrase repetition).
+4. Read `sections/<N-1>/marketing.md` if present (avoid hook-phrase repetition).
 5. Generate three title variants; pick the strongest.
 6. Generate hook phrase; check against `MEMORY.md > hook_phrases_used` (no exact reuse).
 7. Generate TED-3-act annotation.

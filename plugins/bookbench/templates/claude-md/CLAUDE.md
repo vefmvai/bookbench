@@ -13,7 +13,7 @@ The book's content lives in `.book/`. The plugin code lives in `${CLAUDE_PLUGIN_
 | What you need | Where to read |
 |---------------|----------------|
 | Vision and constraints | `.book/PROJECT.md` |
-| Chapter plan | `.book/ROADMAP.md` |
+| Section plan | `.book/ROADMAP.md` |
 | Current state | `.book/STATE.md` |
 | Quantitative parameters | `.book/config.yaml` |
 | Voice profile | `.book/context/voice-profile.md` |
@@ -37,7 +37,7 @@ If this is a brand-new folder, run `/book:start` first.
 
 - Hidden folders `.book/`, `.book/.claude/`, `.book/.hooks/`, `.book/.backup/` are owned by the framework. Do not edit by hand unless you know what you are doing.
 - Logs `.book/TUNING-LOG.md`, `REJECTIONS-LOG.md`, `UPDATE-LOG.md` are append-only.
-- Chapter artefacts in `.book/chapters/<id>/` follow a strict per-role ownership: spec.md (strategist), draft.md (writer), factcheck.md (factchecker), edited.md (editor), marketing.md (marketer), summary.md (coordinator).
+- Section artefacts in `.book/sections/<id>/` follow a strict per-role ownership: spec.md (strategist), draft.md (writer), factcheck.md (factchecker), edited.md (editor), marketing.md (marketer), summary.md (coordinator).
 
 ## Help
 

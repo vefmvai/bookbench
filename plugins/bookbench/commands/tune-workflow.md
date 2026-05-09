@@ -11,7 +11,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Task, AskUserQuestion]
 Tune the per-book workflow.md. Pattern detection looks at structural signals
 (skipped blocks, repeated revise-loops, time-overruns, requested new blocks)
 and proposes edits to `.book/workflow.md`. Apply is gated by an extra
-confirmation step — workflow changes have cascading effects on next chapters.
+confirmation step — workflow changes have cascading effects on next sections.
 </purpose>
 
 <!-- Stage 14, Wave B, T4: full implementation. -->
@@ -76,29 +76,29 @@ Task(
     - .book/STATE.md (timestamps for blocks, gates, revise-loops)
     - .book/REJECTIONS-LOG.md
     - .book/TUNING-LOG.md  (filter out previously-rejected workflow proposals)
-    - .book/chapters/*/discussion.md (for "requested new block" mentions)
+    - .book/sections/*/discussion.md (for "requested new block" mentions)
     - .book/.claude/agent-memory/tuner/MEMORY.md (for cooldown checks)
 
-  Lookback: last ${LOOKBACK} chapters (parameterisable via --lookback).
+  Lookback: last ${LOOKBACK} sections (parameterisable via --lookback).
   Severity threshold: ${SEVERITY_THRESHOLD}.
 
   Workflow-mode specific signals (per workflow-evolution-design.md § 2.2):
     1. Skipped blocks      — block X was in workflow.md but author skipped it >= 3 times.
-    2. Requested new blocks — author asked "let's also check Y" >= 3 times in chapter discussions or rejections.
+    2. Requested new blocks — author asked "let's also check Y" >= 3 times in section discussions or rejections.
     3. Block duration outliers — block X took N times longer than planned (timestamps in STATE).
-    4. Revise-loop frequency — chapter N triggered re-discuss / re-edit-chapter several times.
+    4. Revise-loop frequency — section N triggered re-discuss / re-edit-section several times.
     5. Cross-cutting trigger misfires — cross-cutting block did not run when its trigger said it should.
 
   Procedure: TUNE adapted for workflow:
     Phase 1 — collect signals from sources above
     Phase 2 — cluster (>= 3 occurrences across the lookback window)
     Phase 3 — prioritise:
-              critical = blocker for next chapter (e.g. workflow contains a block author always skips)
+              critical = blocker for next section (e.g. workflow contains a block author always skips)
               important = causes revise-loops but not blockers
               optional = stylistic / convenience improvements
     Phase 4 — write proposal entries to TUNING-LOG.md with status: proposed and mode: workflow.
               Each proposal MUST include an `impact` block in `rationale_full` modelling
-              the effect on the next 3 chapters' chapter_loop.
+              the effect on the next 3 sections' section_loop.
 
   Output to caller:
     - Markdown report with the five sections from book-tuner.md Procedure §15.
@@ -129,7 +129,7 @@ Workflow changes are higher-risk than guideline changes. Use AskUserQuestion
 with **two** confirmations for apply:
 
 1. First gate — show the proposal + the impact block (modelled effect on
-   the next 3 chapters):
+   the next 3 sections):
    - `Continue to apply confirmation`
    - `Reject (cooldown)`
    - `Save and exit`
@@ -150,7 +150,7 @@ Only after both confirmations dispatch into Step 7W-Apply.
 4. **Round-trip parse**: read the updated `.book/workflow.md` and validate
    that:
    - YAML frontmatter parses (if present);
-   - all top-level keys (`bookbench_version`, `book_level`, `chapter_loop`,
+   - all top-level keys (`bookbench_version`, `book_level`, `section_loop`,
      `cross_cutting`, `post_book`) are still present;
    - block name structure is intact (every `block:` has a `name:` and every
      `gate:` has `on_approve:` / `on_revise:`).
@@ -190,4 +190,4 @@ higher-stakes and the author should not be re-asked too often.
   (T6e). Until then, this inline parse is sufficient.
 - Workflow tuning may be invoked manually by the author via
   `/book:tune:workflow` even when no automated signals exist — the author
-  uses it as a pre-flight planning aid before changing chapter cadence.
+  uses it as a pre-flight planning aid before changing section cadence.

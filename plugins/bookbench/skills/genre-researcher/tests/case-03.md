@@ -3,7 +3,7 @@
 ## Input
 
 User runs `/book:research-genre memoir`. Skill runs all phases and produces a
-preset. At Phase 5 the author rejects it (e.g., "I disagree with the chapter
+preset. At Phase 5 the author rejects it (e.g., "I disagree with the section
 structure").
 
 ## Expected behaviors

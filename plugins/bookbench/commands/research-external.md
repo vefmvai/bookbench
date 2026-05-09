@@ -1,6 +1,6 @@
 ---
-description: Runs external research on a topic via book-factchecker — uses MCP search servers (Tavily / Brave / Exa / Perplexity), WebSearch, WebFetch, citation verification. Stores synthesis in chapters/<N>/research/external/<slug>.md if --chapter N is given, else in .book/research/external/<slug>.md. UX-05 from stage 7.2.
-argument-hint: "<topic> [--chapter <N>] [--depth quick|standard|deep] [--prefer-sources <comma-sep>] [--max-results <K>]"
+description: Runs external research on a topic via book-factchecker — uses MCP search servers (Tavily / Brave / Exa / Perplexity), WebSearch, WebFetch, citation verification. Stores synthesis in sections/<N>/research/external/<slug>.md if --section N is given, else in .book/research/external/<slug>.md. UX-05 from stage 7.2.
+argument-hint: "<topic> [--section <N>] [--depth quick|standard|deep] [--prefer-sources <comma-sep>] [--max-results <K>]"
 allowed-tools: [Task, Read, Write, Bash, AskUserQuestion]
 ---
 
@@ -15,7 +15,7 @@ External research about a topic via the internet. Distinct from `/book:research-
 ## Inputs
 
 - `<topic>` — required; the search query.
-- `--chapter <N>` — optional; scopes the output to a specific chapter folder.
+- `--section <N>` — optional; scopes the output to a specific section folder.
 - `--depth quick|standard|deep` — optional; default `standard`.
 - `--prefer-sources <comma-sep>` — optional; preferred URLs / DOIs / source names.
 - `--max-results <K>` — optional; default 8.
@@ -26,8 +26,8 @@ External research about a topic via the internet. Distinct from `/book:research-
 
 ## Outputs
 
-- `.book/chapters/<N>/research/external/<slug>.md` — if `--chapter`.
-- `.book/research/external/<slug>.md` — if no `--chapter`.
+- `.book/sections/<N>/research/external/<slug>.md` — if `--section`.
+- `.book/research/external/<slug>.md` — if no `--section`.
 
 <execution>
 
@@ -40,13 +40,13 @@ Eight-step orchestrator: validate → resolve paths → confirm → Task to fact
 
 if [ -z "${ARGUMENTS:-}" ]; then
   echo "Error: /book:research-external requires a topic."
-  echo "Usage: /book:research-external \"<topic>\" [--chapter <N>] [--depth quick|standard|deep]"
+  echo "Usage: /book:research-external \"<topic>\" [--section <N>] [--depth quick|standard|deep]"
   exit 0
 fi
 
 # Parse arguments — first positional is topic (may contain spaces if quoted)
 TOPIC=""
-CHAPTER_N=""
+SECTION_N=""
 DEPTH="standard"
 PREFER=""
 MAX_RESULTS=8
@@ -54,8 +54,8 @@ MAX_RESULTS=8
 # Best-effort arg parsing (the actual command receives $ARGUMENTS as a single string)
 while [ $# -gt 0 ]; do
   case "$1" in
-    --chapter)         CHAPTER_N="$2"; shift 2 ;;
-    --chapter=*)       CHAPTER_N="${1#--chapter=}"; shift ;;
+    --section)         SECTION_N="$2"; shift 2 ;;
+    --section=*)       SECTION_N="${1#--section=}"; shift ;;
     --depth)           DEPTH="$2"; shift 2 ;;
     --depth=*)         DEPTH="${1#--depth=}"; shift ;;
     --prefer-sources)  PREFER="$2"; shift 2 ;;
@@ -82,14 +82,14 @@ slugify() {
 SLUG=$(slugify "$TOPIC")
 [ -z "$SLUG" ] && SLUG="research-$(date -u +%s)"
 
-if [ -n "$CHAPTER_N" ]; then
-  CHAPTER_DIR=$(printf '.book/chapters/chapter-%03d' "$CHAPTER_N")
-  [ -d "$CHAPTER_DIR" ] || {
-    echo "Error: chapter $CHAPTER_N does not exist ($CHAPTER_DIR)."
-    echo "Run /book:plan-chapter $CHAPTER_N first or omit --chapter."
+if [ -n "$SECTION_N" ]; then
+  SECTION_DIR=$(printf '.book/sections/section-%03d' "$SECTION_N")
+  [ -d "$SECTION_DIR" ] || {
+    echo "Error: section $SECTION_N does not exist ($SECTION_DIR)."
+    echo "Run /book:plan-section $SECTION_N first or omit --section."
     exit 0
   }
-  OUT_DIR="$CHAPTER_DIR/research/external"
+  OUT_DIR="$SECTION_DIR/research/external"
 else
   OUT_DIR=".book/research/external"
 fi
@@ -168,7 +168,7 @@ N_SOURCES=$(grep -cE '^\| [0-9]+ \|' "$OUT_FILE" || echo 0)
 ```bash
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 SCOPE="general"
-[ -n "$CHAPTER_N" ] && SCOPE="chapter $CHAPTER_N"
+[ -n "$SECTION_N" ] && SCOPE="section $SECTION_N"
 printf '\n%s — `/book:research-external` — topic «%s», %d sources, scope %s\n' \
   "$NOW" "$TOPIC" "$N_SOURCES" "$SCOPE" >> .book/STATE.md
 ```
@@ -184,17 +184,17 @@ External research done: <OUT_FILE>
 Sources: <N_SOURCES>
 
 Recommended next:
-  /book:plan-chapter <N>      — feed the research into chapter spec.
-  /book:write-chapter <N>     — writer will pick up the research file automatically.
+  /book:plan-section <N>      — feed the research into section spec.
+  /book:write-section <N>     — writer will pick up the research file automatically.
   /book:research-external "<another topic>"  — extend the research.
 ```
 
 ### Constitutional rules
 
 - **MUST** delegate research to `book-factchecker` — never call WebSearch from the coordinator.
-- **MUST** validate `--chapter <N>` if given; refuse if the chapter does not exist.
+- **MUST** validate `--section <N>` if given; refuse if the section does not exist.
 - **MUST** confirm depth and output path with the author before launching.
-- **NEVER** modify chapter draft.md or edited.md — research is read-only input for writer.
-- **NEVER** cite sources in chapter text directly — that is the writer's job.
+- **NEVER** modify section draft.md or edited.md — research is read-only input for writer.
+- **NEVER** cite sources in section text directly — that is the writer's job.
 
 </execution>

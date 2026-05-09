@@ -1,6 +1,6 @@
 ---
 name: voice-builder
-description: Строит профиль голоса (voice profile) книги с нуля, когда нет исходных текстов для импорта. Активируется из агента book-writer перед первым draft.md, из команды /book:voice build в выделенной сессии или из /book:voice rebuild. Предлагает три пути — B1 быстрое интервью ~5 минут, B2 серьёзная выделенная сессия ~15-20 минут с тестовым абзацем и итерацией, B3 агент сам предлагает профиль из артефактов книги. Проецирует абстрактные ответы автора (любимые писатели, желаемое впечатление у читателя) на шестипараметрическую модель голоса из скилла voice-profile. На выходе — заполненный .book/context/voice-profile.md с обязательной секцией Reasoning. Не активируется на /book:start, /book:plan-book, /book:plan-chapter и /book:discuss-chapter — на стадиях планирования голос ещё не применяется.
+description: Строит профиль голоса (voice profile) книги с нуля, когда нет исходных текстов для импорта. Активируется из агента book-writer перед первым draft.md, из команды /book:voice build в выделенной сессии или из /book:voice rebuild. Предлагает три пути — B1 быстрое интервью ~5 минут, B2 серьёзная выделенная сессия ~15-20 минут с тестовым абзацем и итерацией, B3 агент сам предлагает профиль из артефактов книги. Проецирует абстрактные ответы автора (любимые писатели, желаемое впечатление у читателя) на шестипараметрическую модель голоса из скилла voice-profile. На выходе — заполненный .book/context/voice-profile.md с обязательной секцией Reasoning. Не активируется на /book:start, /book:plan-book, /book:plan-section и /book:discuss-section — на стадиях планирования голос ещё не применяется.
 model: sonnet
 ---
 
@@ -11,7 +11,7 @@ model: sonnet
 Activated in three triggers, never otherwise:
 
 1. From the body of `book-writer` — when the writer prepares to generate the
-   first `chapters/<N>/draft.md` of the book and finds `.book/context/voice-profile.md`
+   first `sections/<N>/draft.md` of the book and finds `.book/context/voice-profile.md`
    empty or containing only TBD placeholders. The writer stops, returns a
    `voice_pending` diagnostic to the coordinator, and the coordinator invokes
    this skill via `AskUserQuestion` over the three paths B1/B2/B3.
@@ -19,13 +19,13 @@ Activated in three triggers, never otherwise:
    `--mode=quick|serious` and an optional `--rebuild` flag).
 3. From the explicit command `/book:voice rebuild` (alias of
    `/book:voice build --rebuild`) — when the author wants to redo voice from
-   scratch, e.g., after writing the first three chapters and realising the
+   scratch, e.g., after writing the first three sections and realising the
    voice is wrong.
 
-**Never activated on** `/book:start`, `/book:plan-book`, `/book:plan-chapter`,
-or `/book:discuss-chapter`. Reason: at those stages no chapter prose is being
+**Never activated on** `/book:start`, `/book:plan-book`, `/book:plan-section`,
+or `/book:discuss-section`. Reason: at those stages no section prose is being
 generated, so a voice profile is not yet needed; deferring the work until the
-first chapter avoids forcing the author into a 5-15 min decision while they
+first section avoids forcing the author into a 5-15 min decision while they
 are still shaping the book idea. Gate enforcement happens in the body of
 `book-writer` (constitution NEVER rule) — see related skill `voice-profile`.
 
@@ -163,7 +163,7 @@ Read all of:
 - `.book/PROJECT.md` (or the equivalent topic file produced at `/book:start`)
   for the genre, topic, and author intent;
 - `.book/context/target-audience.md` for the audience profile;
-- `.book/chapters/<N>/spec.md` for the current chapter (the one the writer
+- `.book/sections/<N>/spec.md` for the current section (the one the writer
   is about to draft);
 - `.book/ROADMAP.md` for the overall plan flavour (e.g., "personal stories
   thread", "case-study heavy", "technical-deep-dive").
@@ -184,7 +184,7 @@ reasoning. Examples:
 ### Step 3 — Generate trial paragraph
 
 Hand off to `book-writer` to generate 200-300 words on the topic of the
-**current chapter spec**, not on a neutral coffee-shop topic — this lets the
+**current section spec**, not on a neutral coffee-shop topic — this lets the
 author judge the voice on the real subject matter.
 
 ### Step 4 — Show profile + reasoning + trial paragraph; gate
@@ -207,7 +207,7 @@ discard the proposal and start B1 from Q1.
 ```
 [builder]
 Path B3 — I propose a voice profile from the artefacts of your book.
-Reading PROJECT.md, context/target-audience.md, chapters/01/spec.md and
+Reading PROJECT.md, context/target-audience.md, sections/01/spec.md and
 ROADMAP.md … done.
 
 Proposal: formality=neutral, paragraph length=medium, sentence variety=mixed,
@@ -217,7 +217,7 @@ tolerance=moderate.
 Reasoning (short): popular-science genre + broad audience + personal-story
 plan thread → neutral register + medium paragraphs + restrained warmth.
 
-Trial paragraph on the topic of chapter 1 (200-300 words):
+Trial paragraph on the topic of section 1 (200-300 words):
 "<paragraph here>"
 
 [builder asks]
@@ -395,4 +395,4 @@ The actual voice content lives in the book folder, not in the plugin.
   book folder and never in the plugin.
 - This skill complements the `voice-profile` skill: this one *builds* the
   voice-profile.md; the other one explains *how the writer reads it* at
-  chapter start.
+  section start.

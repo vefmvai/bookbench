@@ -104,7 +104,7 @@ $ claude
    ├─ .book/agent-guidelines/  (9 ролей × дефолтные гайдлайны жанра)
    ├─ .book/.claude/agents/    (9 локальных тел субагентов)
    ├─ .book/.hooks/         (anti-ai-cliche-lint.sh)
-   ├─ .book/chapters/       (пусто, заполнится по мере глав)
+   ├─ .book/sections/       (пусто, заполнится по мере глав)
    └─ .book/agent-memory/   (пустые MEMORY.md по 5 ролям цикла)
 
 ✅ Книга «История кофе» развёрнута. Записан в реестр книг (registry.yaml).
@@ -151,11 +151,11 @@ $ claude
 ### Шаг A-3. ТЗ первой главы
 
 ```
-> /book:plan-chapter 1
+> /book:plan-section 1
 🤖 [book-coordinator] вызываю book-strategist для ТЗ главы 1...
-🤖 [book-strategist] записал chapters/01/spec.md:
+🤖 [book-strategist] записал sections/01/spec.md:
 
-   ## Chapter 1: Легенда о Калди и эфиопских пастухах
+   ## Section 1: Легенда о Калди и эфиопских пастухах
    ## Цель главы
    Открыть книгу через сильную нарративную сцену; ввести читателя в географию
    и быт IX-X веков Эфиопии; зафиксировать «момент открытия» как символ.
@@ -191,7 +191,7 @@ $ claude
 ### Шаг A-4. Запуск 5-фазного цикла главы
 
 ```
-> /book:write-chapter 1
+> /book:write-section 1
 🤖 [book-coordinator] запускаю микро-цикл главы 1.
 
    Фаза 1/5: Стратег — уже выполнено (spec.md от A-3)
@@ -233,7 +233,7 @@ $ claude
    Hook anti-ai-cliche-lint срабатывает на блоке 3: найдено «отправляемся в путешествие».
       ↳ возврат на правку → переписано → hook pass.
    Двойной audit-pass: писатель проходит черновик с явным вопросом «что выдаёт ИИ».
-   ✅ chapters/01/draft.md создан (6800 знаков).
+   ✅ sections/01/draft.md создан (6800 знаков).
 
    Фаза 3/5: Фактчекер
    ├─ Task(book-factchecker, ...)
@@ -252,7 +252,7 @@ $ claude
    ↳ Loop verification: writer revise-mode → правит формулировку на «около IX-X
      века» с явной пометкой «легенда; точная дата неизвестна».
    ↳ Re-check фактчекера: pass.
-   ✅ chapters/01/factcheck.md создан.
+   ✅ sections/01/factcheck.md создан.
 
    Фаза 4/5: Редактор
    ├─ Task(book-editor, ...)
@@ -262,7 +262,7 @@ $ claude
    ├─ Сокращает на ~10% (6800 → 6100 знаков; King's −10% rule)
    ├─ Двойной audit-pass анти-ИИ-клише после edit → pass
    ├─ Проверяет cohesion с другими главами (для гл. 1 — пусто)
-   └─ ✅ chapters/01/edited.md создан.
+   └─ ✅ sections/01/edited.md создан.
 
    Фаза 5/5: Маркетолог
    ├─ Task(book-marketer, ...)
@@ -270,10 +270,10 @@ $ claude
    ├─ Промпт обложки в Midjourney (1 крупный объект — кофейная ягода;
    │   не «карта мира с маршрутами»)
    ├─ 3 фрагмента-цитаты для соцсетей
-   └─ ✅ chapters/01/marketing.md создан.
+   └─ ✅ sections/01/marketing.md создан.
 
    Финализация координатора:
-   ├─ chapters/01/summary.md (сводка ≤500 знаков для context budget будущих глав)
+   ├─ sections/01/summary.md (сводка ≤500 знаков для context budget будущих глав)
    ├─ Обновлены реестры:
    │   ├─ agent-memory/strategist/MEMORY.md: ["легенда о Калди", "эфиопские плоскогорья"]
    │   ├─ agent-memory/writer/MEMORY.md: используемые примеры, метафоры, voice notes
@@ -291,7 +291,7 @@ $ claude
 > /book:status
 🤖 Книга «История кофе»: глава 1 завершена.
    Готово: 1 / 25 глав (4%).
-   Следующее: /book:plan-chapter 2 или /book:next.
+   Следующее: /book:plan-section 2 или /book:next.
 ```
 
 ### Шаг A-6. Следующая глава
@@ -322,7 +322,7 @@ $ claude
    4) Несколько источников
 📝 4
 ✋ Дай пути:
-📝 ~/Notes/coffee-book/, ~/Downloads/claude-export-2026-04.json, ~/Drafts/coffee-chapter-*.docx
+📝 ~/Notes/coffee-book/, ~/Downloads/claude-export-2026-04.json, ~/Drafts/coffee-section-*.docx
 🤖 Найдено: 47 файлов (38 md, 5 docx, 1 json с 12 чатов, 3 txt).
    Сначала зададим базовые параметры — как в сценарии A.
    ... (жанр, название, аудитория, объём, язык)
@@ -339,7 +339,7 @@ $ claude
    ├─ Task(book-doc-classifier, file=~/Notes/coffee-book/note-01.md)
    ├─ Task(book-doc-classifier, file=~/Notes/coffee-book/note-02.md)
    ├─ ... (47 файлов)
-   └─ Task(book-doc-classifier, file=~/Drafts/coffee-chapter-3.docx)
+   └─ Task(book-doc-classifier, file=~/Drafts/coffee-section-3.docx)
 
    Каждый classifier пишет .book/intel/classifications/<file>.json:
    {
@@ -352,7 +352,7 @@ $ claude
      ]
    }
 
-   11 классов: idea / chapter-draft / fact / metaphor / visual-reference /
+   11 классов: idea / section-draft / fact / metaphor / visual-reference /
    voice-sample / question-to-self / glossary-entry / quote / structure-element / dialog
 
    Фаза 2/2: Synthesis
@@ -373,9 +373,9 @@ $ claude
    └─ Что отвергнуто: 23 дубликата
 
 📝 пользователь смотрит INGEST-DECISIONS.md, правит 3 решения через /book:resolve
-> /book:resolve fragment-127 chapter-15
+> /book:resolve fragment-127 section-15
 > /book:resolve fragment-204 reject
-> /book:resolve fragment-318 chapter-8
+> /book:resolve fragment-318 section-8
 🤖 ✅ Решения применены.
 ```
 
@@ -390,7 +390,7 @@ $ claude
 > /book:plan-book --from-imports
 🤖 [book-strategist] финализирую ROADMAP с учётом импорта.
    ├─ Из набросков автора: 18 глав
-   ├─ Из синтезатора: 5 глав, заполненных на 60%+ (chapter-3.docx → глава 8)
+   ├─ Из синтезатора: 5 глав, заполненных на 60%+ (section-3.docx → глава 8)
    ├─ Пробелы: 7 глав без материала
    └─ Конфликт: глава 12 в набросках и фрагмент чата claude.ai пересекаются
 ✋ Финализируй ROADMAP. Что делать с конфликтом?
@@ -418,11 +418,11 @@ $ claude
 ### Шаг B-5. Старт главы, где есть импортированный черновик
 
 ```
-> /book:plan-chapter 5
-🤖 [book-strategist] обнаружил: для главы 5 импортирован черновик из chapter-3.docx (60% готов).
-🤖 chapters/05/spec.md создан с пометкой:
+> /book:plan-section 5
+🤖 [book-strategist] обнаружил: для главы 5 импортирован черновик из section-3.docx (60% готов).
+🤖 sections/05/spec.md создан с пометкой:
    ├─ Режим: integrate-existing-draft
-   ├─ Импортированный черновик: chapters/05/imported-draft.md (1200 слов)
+   ├─ Импортированный черновик: sections/05/imported-draft.md (1200 слов)
    └─ Что нужно дополнить: ~40% объёма + проверка против реестра USED EXAMPLES
 ✋ Утверждаешь?
 📝 y
@@ -431,10 +431,10 @@ $ claude
 ### Шаг B-6. Микро-цикл в режиме «дополнения»
 
 ```
-> /book:write-chapter 5
+> /book:write-section 5
 🤖 Фаза 2/5: Писатель в режиме from-existing
    ├─ Дополняет 40% объёма
-   ├─ Переписывает AI-склонные куски (chapter-3.docx был частично из claude.ai)
+   ├─ Переписывает AI-склонные куски (section-3.docx был частично из claude.ai)
    ├─ Проверяет против USED EXAMPLES — метафора «корабль с грузом» уже использована
    │   в импортированной главе 3, заменяет.
    └─ Hook anti-ai-cliche ловит «погружаемся в мир» в импортированном фрагменте → правит.
@@ -472,7 +472,7 @@ history-of-coffee/
     │   ├── red-thread-keywords.md
     │   ├── visual-blacklist.md
     │   └── cross-references.md
-    ├── chapters/
+    ├── sections/
     │   └── 01/
     │       ├── spec.md
     │       ├── draft.md
@@ -517,7 +517,7 @@ history-of-coffee/
 | Стратег предложил странный план книги | Прервать, отредактировать `PROJECT.md` (точнее описать книгу и аудиторию), запустить `/book:plan-book` ещё раз. Стратег идемпотентен — переписывает `ROADMAP.md` |
 | Координатор не помнит, на какой главе остановились | `/book:status` — читает `STATE.md`. `/book:resume` — продолжает текущий этап. `/book:next` — даёт умную подсказку |
 | Не уверен, что workflow подходит твоему жанру | `/book:workflow:check` — статическая валидация `workflow.md`. Если жанр специфичный — `/book:research-genre <ваш-жанр>` запустит genre-researcher |
-| После `/book:write-chapter` не появилось `marketing.md` | Возможно, маркетолог отключён в `workflow.md > chapter_loop.params.enable_marketer: false`. Включить — отредактировать файл, перезапустить `/book:write-chapter:market <N>` (атомарная подкоманда только маркетинговой фазы) |
+| После `/book:write-section` не появилось `marketing.md` | Возможно, маркетолог отключён в `workflow.md > section_loop.params.enable_marketer: false`. Включить — отредактировать файл, перезапустить `/book:write-section:market <N>` (атомарная подкоманда только маркетинговой фазы) |
 
 Расширенный troubleshooting — в [`faq.md`](faq.md), кластер 5 «Troubleshooting» (включая B-14-01..05 как known issues 0.1.0 с workaround).
 
@@ -525,7 +525,7 @@ history-of-coffee/
 
 ## Куда дальше
 
-- [`chapter-cycle.md`](chapter-cycle.md) — что в каждой фазе цикла, как чинить, atomic subcommands
+- [`section-cycle.md`](section-cycle.md) — что в каждой фазе цикла, как чинить, atomic subcommands
 - [`customization.md`](customization.md) — как настроить под себя (config / guidelines / tuner)
 - [`voice-management.md`](voice-management.md) — голос подробно: библиотека, перенос между книгами
 - [`models-and-subscriptions.md`](models-and-subscriptions.md) — выбор профиля под подписку

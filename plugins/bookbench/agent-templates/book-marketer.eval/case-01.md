@@ -1,16 +1,16 @@
-# Case 01: Pack marketing for a chapter with default settings
+# Case 01: Pack marketing for a section with default settings
 
 ## Input
 
-Coordinator calls marketer for chapter 4 after editor `pass`. workflow.marketing
+Coordinator calls marketer for section 4 after editor `pass`. workflow.marketing
 is enabled. Inputs:
-- chapters/004/edited.md.
+- sections/004/edited.md.
 - context/visual-blacklist.md (lists "neural pathways", "matrix code rain",
   and "abstract data flow").
 - context/target-audience.md (audience: general public, education ≥ secondary,
   preferred platforms: telegram + linkedin).
 - agent-guidelines/marketer/{brand-voice, visual-blacklist-extras, telegram-tone}.md.
-- agent-memory/marketer/MEMORY.md (hook techniques used last 3 chapters:
+- agent-memory/marketer/MEMORY.md (hook techniques used last 3 sections:
   paradox-statement, parallel-list, story-opener; SUCCESs primary attribute
   "Concrete" used 4 times — threshold 5).
 
@@ -26,7 +26,7 @@ is enabled. Inputs:
 - Writes Twitter/X (≤280 chars) and LinkedIn (≤500 chars) fragments.
 - Generates a visual concept + Midjourney prompt that does NOT contain
   any of the visual-blacklist motifs.
-- Writes chapters/004/marketing.md with frontmatter (chapter_id, created_by,
+- Writes sections/004/marketing.md with frontmatter (section_id, created_by,
   SUCCESs_primary, SUCCESs_secondary, visual_motifs_used, hook_technique).
 - Updates marketer/MEMORY.md.
 

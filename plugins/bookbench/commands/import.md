@@ -23,7 +23,7 @@ Bring legacy notes into a structured book. Implements the second of the two star
 
 - `.book/intel/classifications/<filename>.json` — output of classifier per file.
 - `.book/INGEST-DECISIONS.md` — synthesizer's proposed mapping with three buckets: `auto-resolved`, `competing-variants`, `rejected`.
-- After author confirmation: writes into `agent-memory/<role>/MEMORY.md`, `context/`, `chapters/<id>/`, `agent-guidelines/<role>/`.
+- After author confirmation: writes into `agent-memory/<role>/MEMORY.md`, `context/`, `sections/<id>/`, `agent-guidelines/<role>/`.
 
 <execution>
 
@@ -111,7 +111,7 @@ For each FILE in FILES:
       You are book-doc-classifier (memory: none).
       Classify the file <FILE> into one of 11 classes:
         glossary | character | concept | metaphor | example | voice-sample
-        | chapter-fragment | research-note | rejected-claim
+        | section-fragment | research-note | rejected-claim
         | structural-decision | other.
       Output JSON: { class, confidence (0-1), tag_hints, fragments[] }.
       Write to .book/intel/classifications/<basename>.json.
@@ -155,9 +155,9 @@ Task(
     Mode parameter: ${MODE}
       • new      — produce a full bootstrap proposal: PROJECT.md hints,
                    config.yaml hints, ROADMAP.md skeleton, voice-profile,
-                   chapters/*/draft.md proposals.
+                   sections/*/draft.md proposals.
       • merge    — fold into existing structure: extend glossary, add to
-                   character/concept registries, optionally append chapters.
+                   character/concept registries, optionally append sections.
 
     Output: .book/INGEST-DECISIONS.md with three labelled bucket sections.
     For each item write: source-file → destination → rationale → confidence.
@@ -208,7 +208,7 @@ For each auto-resolved item:
   - Write a one-line entry to INGEST-DECISIONS.md > "Applied" section
 ```
 
-The synthesizer is the only role with permission to write into other roles' MEMORY.md per MEM-01. For `auto-resolved` items into `agent-memory/<role>/MEMORY.md`, the orchestrator delegates by re-invoking synthesizer with explicit `apply` mode (a small follow-up Task call). For all other destinations (`context/`, `chapters/`, `agent-guidelines/`), the orchestrator can `Write` / `Edit` directly.
+The synthesizer is the only role with permission to write into other roles' MEMORY.md per MEM-01. For `auto-resolved` items into `agent-memory/<role>/MEMORY.md`, the orchestrator delegates by re-invoking synthesizer with explicit `apply` mode (a small follow-up Task call). For all other destinations (`context/`, `sections/`, `agent-guidelines/`), the orchestrator can `Write` / `Edit` directly.
 
 ### Step 8 — Atomic state mutation + next-step
 
@@ -244,7 +244,7 @@ fi
 - **MUST** present an INGEST-DECISIONS gate before applying anything (Brief-Then-Execute, Part VII methodology).
 - **MUST** keep competing variants pending — never auto-resolve them (that is `/book:resolve`).
 - **NEVER** delete original files in `<path>` or `.book/inputs/` — they remain as authoritative source.
-- **NEVER** invoke writer / editor / factchecker — these come later via `/book:write-chapter`.
+- **NEVER** invoke writer / editor / factchecker — these come later via `/book:write-section`.
 - **NEVER** exceed the per-invocation limit of 100 files; for larger imports, ask the author for a manifest split.
 
 </execution>

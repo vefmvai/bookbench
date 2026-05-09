@@ -3,9 +3,9 @@
 ## Input
 
 Coordinator calls writer in revise-mode. `<files_to_read>`:
-- chapters/004/spec.md (unchanged).
-- chapters/004/draft.md (initial version, word_count: 3450).
-- chapters/004/factcheck.md with status: revise-required, listing 2
+- sections/004/spec.md (unchanged).
+- sections/004/draft.md (initial version, word_count: 3450).
+- sections/004/factcheck.md with status: revise-required, listing 2
   [UNVERIFIABLE] blocks at lines 47 and 112, plus a vague-attribution warning
   at line 23.
 
@@ -14,7 +14,7 @@ Prompt: "Revise the draft addressing factcheck.md. Iteration 1."
 ## Expected behaviors
 
 - Writer reads spec, draft, factcheck (Procedure WRITE-DRAFT-REVISE step 1).
-- Rewrites ONLY the indicated lines, not the rest of the chapter.
+- Rewrites ONLY the indicated lines, not the rest of the section.
 - Applies the recommendation from factcheck.md (hedging / removal / sourcing).
 - Writes the updated draft.md with revision_iteration: 1.
 - PostToolUse hook fires; writer self-checks.
@@ -24,7 +24,7 @@ Prompt: "Revise the draft addressing factcheck.md. Iteration 1."
 
 ## Acceptance criteria
 
-- chapters/004/draft.md frontmatter has revision_iteration: 1.
+- sections/004/draft.md frontmatter has revision_iteration: 1.
 - The unaffected paragraphs are byte-identical or near-identical to the prior
   draft (no needless rewriting).
 - The two [UNVERIFIABLE] blocks are addressed (rewritten or hedged).
@@ -40,4 +40,4 @@ Prompt: "Revise the draft addressing factcheck.md. Iteration 1."
 ## Notes
 
 Verifies the localized-revise principle: writer does not "improve" unaffected
-text. Common failure: rewriting the entire chapter and inflating revision_count.
+text. Common failure: rewriting the entire section and inflating revision_count.

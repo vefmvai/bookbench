@@ -133,7 +133,7 @@ Recommended next:
 - **MUST** be read-only — never edit `registry.yaml` here.
 - **MUST** tolerate a missing or malformed registry without exiting non-zero.
 - **MUST** filter to `status == active` by default; `--all` is the explicit opt-in.
-- **NEVER** open chapter content, guidelines, or memory files of any registered book — this command never crosses into book-local data.
+- **NEVER** open section content, guidelines, or memory files of any registered book — this command never crosses into book-local data.
 - **NEVER** invoke any subagent — pure helper-driven listing.
 
 </execution>

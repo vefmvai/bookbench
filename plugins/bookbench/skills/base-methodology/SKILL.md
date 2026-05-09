@@ -9,11 +9,11 @@ This skill supplies the genre-agnostic methodology layer for every BookBench rol
 
 ## When to use
 
-- Writer drafts a chapter (Phase 2 of the chapter micro-cycle).
-- Strategist plans a chapter or the whole book.
+- Writer drafts a section (Phase 2 of the section micro-cycle).
+- Strategist plans a section or the whole book.
 - Editor performs developmental, line, copy or proof editing (Phase 4).
 - Factchecker verifies factual claims and cohesion of evidence (Phase 3).
-- Marketer packages the chapter (Phase 6).
+- Marketer packages the section (Phase 6).
 - Tuner reasons about which guidelines to propose.
 
 ## Architecture
@@ -22,23 +22,23 @@ Twenty-three invariants are organised into seven groups (T1–T7). Each invarian
 
 ## Group T1 — structure first
 
-- T1.1 Pyramid principle: each chapter has one governing thought, supported by 2–6 elements (count is genre-dependent and lives in the genre skill).
-- T1.5 Structure is a separate phase before drafting; the chapter spec.md is its artefact.
+- T1.1 Pyramid principle: each section has one governing thought, supported by 2–6 elements (count is genre-dependent and lives in the genre skill).
+- T1.5 Structure is a separate phase before drafting; the section spec.md is its artefact.
 
-## Group T2 — coherence between chapters
+## Group T2 — coherence between sections
 
-- T2.1 Adjacent chapters need an explicit causal connector (plot connector).
-- T2.2 Red-thread keywords appear in every chapter (≥1) — strategist tracks the registry.
-- T2.3 The editor must read neighbouring chapters before line edit.
+- T2.1 Adjacent sections need an explicit causal connector (plot connector).
+- T2.2 Red-thread keywords appear in every section (≥1) — strategist tracks the registry.
+- T2.3 The editor must read neighbouring sections before line edit.
 - T2.4 Two levels of cohesion: line-level (cohesion) and structure-level (coherence).
 
 ## Group T3 — writing rhythm
 
-- T3.1 Shitty First Draft: the writer finishes the chapter without polishing; polishing is the editor's job.
+- T3.1 Shitty First Draft: the writer finishes the section without polishing; polishing is the editor's job.
 - T3.2 Ten-percent rule: between draft and edit the volume drops by roughly ten percent (King).
 - T3.3 Four editing mental modes: structural / style / voice / proof.
 - T3.4 The author must always have a small next step — never leave them stuck.
-- T3.5 The chapter is split into blocks, not treated as one atom.
+- T3.5 The section is split into blocks, not treated as one atom.
 
 ## Group T4 — editing
 
@@ -56,7 +56,7 @@ Twenty-three invariants are organised into seven groups (T1–T7). Each invarian
 ## Group T6 — voice and AI-isms
 
 - T6.1 Forty-six anti-AI-cliche patterns are forbidden by default in author text — see `skills/anti-ai-cliche/`.
-- T6.2 Voice calibration: the writer reads voice samples from `agent-guidelines/writer/voice-samples.md` at chapter start; the editor performs a double-pass audit (humanity test) before submission.
+- T6.2 Voice calibration: the writer reads voice samples from `agent-guidelines/writer/voice-samples.md` at section start; the editor performs a double-pass audit (humanity test) before submission.
 - T6.3 The agent is an author, not an assistant — no "I hope this helps", no "Let me know", no "as of my last training".
 
 ## Group T7 — collaborative architecture
@@ -64,13 +64,13 @@ Twenty-three invariants are organised into seven groups (T1–T7). Each invarian
 - T7.1 Plan → sections → stitch (AgentWrite pattern) is the framework architecture for long-form writing.
 - T7.3 Multi-role collaborative editing beats a single agent — this is the philosophical core of BookBench.
 
-## Procedure for a writing role at chapter start
+## Procedure for a writing role at section start
 
 1. Read `.book/agent-guidelines/<role>/README.md` and the files it references.
 2. Read `.book/.claude/agent-memory/<role>/MEMORY.md` for active registries.
-3. Read `chapters/<N>/spec.md` for the structural ToR.
+3. Read `sections/<N>/spec.md` for the structural ToR.
 4. Read `.book/context/voice-profile.md`, `parameters.md`, `red-thread-keywords.md`.
-5. Read previous chapter's `summary.md` (only N-1 by default; see `context-control.md`).
+5. Read previous section's `summary.md` (only N-1 by default; see `context-control.md`).
 6. Apply T6.3 — author voice, not assistant.
 7. Apply T3.1 — write the draft to the end before polishing.
 8. Apply T5.5 — every abstract claim gets one concrete anchor.
@@ -78,8 +78,8 @@ Twenty-three invariants are organised into seven groups (T1–T7). Each invarian
 
 ## Procedure for an editing role on draft.md
 
-1. Read `chapters/<N>/draft.md` and `factcheck.md`.
-2. Read neighbouring chapters' `summary.md` (T2.3) — N-1 and N+1 if available.
+1. Read `sections/<N>/draft.md` and `factcheck.md`.
+2. Read neighbouring sections' `summary.md` (T2.3) — N-1 and N+1 if available.
 3. Apply T4.1 — the four editing levels in order.
 4. Apply T3.2 — aim for a ten-percent reduction.
 5. Apply T6.1 — run a double-pass anti-AI-cliche audit (the hook is mechanical; this pass is semantic).
@@ -106,7 +106,7 @@ The `tests/skills/base-methodology/` directory will hold ≥3 evaluation cases f
 
 - Test 1 — writer reads spec.md and produces draft.md that respects T3.1 (no polishing inside the writer phase).
 - Test 2 — editor reads draft.md and applies T3.2 (ten-percent reduction within ±5%).
-- Test 3 — strategist plans chapter 8 of a topic-A book and applies T2.1 (explicit plot connector to chapter 7).
+- Test 3 — strategist plans section 8 of a topic-A book and applies T2.1 (explicit plot connector to section 7).
 
 ## Notes
 

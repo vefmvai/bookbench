@@ -1,26 +1,26 @@
 ---
 description: Перезапускает цикл редактуры главы N из версионной подпапки vN/. С флагом --from-audit берёт замечания из audit-report.md; иначе запрашивает список проблем у автора. Сохраняет предыдущий edited.md как v1 и создаёт v2 (или v3, ...). С --with-marketing дополнительно перезапускает агента book-marketer.
-argument-hint: "<chapter-number> [--from-audit] [--with-marketing]"
+argument-hint: "<section-number> [--from-audit] [--with-marketing]"
 allowed-tools: [Task, Read, Write, Edit, Bash, AskUserQuestion]
 ---
 
-# /book:re-edit-chapter
+# /book:re-edit-section
 
 <purpose>
-Generate `chapters/<id>/v2/` (or v3, ...) with a new draft, factcheck and edit pass driven by either an audit report or explicit author feedback. The old version stays in place — the coordinator surfaces both versions to the author at the gate.
+Generate `sections/<id>/v2/` (or v3, ...) with a new draft, factcheck and edit pass driven by either an audit report or explicit author feedback. The old version stays in place — the coordinator surfaces both versions to the author at the gate.
 </purpose>
 
 <!-- ЭТАП 14: реализовано — см. <execution> ниже -->
 
 ## Inputs
 
-- `.book/chapters/<id>/edited.md` (current).
-- `.book/chapters/<id>/audit-report.md` (if `--from-audit`).
+- `.book/sections/<id>/edited.md` (current).
+- `.book/sections/<id>/audit-report.md` (if `--from-audit`).
 - Author-provided issue list (if no `--from-audit`).
 
 ## Outputs
 
-- `.book/chapters/<id>/v2/{draft.md, factcheck.md, edited.md}` (or v3, ...).
+- `.book/sections/<id>/v2/{draft.md, factcheck.md, edited.md}` (or v3, ...).
 - Updates to relevant role MEMORY.md files (the editor's own memory protocol).
 - Updated STATE.md.
 
@@ -33,8 +33,8 @@ Eight-step orchestrator: validate → resolve → choose source of issues → co
 ```bash
 [ -d .book ] || { echo "No .book/ directory."; exit 0; }
 
-# Parse chapter number
-CHAPTER_N=""
+# Parse section number
+SECTION_N=""
 FROM_AUDIT=0
 WITH_MARKETING=0
 for arg in $ARGUMENTS; do
@@ -42,21 +42,21 @@ for arg in $ARGUMENTS; do
     --from-audit)       FROM_AUDIT=1 ;;
     --with-marketing)   WITH_MARKETING=1 ;;
     --*)                : ;;
-    *)                  [ -z "$CHAPTER_N" ] && CHAPTER_N="$arg" ;;
+    *)                  [ -z "$SECTION_N" ] && SECTION_N="$arg" ;;
   esac
 done
 
-if [ -z "$CHAPTER_N" ]; then
-  echo "Error: /book:re-edit-chapter requires a chapter number."
-  echo "Usage: /book:re-edit-chapter <N> [--from-audit] [--with-marketing]"
+if [ -z "$SECTION_N" ]; then
+  echo "Error: /book:re-edit-section requires a section number."
+  echo "Usage: /book:re-edit-section <N> [--from-audit] [--with-marketing]"
   exit 0
 fi
 
-CHAPTER_DIR=$(printf '.book/chapters/chapter-%03d' "$CHAPTER_N")
-[ -d "$CHAPTER_DIR" ] || { echo "Error: chapter $CHAPTER_N not found ($CHAPTER_DIR)."; exit 0; }
-[ -f "$CHAPTER_DIR/edited.md" ] || {
-  echo "Error: $CHAPTER_DIR/edited.md does not exist."
-  echo "The chapter has not finished its first edit pass. Run /book:write-chapter $CHAPTER_N first."
+SECTION_DIR=$(printf '.book/sections/section-%03d' "$SECTION_N")
+[ -d "$SECTION_DIR" ] || { echo "Error: section $SECTION_N not found ($SECTION_DIR)."; exit 0; }
+[ -f "$SECTION_DIR/edited.md" ] || {
+  echo "Error: $SECTION_DIR/edited.md does not exist."
+  echo "The section has not finished its first edit pass. Run /book:write-section $SECTION_N first."
   exit 0
 }
 ```
@@ -65,10 +65,10 @@ CHAPTER_DIR=$(printf '.book/chapters/chapter-%03d' "$CHAPTER_N")
 
 ```bash
 NEXT_VER=2
-while [ -d "$CHAPTER_DIR/v$NEXT_VER" ]; do
+while [ -d "$SECTION_DIR/v$NEXT_VER" ]; do
   NEXT_VER=$((NEXT_VER + 1))
 done
-NEW_VER_DIR="$CHAPTER_DIR/v$NEXT_VER"
+NEW_VER_DIR="$SECTION_DIR/v$NEXT_VER"
 mkdir -p "$NEW_VER_DIR"
 ```
 
@@ -78,18 +78,18 @@ mkdir -p "$NEW_VER_DIR"
 ISSUES_FILE=""
 
 if [ "$FROM_AUDIT" -eq 1 ]; then
-  if [ ! -f "$CHAPTER_DIR/audit-report.md" ]; then
-    echo "Error: --from-audit was passed but $CHAPTER_DIR/audit-report.md is missing."
-    echo "Run /book:audit-chapter $CHAPTER_N first."
+  if [ ! -f "$SECTION_DIR/audit-report.md" ]; then
+    echo "Error: --from-audit was passed but $SECTION_DIR/audit-report.md is missing."
+    echo "Run /book:audit-section $SECTION_N first."
     exit 0
   fi
-  ISSUES_FILE="$CHAPTER_DIR/audit-report.md"
+  ISSUES_FILE="$SECTION_DIR/audit-report.md"
 else
   echo "What issues should the editor address in v$NEXT_VER?"
   echo "(End input with an empty line. AskUserQuestion will collect this.)"
   # Use AskUserQuestion to capture the issue list as free-text
   # Save to .book/.tmp/re-edit-issues-$$.md
-  ISSUES_FILE=".book/.tmp/re-edit-$CHAPTER_N-v$NEXT_VER-issues.md"
+  ISSUES_FILE=".book/.tmp/re-edit-$SECTION_N-v$NEXT_VER-issues.md"
   mkdir -p .book/.tmp
   # AskUserQuestion result captured to ISSUES_FILE
 fi
@@ -107,7 +107,7 @@ Exit.
 
 Present an `AskUserQuestion`:
 
-- Title: «Re-edit chapter <N> as v<NEXT_VER>?»
+- Title: «Re-edit section <N> as v<NEXT_VER>?»
 - Body:
   - `Source of issues: <ISSUES_FILE>`
   - `Output:           <NEW_VER_DIR>/`
@@ -122,12 +122,12 @@ Present an `AskUserQuestion`:
 ```
 Task(
   subagent_type: book-editor,
-  description: "Re-edit chapter <N> as v<NEXT_VER>",
+  description: "Re-edit section <N> as v<NEXT_VER>",
   prompt: """
     You are book-editor in RE-EDIT mode.
 
     Source of issues: <ISSUES_FILE>
-    Previous edited.md: <CHAPTER_DIR>/edited.md
+    Previous edited.md: <SECTION_DIR>/edited.md
     Output dir: <NEW_VER_DIR>/
 
     Required:
@@ -151,10 +151,10 @@ Task(
   """,
   files_to_read: [
     <ISSUES_FILE>,
-    <CHAPTER_DIR>/edited.md,
-    <CHAPTER_DIR>/spec.md,
-    <CHAPTER_DIR>/draft.md,
-    <CHAPTER_DIR>/factcheck.md,
+    <SECTION_DIR>/edited.md,
+    <SECTION_DIR>/spec.md,
+    <SECTION_DIR>/draft.md,
+    <SECTION_DIR>/factcheck.md,
     .book/context/voice-profile.md,
     .book/context/red-thread-keywords.md,
     .book/context/glossary.md,
@@ -170,7 +170,7 @@ If `--with-marketing`:
 ```
 Task(
   subagent_type: book-marketer,
-  description: "Re-run marketing for v<NEXT_VER> of chapter <N>",
+  description: "Re-run marketing for v<NEXT_VER> of section <N>",
   prompt: ...,
   files_to_read: [<NEW_VER_DIR>/edited.md, .book/context/, .book/agent-guidelines/marketer/]
 )
@@ -184,7 +184,7 @@ Task(
   exit 1
 }
 NEW_SHA=$(shasum -a 256 "$NEW_VER_DIR/edited.md" | awk '{print $1}')
-OLD_SHA=$(shasum -a 256 "$CHAPTER_DIR/edited.md" | awk '{print $1}')
+OLD_SHA=$(shasum -a 256 "$SECTION_DIR/edited.md" | awk '{print $1}')
 [ "$NEW_SHA" = "$OLD_SHA" ] && echo "Warning: v$NEXT_VER is byte-identical to v1 — editor may not have changed anything."
 ```
 
@@ -192,21 +192,21 @@ OLD_SHA=$(shasum -a 256 "$CHAPTER_DIR/edited.md" | awk '{print $1}')
 
 ```bash
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-printf '\n%s — `/book:re-edit-chapter %d` — produced v%d in %s\n' \
-  "$NOW" "$CHAPTER_N" "$NEXT_VER" "$NEW_VER_DIR" >> .book/STATE.md
+printf '\n%s — `/book:re-edit-section %d` — produced v%d in %s\n' \
+  "$NOW" "$SECTION_N" "$NEXT_VER" "$NEW_VER_DIR" >> .book/STATE.md
 
-# Update chapter-state.yaml: add re_edit_versions list entry
-if [ -f "$CHAPTER_DIR/chapter-state.yaml" ]; then
+# Update section-state.yaml: add re_edit_versions list entry
+if [ -f "$SECTION_DIR/section-state.yaml" ]; then
   # Best-effort YAML append
   echo "  - v$NEXT_VER: { created_at: \"$NOW\", source: $([ "$FROM_AUDIT" = 1 ] && echo audit-report || echo author-issues) }" \
-    >> "$CHAPTER_DIR/chapter-state.yaml"
+    >> "$SECTION_DIR/section-state.yaml"
 fi
 
 echo "Re-edit done: v$NEXT_VER produced in $NEW_VER_DIR."
 echo ""
 echo "Recommended next:"
-echo "  /book:audit-chapter $CHAPTER_N            — re-audit the new version."
-echo "  /book:re-edit-chapter $CHAPTER_N --from-audit  — yet another iteration if needed."
+echo "  /book:audit-section $SECTION_N            — re-audit the new version."
+echo "  /book:re-edit-section $SECTION_N --from-audit  — yet another iteration if needed."
 ```
 
 ### Constitutional rules
@@ -214,7 +214,7 @@ echo "  /book:re-edit-chapter $CHAPTER_N --from-audit  — yet another iteration
 - **MUST** preserve the existing `edited.md` (v1) — never overwrite it.
 - **MUST** create a versioned subfolder `v<N>/` and write all artefacts there.
 - **MUST** confirm with the author before launching (Brief-Then-Execute).
-- **MUST** delegate the actual edit to `book-editor` via `Task` — never edit chapter content from the orchestrator.
+- **MUST** delegate the actual edit to `book-editor` via `Task` — never edit section content from the orchestrator.
 - **NEVER** invoke writer / marketer without explicit author consent.
 - **NEVER** delete previous versions; they are part of the audit trail.
 

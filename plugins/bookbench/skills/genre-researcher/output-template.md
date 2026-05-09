@@ -7,7 +7,7 @@ Every `<genre>-methodology.md` file produced by the genre researcher follows thi
 ```yaml
 ---
 name: <genre>-methodology
-description: Provides a <genre> methodology for the BookBench writing roles — <key elements>. Applied when a role writes a <genre> chapter or <specific triggers>. Not applied for <adjacent genres> — they need different genre skills.
+description: Provides a <genre> methodology for the BookBench writing roles — <key elements>. Applied when a role writes a <genre> section or <specific triggers>. Not applied for <adjacent genres> — they need different genre skills.
 ---
 ```
 
@@ -15,9 +15,9 @@ description: Provides a <genre> methodology for the BookBench writing roles — 
 
 One paragraph: the genre's idea expressed plainly. The reader contract. Who reads this kind of book.
 
-## Section 2 — Chapter structure
+## Section 2 — Section structure
 
-Structural skeleton (Pyramid / TED-3-act / Save the Cat / IMRaD / Hero's Journey / something else). Ladder of abstraction (only if the genre is non-fiction). Genre-typical chapter shape.
+Structural skeleton (Pyramid / TED-3-act / Save the Cat / IMRaD / Hero's Journey / something else). Ladder of abstraction (only if the genre is non-fiction). Genre-typical section shape.
 
 ## Section 3 — Writer behaviour
 
@@ -31,7 +31,7 @@ Genre rules for the writer: SFD, voice calibration, control checkpoints every N 
 
 Voice formula. Humanity checklist (semantic). Trigger → action rules.
 
-## Section 6 — Chapter micro-cycle
+## Section 6 — Section micro-cycle
 
 Numbered procedure of 4–6 steps. Each step is a subagent. Map steps onto the blocks from `blocks-catalog.md` (do not invent new blocks; if a block is missing, write a `proposed-new-blocks.md` note instead).
 
@@ -39,7 +39,7 @@ Numbered procedure of 4–6 steps. Each step is a subagent. Map steps onto the b
 
 Table of quantitative parameters with defaults and ranges. The seventeen of `popular-science` are a template; not all apply.
 
-## Section 8 — Humanity checklist for a chapter
+## Section 8 — Humanity checklist for a section
 
 A 12–17-point checklist applied before submitting `edited.md`. Adapted to genre.
 

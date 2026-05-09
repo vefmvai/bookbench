@@ -1,12 +1,12 @@
 # Book roadmap
 
-> The chapter plan of the book. Created or extended via `/book:plan-book`. Edit it manually if you must — the strategist will pick up changes on the next chapter.
+> The section plan of the book. Created or extended via `/book:plan-book`. Edit it manually if you must — the strategist will pick up changes on the next section.
 
 ## Parts
 
-(Optional grouping of chapters into parts.)
+(Optional grouping of sections into parts.)
 
-## Chapters
+## Sections
 
 | # | Slug | Title | Status | Notes |
 |---|------|-------|--------|-------|

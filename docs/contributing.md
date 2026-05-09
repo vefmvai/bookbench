@@ -397,5 +397,5 @@ BookBench опирается на:
 
 - [`architecture.md`](architecture.md) — общая картина для контрибьюторов
 - [`dev-mode.md`](dev-mode.md) — local-dev workflow с `/book:evolve`
-- [`chapter-cycle.md`](chapter-cycle.md) — что в каждой фазе цикла (для понимания, что менять)
+- [`section-cycle.md`](section-cycle.md) — что в каждой фазе цикла (для понимания, что менять)
 - [`upgrade-guide.md`](upgrade-guide.md) — что не трогается при обновлении (важно для совместимости)

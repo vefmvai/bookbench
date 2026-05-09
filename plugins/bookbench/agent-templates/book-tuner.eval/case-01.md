@@ -2,7 +2,7 @@
 
 ## Input
 
-REJECTIONS-LOG.md contains 3 entries from the last 5 chapters with
+REJECTIONS-LOG.md contains 3 entries from the last 5 sections with
 `reason_category: language` and `pattern_hint: anglicism-framework`
 (the author keeps replacing "framework" with "методика" or "каркас"
 in edited.md).
@@ -28,7 +28,7 @@ agent-memory/tuner/MEMORY.md has no active cooldown for this signal.
 - TUNING-LOG.md has a new entry with `status: proposed`, severity: critical,
   files_changed pointing at `agent-guidelines/writer/forbidden-phrases.md`.
 - The proposed diff is concrete (a + line, not vague).
-- The report cites "3 occurrences" and the chapters they came from.
+- The report cites "3 occurrences" and the sections they came from.
 - agent-guidelines/writer/forbidden-phrases.md is byte-identical to before.
 
 ## Target models

@@ -7,7 +7,7 @@ allowed-tools: [Read, Bash, Glob, Grep]
 # /book:status
 
 <purpose>
-Show progress: how many chapters are done, what was last touched, whether plugin and book versions are still compatible, what is recommended next.
+Show progress: how many sections are done, what was last touched, whether plugin and book versions are still compatible, what is recommended next.
 </purpose>
 
 <!-- ЭТАП 13: реализовано — см. <execution> ниже -->
@@ -15,7 +15,7 @@ Show progress: how many chapters are done, what was last touched, whether plugin
 ## Inputs
 
 - `.book/STATE.md`, `.book/ROADMAP.md`, `.book/config.yaml`.
-- Listing of `.book/chapters/`.
+- Listing of `.book/sections/`.
 - `${CLAUDE_PLUGIN_DATA}/registry.yaml` for registration check.
 
 ## Outputs
@@ -58,7 +58,7 @@ Extract via Bash and Glob:
 ```bash
 # State
 CURRENT_SECTION=$(awk -F'`' '/current_section/{print $3; exit}' .book/STATE.md | sed -E 's/^: //; s/^[[:space:]]+//; s/[[:space:]]+$//')
-CURRENT_CHAPTER=$(awk -F'`' '/current_chapter/{print $3; exit}' .book/STATE.md | sed -E 's/^: //; s/^[[:space:]]+//; s/[[:space:]]+$//')
+CURRENT_SECTION=$(awk -F'`' '/current_section/{print $3; exit}' .book/STATE.md | sed -E 's/^: //; s/^[[:space:]]+//; s/[[:space:]]+$//')
 LAST_ACTION=$(awk -F'`' '/last_action/{print $3; exit}' .book/STATE.md | sed -E 's/^: //; s/^[[:space:]]+//; s/[[:space:]]+$//')
 
 # Last 3 history entries
@@ -73,20 +73,20 @@ BOOK_VERSION=$(awk -F'"' '/created_with_bookbench/{print $2; exit}' .book/config
 LAST_SYNCED=$(awk -F'"' '/last_synced_with/{print $2; exit}' .book/config.yaml)
 ```
 
-### Step 4 — Plan and chapter listing
+### Step 4 — Plan and section listing
 
 ```bash
-# ROADMAP planned chapters (count of "## Chapter" or "- chapter-" entries)
+# ROADMAP planned sections (count of "## Section" or "- section-" entries)
 ROADMAP_LINES=$(wc -l < .book/ROADMAP.md 2>/dev/null || echo 0)
-PLANNED_CHAPTERS=$(grep -cE '^## (Chapter|Глава)' .book/ROADMAP.md 2>/dev/null || echo 0)
+PLANNED_SECTIONS=$(grep -cE '^## (Section|Раздел)' .book/ROADMAP.md 2>/dev/null || echo 0)
 
-# Existing chapter folders
-CHAPTER_DIRS=$(ls -d .book/chapters/chapter-*/ 2>/dev/null | sort || true)
+# Existing section folders
+SECTION_DIRS=$(ls -d .book/sections/section-*/ 2>/dev/null | sort || true)
 COMPLETED_COUNT=0
 IN_PROGRESS_COUNT=0
-for d in $CHAPTER_DIRS; do
-  if [ -f "$d/chapter-state.yaml" ]; then
-    if grep -qE '^completed: true' "$d/chapter-state.yaml"; then
+for d in $SECTION_DIRS; do
+  if [ -f "$d/section-state.yaml" ]; then
+    if grep -qE '^completed: true' "$d/section-state.yaml"; then
       COMPLETED_COUNT=$((COMPLETED_COUNT + 1))
     else
       IN_PROGRESS_COUNT=$((IN_PROGRESS_COUNT + 1))
@@ -138,8 +138,8 @@ Book status — "${BOOK_TITLE}"
 
 Progress
   Section:         ${CURRENT_SECTION}
-  Current chapter: ${CURRENT_CHAPTER:-none}
-  Planned:         ${PLANNED_CHAPTERS} chapters in ROADMAP
+  Current section: ${CURRENT_SECTION:-none}
+  Planned:         ${PLANNED_SECTIONS} sections in ROADMAP
   Completed:       ${COMPLETED_COUNT}
   In progress:     ${IN_PROGRESS_COUNT}
 
@@ -157,15 +157,15 @@ Recommended next:
 
 The «recommended next» line varies by state:
 
-- If `PLANNED_CHAPTERS == 0` and `IN_PROGRESS_COUNT == 0`: «Run `/book:plan-book` to draft the chapter list.»
-- If `PLANNED_CHAPTERS > 0` and `COMPLETED_COUNT == 0`: «Run `/book:plan-chapter 1` to draft the spec for chapter 1.»
-- If `IN_PROGRESS_COUNT > 0`: «Run `/book:resume` for a briefing on the in-progress chapter.»
-- Otherwise: «Run `/book:plan-chapter <next-id>` to start the next chapter.»
+- If `PLANNED_SECTIONS == 0` and `IN_PROGRESS_COUNT == 0`: «Run `/book:plan-book` to draft the section list.»
+- If `PLANNED_SECTIONS > 0` and `COMPLETED_COUNT == 0`: «Run `/book:plan-section 1` to draft the spec for section 1.»
+- If `IN_PROGRESS_COUNT > 0`: «Run `/book:resume` for a briefing on the in-progress section.»
+- Otherwise: «Run `/book:plan-section <next-id>` to start the next section.»
 
 ### Constitutional rules for this command
 
 - **MUST** be read-only — never Write, Edit, or Bash a destructive command.
-- **MUST** complete in under 5 seconds on a 200-chapter book (no full-text reads).
+- **MUST** complete in under 5 seconds on a 200-section book (no full-text reads).
 - **MUST** never throw on missing optional files (`ROADMAP.md` may not exist before `/book:plan-book`).
 - **NEVER** modify `STATE.md`.
 - **NEVER** call any subagent through `Task`.

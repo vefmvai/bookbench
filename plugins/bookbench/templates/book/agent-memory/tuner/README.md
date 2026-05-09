@@ -14,7 +14,7 @@ For role `tuner`, the MEMORY.md follows the schema in `role-memory-schemas.md` (
 
 - Active high-level decisions (for the role).
 - Active registries (per-role: metaphors, sources, anti-cliche occurrences, etc.).
-- Recently archived entries (auto-compacted on chapter approval).
+- Recently archived entries (auto-compacted on section approval).
 
 ## How to inspect
 

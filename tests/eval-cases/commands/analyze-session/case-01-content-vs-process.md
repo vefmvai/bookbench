@@ -27,13 +27,13 @@ verbatim author text):
 | 2 | "the year 1812 is wrong; the correct date is 1815" | content (fact → year mismatch) |
 | 3 | "why did the factchecker run twice on the same statement again?" | process (repeated pass + token waste) |
 | 4 | "this paragraph has too many adjectives; trim them" | content (voice → style/register) |
-| 5 | "the team is taking too long on chapter 3; total 40 minutes feels excessive" | process (slow / token / context) |
+| 5 | "the team is taking too long on section 3; total 40 minutes feels excessive" | process (slow / token / context) |
 
 ## Expected observer output
 
 The observer must produce:
 
-### `chapter-3-content-notes.md`
+### `section-3-content-notes.md`
 
 Three entries under different sub-categories:
 
@@ -41,7 +41,7 @@ Three entries under different sub-categories:
 - **Facts:** "year mismatch in introductory paragraph; corrected to authoritative source; role: book-factchecker; local fix: agent-guidelines/factchecker/trusted-sources.md"
 - **Voice:** "excessive adjectival density rejected; role: book-writer; local fix: agent-guidelines/editor/cohesion-rules.md or writer/voice-samples.md"
 
-### `chapter-3-process-notes.md`
+### `section-3-process-notes.md`
 
 Two entries:
 
@@ -51,7 +51,7 @@ Two entries:
 ### `upgrade-candidates.md`
 
 No new candidates yet — single occurrences only. Counters incremented
-locally; promotion happens after ≥3 cross-chapter recurrences.
+locally; promotion happens after ≥3 cross-section recurrences.
 
 ## Acceptance criteria
 
@@ -60,7 +60,7 @@ locally; promotion happens after ≥3 cross-chapter recurrences.
 - Privacy self-check: clean.
 - No verbatim quotes in either notes file.
 - No book-specific proper nouns (the eval intentionally uses generic
-  domain words: "gears", "1812/1815", "factchecker", "chapter 3").
+  domain words: "gears", "1812/1815", "factchecker", "section 3").
 
 ## Pass / fail
 

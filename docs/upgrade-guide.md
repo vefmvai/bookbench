@@ -118,7 +118,7 @@ $ claude
 
 Факты о книге: `parameters.md` (P-01, P-02, ...), `voice-profile.md`, `glossary.md`, `red-thread-keywords.md`, `cross-references.md`. Контент книги — собственность автора.
 
-### `.book/chapters/`
+### `.book/sections/`
 
 Все главы в любом виде: `spec.md`, `draft.md`, `factcheck.md`, `edited.md`, `marketing.md`, `summary.md`. Это твой текст.
 
@@ -162,7 +162,7 @@ $ claude
 
 7. `/book:doctor` — проверь, что всё на месте.
 8. Запусти простую команду (например, `/book:status`) — убедись, что субагенты отвечают.
-9. Если есть открытая глава — `/book:write-chapter:edit <N>` (только редактор) на проверочной главе — посмотри, не сломалось ли поведение.
+9. Если есть открытая глава — `/book:write-section:edit <N>` (только редактор) на проверочной главе — посмотри, не сломалось ли поведение.
 
 Если что-то не так — см. [Откат](#откат) ниже.
 
@@ -268,8 +268,8 @@ metadata:
 
 ### Что НЕ изменится без мажорной версии
 
-- Контракт `chapter-loop` (вход / выход / параметры).
-- Структура секций workflow.md (`book_level`, `chapter_loop`, `cross_cutting`, `post_book`).
+- Контракт `section-loop` (вход / выход / параметры).
+- Структура секций workflow.md (`book_level`, `section_loop`, `cross_cutting`, `post_book`).
 - Имена и роли 9 субагентов.
 
 ### Применение новых дефолтов к существующей книге
@@ -282,8 +282,8 @@ metadata:
    Текущая версия: 0.1.0 (preset popular-science)
    Доступная версия preset'а: 0.1.3
    Изменения:
-   ├─ chapter_loop.params.factcheck_max_iterations: 3 → 5
-   └─ chapter_loop.params.target_length.max: 8500 → 9000
+   ├─ section_loop.params.factcheck_max_iterations: 3 → 5
+   └─ section_loop.params.target_length.max: 8500 → 9000
 
 ✋ Применить новые дефолты? (y/n)
    Бэкап будет создан в .book/.backup/.
@@ -299,6 +299,37 @@ metadata:
 Это редкий случай (мажорная версия). Тогда `/book:workflow:check` покажет breaking change и предложит ручную миграцию.
 
 В 0.1 → 0.2 такие случаи будут описаны в CHANGELOG.md в разделе `Breaking changes`. Пока в 0.x.x — гарантируется обратная совместимость workflow.
+
+---
+
+## Обновление с 0.2.x на 0.3.0
+
+В 0.3.0 изменены имена команд (`chapter` → `section`) и структура `.book/` (новые поля `book.format`, `book.audience`, `workflow.completion_format`; директория `chapters/` → `sections/`). Без deprecation aliases (D-32) — старые имена слаш-команд не работают. **Если у вас нет инициализированной книги 0.2.x** (этот случай покрывает большинство пользователей на момент выхода 0.3.0) — просто чистая переустановка плагина:
+
+```
+/plugin uninstall bookbench@bookbench
+/plugin marketplace remove bookbench
+/plugin marketplace add vefmvai/bookbench
+/plugin install bookbench@bookbench
+/reload-plugins
+/book:doctor   # должно показать BookBench 0.3.0
+```
+
+См. `docs/release-030-notes.md` для детального списка изменений.
+
+**Если у вас была инициализирована книга 0.2.x** (редкий случай) — нужна ручная миграция:
+
+1. Сделайте бэкап `.book/` целиком: `cp -r .book .book.backup-pre-0.3.0/`.
+2. Переименуйте директорию: `mv .book/chapters .book/sections`. Внутри `.template/chapter-state.yaml` переименуйте в `section-state.yaml` (если файл существует).
+3. В `.book/config.yaml` добавьте три новых поля:
+   - `book.format: book` (или подходящее значение из `article | book | monograph | dissertation | other`).
+   - `book.audience: ""` (заполните свободным текстом-портретом аудитории).
+   - `workflow.completion_format: editor_pass_plus_author_approval` (дефолт; см. `release-030-notes.md` если нужно другое).
+4. В `.book/STATE.md` и `.book/PROJECT.md` замените упоминания `current_chapter` → `current_section`, `chapter_loop` → `section_loop`, `chapter_target_chars` → `section_target_chars`.
+5. Привычку «писать `/book:write-chapter`» замените на `/book:write-section`. Аналогично для `plan-chapter`, `audit-chapter`, `re-edit-chapter`, `discuss-chapter`.
+6. Прогоните `/book:doctor` — он подсветит оставшиеся несоответствия структуры.
+
+В диалогах с автором (выводе субагентов) слово «глава» / «раздел» / «часть» подставляется автоматически из `formats.<format>.section_word` — менять привычные термины в общении с агентом не требуется.
 
 ---
 

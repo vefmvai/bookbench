@@ -7,11 +7,11 @@ description: Помогает агентам book-writer и book-editor отка
 
 ## When to use
 
-Activated by `book-writer` at the start of every chapter (after spec.md, before drafting) and by `book-editor` during cohesion editing. Both roles read `.book/context/voice-profile.md` and `.book/agent-guidelines/writer/voice-samples.md`; this skill defines _how_ to read them.
+Activated by `book-writer` at the start of every section (after spec.md, before drafting) and by `book-editor` during cohesion editing. Both roles read `.book/context/voice-profile.md` and `.book/agent-guidelines/writer/voice-samples.md`; this skill defines _how_ to read them.
 
 ## The six-parameter voice model
 
-Every author voice projects onto six parameters that the writer must calibrate at chapter start:
+Every author voice projects onto six parameters that the writer must calibrate at section start:
 
 | Parameter | Range | Default for popular-science |
 |-----------|-------|------------------------------|
@@ -24,12 +24,12 @@ Every author voice projects onto six parameters that the writer must calibrate a
 
 Each value lives in `.book/voice-profile.yaml` (set during `/book:start`) and overrides the genre defaults from `defaults.yaml`.
 
-## Calibration procedure for writer at chapter start
+## Calibration procedure for writer at section start
 
 1. Read `.book/context/voice-profile.md` (prose description plus the six-parameter model).
 2. Read `.book/agent-guidelines/writer/voice-samples.md` (≥3 author-written passages of 200–500 words each).
 3. For each sample, note which of the six parameters dominate.
-4. Read `chapters/<N-1>/draft.md` last 2 paragraphs to feel the immediate-prior tone.
+4. Read `sections/<N-1>/draft.md` last 2 paragraphs to feel the immediate-prior tone.
 5. Mentally fix the calibration before writing the first sentence of `draft.md`.
 
 ## Calibration procedure for editor during cohesion edit
@@ -53,7 +53,7 @@ Six classic drift markers (each maps to a humanity-test failure):
 
 ## Tests
 
-- Test 1 — given samples in informal register and a spec.md for chapter 5, the writer produces a draft.md that scores within ±1 on the formality parameter against the samples.
+- Test 1 — given samples in informal register and a spec.md for section 5, the writer produces a draft.md that scores within ±1 on the formality parameter against the samples.
 - Test 2 — given samples with strong dash-medium discipline, the writer produces a draft.md with no `—` (long dash) characters.
 - Test 3 — given samples with vivid emotional intensity, the writer produces a draft.md with at least 3 emotional markers per 5000 chars.
 
@@ -65,4 +65,4 @@ This skill has no extra reference files. The actual voice content lives in the b
 
 - This skill never carries time-sensitive information.
 - Six-parameter model intentionally simple; future versions (0.2+) may extend.
-- Tests reference generic placeholders (chapter 5, samples, etc.) — no time-sensitive author specifics.
+- Tests reference generic placeholders (section 5, samples, etc.) — no time-sensitive author specifics.

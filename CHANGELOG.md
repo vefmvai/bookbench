@@ -6,7 +6,68 @@
 
 ## [Unreleased]
 
-_n/a — все изменения текущего цикла вошли в 0.2.0._
+_n/a — все изменения текущего цикла вошли в 0.3.0._
+
+---
+
+## [0.3.0] — 2026-05-09
+
+Major-релиз. Переосмысление стартового онбординга и разделение четырёх измерений работы автора (`genre / style / format / audience`) как ортогональных первоклассных сущностей фреймворка. Структурный рефакторинг терминологии `chapter` → `section` во всём коде плагина (~150 файлов). Релиз вырос из первого живого запуска `/book:start` на статье-манифесте «Спираль» в мае 2026 — четыре серьёзных UX-проблемы стартового интервью + одна концептуальная развилка стали Milestone 2.
+
+### Added
+
+- **Коуч-режим `/book:start`.** Заменили жёсткое 5-вопросное radio-интервью на открытый коуч-диалог. Команда принимает свободное описание автора, голосовой ввод и приложенные файлы (drafts, voice-samples, заметки); агент анализирует вход + опционально вызывает `/book:import` автоматически; формулирует одну гипотезу понимания «формат — X, ближайший жанр — Y, аудитория — Z, метка стиля — B1/B2/B3» с подтверждением автора. Реализовано inline в команде с физическим выносом коуч-промпта в `lib/start-coach-prompt.md` (433 строки, 4 коуч-сборки по `matching-design.md` §§ 3.1–3.7). Архитектурное решение D-33 (без 11-го субагента; состав команды остаётся 9 субагентов + voice-builder Skill).
+- **Поле `book.format` в `config.yaml`** с дефолтом `book` и значениями `article | book | monograph | dissertation | other`. Влияет на единицу работы, ожидаемый объём, workflow книги и адаптивную подстановку слов «глава / раздел / часть» в диалогах субагентов.
+- **Поле `book.audience` как свободный текст-портрет** (не enum). Заполняется на основе описания автора в коуч-диалоге.
+- **Поле `workflow.completion_format` с дефолтом `editor_pass_plus_author_approval`** (закрывает непонятный вопрос «когда глава готова» из старого стартового интервью). Меняется через `/book:config`.
+- **Новая команда `/book:research-format`** (336 строк) — симметрично `/book:research-genre`. Запускает Deep Research по произвольному формату (например, screenplay, longread, photo-essay), генерирует пресет в `${CLAUDE_PLUGIN_DATA}/user-formats/` для повторного использования.
+- **5 пресетов форматов в `defaults.yaml`** (`article`, `book`, `monograph`, `dissertation`, `other`) + ключ `compatible_formats` ко всем 4 жанровым пресетам с обязательной симметрией жанр ↔ формат.
+- **Поле `formats.<format>.section_word`** для adaptive substitution: каждый субагент читает `book.format` из `.book/config.yaml`, находит `section_word` и подставляет его в диалоги с автором («глава» / «раздел» / «часть»). В технических контекстах (имена файлов, путей, полей) везде `section`. Архитектурное решение D-31.
+- **Четырёхмерная модель работы автора (D-30)** — `genre / style / format / audience` как ортогональные первоклассные сущности фреймворка. Формат — расширяемая библиотека (как жанры), не enum. Стиль собирается отдельно через `voice-builder` с отлётом до первой секции (TOV-08 сохранён дословно).
+- **5 eval-кейсов `tests/eval-cases/start-coach/`** — happy-path научпоп / voice-samples B2 / drafts автоимпорт / screenplay (B2 ресёрч) / uncertain (развилка «не уверен»).
+- **`lib/section-word-helpers.md`** — документация процедуры adaptive substitution для контрибьюторов.
+- **Документация `docs/section-cycle.md`** — полный цикл работы над секцией (раньше был `chapter-cycle.md`, переименован под D-31).
+
+### Changed
+
+- **`chapter` → `section` во всём коде плагина** (~150 файлов): переименована директория шаблона `templates/book/chapters/` → `templates/book/sections/`; переименованы поля `current_chapter` → `current_section`, `chapter_loop` → `section_loop`, `chapter_target_chars` → `section_target_chars` в шаблонах `templates/book/STATE.md`, `PROJECT.md`, `ROADMAP.md`, `config.yaml`. Адаптивная подстановка «глава/раздел/часть» в диалогах с автором — через `formats.<format>.section_word` + 5-строчный MUST-блок в каждом из 10 субагентов (D-31).
+- **9 slash-команд переименованы:** `/book:write-chapter` → `/book:write-section` (+ atomic подкоманды `:draft`, `:factcheck`, `:edit`, `:market`); `/book:plan-chapter` → `/book:plan-section`; `/book:audit-chapter` → `/book:audit-section`; `/book:re-edit-chapter` → `/book:re-edit-section`; `/book:discuss-chapter` → `/book:discuss-section`. Манифест плагина обновлён под новые имена.
+- **Тела всех 10 субагентов** (`agent-templates/` + зеркало `templates/claude-config/agents/`, по A-14.1-01) — все упоминания `chapter` в системных промптах заменены на `section` + добавлен 5-строчный MUST-блок D-31 по чтению `book.format` и подстановке `section_word`.
+- **11 SKILL.md** обновлены под новую терминологию (`anti-ai-cliche`, `base-methodology`, `factcheck-protocol`, `genre-researcher`, `genres/.template`, `genres/popular-science`, `import-classification-protocol`, `import-synthesis-protocol`, `marketing-protocol`, `voice-builder`, `voice-profile`).
+- **`argument-hint` команды `/book:start`** — флаг `--from-existing` удалён. Автоимпорт срабатывает автоматически по приложенным файлам.
+- **Документация `docs/`** — все 14 файлов проверены на упоминания `chapter` / «глава», обновлены под адаптивный термин или прямой `section` по контексту.
+
+### Removed
+
+- **9 старых слаш-команд** (`write-chapter`, `write-chapter:draft|factcheck|edit|market`, `plan-chapter`, `audit-chapter`, `re-edit-chapter`, `discuss-chapter`) удалены из `manifest.json` без deprecation aliases (D-32). У нас нет инициализированных книг 0.2.x на момент релиза, миграция обратной совместимости не нужна.
+- **Старая директория шаблона `templates/book/chapters/`** и связанные файлы.
+- **Файл `docs/chapter-cycle.md`** — заменён на `docs/section-cycle.md`.
+
+### Breaking changes
+
+- Структура `.book/` несовместима с 0.2.x: пути секций (`sections/` вместо `chapters/`), поля конфига (`current_section`, `chapter_loop` → `section_loop`, добавлены `book.format`, `book.audience`, `workflow.completion_format`).
+- Slash-команды переименованы (`/book:write-chapter` → `/book:write-section` и т.д.) — старые имена не работают.
+- Step 4 `/book:start` не показывает radio-кнопки — принимает свободный текст и/или приложенные файлы.
+
+**Миграция:** так как у пользователей нет инициализированных книг 0.2.x, требуется только чистая переустановка плагина (см. блок ниже).
+
+### Migration (для пользователей 0.2.x)
+
+```
+/plugin uninstall bookbench@bookbench
+/plugin marketplace remove bookbench
+/plugin marketplace add vefmvai/bookbench
+/plugin install bookbench@bookbench
+/reload-plugins
+/book:doctor   # должно показать BookBench 0.3.0
+```
+
+Если у вас уже есть инициализированная книга 0.2.x — см. секцию «Обновление с 0.2.x на 0.3.0» в `docs/upgrade-guide.md`.
+
+### Known issues
+
+- **35 редких команд по-прежнему имеют английские описания** (наследие 0.1.5, перенесено как known issue в 0.2.0). Перевод отложен на 0.3.x patch.
+- **Префикс `/book:` против `/bookbench:`** — статус прежний, поведение зависит от версии Claude Code, проверка эмпирическая.
 
 ---
 
@@ -51,7 +112,7 @@ Patch-релиз «Общая уборка». Пост-релизный hot-fix 
 
 - **Eval-кейсы переехали из `commands/` и `skills/` в `tests/eval-cases/`.** Перенесены: `commands/analyze-session.eval/` → `tests/eval-cases/commands/analyze-session/` (3 кейса), `commands/evolve.eval/` → `tests/eval-cases/commands/evolve/` (4 privacy-теста), `skills/voice-builder/voice-builder.eval/` → `tests/eval-cases/skills/voice-builder/` (4 кейса). Теперь Claude Code не подтягивает их как пользовательские команды — автодополнение `/bookbench:*` показывает только реальные команды. Внутренние ссылки в `commands/evolve.md`, `skills/voice-builder/SKILL.md`, `skills/voice-builder/quality-gate.md`, `docs/dev-mode.md` и `docs/contributing.md` обновлены на новые пути. Папки `agent-templates/<role>.eval/` оставлены на месте — они не сканируются Claude Code как команды.
 - **35 описаний (`description:` в frontmatter) переведены с английского на русский** — точечная работа над топ-приоритетом, остальные 35 редких команд остаются на английском как «известный хвост» для 0.1.6/0.2:
-  - 15 команд: `start`, `write-chapter`, `plan-book`, `plan-chapter`, `discuss-chapter`, `status`, `next`, `help`, `voice-build`, `voice-extract`, `voice-list`, `audit-chapter`, `audit-book`, `re-edit-chapter`, `import`.
+  - 15 команд: `start`, `write-section`, `plan-book`, `plan-section`, `discuss-chapter`, `status`, `next`, `help`, `voice-build`, `voice-extract`, `voice-list`, `audit-chapter`, `audit-book`, `re-edit-chapter`, `import`.
   - 11 `SKILL.md`: `anti-ai-cliche`, `base-methodology`, `factcheck-protocol`, `genre-researcher`, `genres/.template`, `genres/popular-science` (был уже на русском), `import-classification-protocol`, `import-synthesis-protocol`, `marketing-protocol`, `voice-builder`, `voice-profile`.
   - 9 агентов: `book-coordinator`, `book-doc-classifier`, `book-doc-synthesizer`, `book-editor`, `book-factchecker`, `book-marketer`, `book-observer`, `book-strategist`, `book-tuner`, `book-writer`. Двойные копии в `templates/claude-config/agents/` синхронизированы (соблюдение A-14.1-01).
 - **Терминология глоссария зафиксирована.** Принят единый глоссарий перевода: chapter→глава, draft→драфт, voice profile→профиль голоса, factcheck→факт-чекинг, workflow→воркфлоу, registry→реестр, audit→аудит, tune→тюнинг, eval→eval-кейс, subagent→субагент. Имена агентов (`book-writer`, `book-strategist` и т.д.), пути файлов, параметры команд, имена скиллов — не переводятся, остаются машинно-читаемыми.
@@ -62,7 +123,7 @@ Patch-релиз «Общая уборка». Пост-релизный hot-fix 
 
 ### Known issues
 
-- **35 редких команд остаются с английскими описаниями** — `archive`, `register`, `forget`, `evolve`, `tune`, `tune-guidelines`, `tune-workflow`, `workflow-add-block`, `workflow-check`, `workflow-edit`, `workflow-move-block`, `workflow-remove-block`, `research-external`, `research-genre`, `research-internal`, `voice-save-as`, `voice-import`, `extract-learnings`, `ship`, `resolve`, `resume`, `run`, `settings`, `update`, `debug`, `doctor`, `config`, `guidelines`, `contribute-genre`, `list`, `analyze-session`, `write-chapter:draft`, `write-chapter:edit`, `write-chapter:factcheck`, `write-chapter:market`. Перевод запланирован на 0.1.6 или 0.2.
+- **35 редких команд остаются с английскими описаниями** — `archive`, `register`, `forget`, `evolve`, `tune`, `tune-guidelines`, `tune-workflow`, `workflow-add-block`, `workflow-check`, `workflow-edit`, `workflow-move-block`, `workflow-remove-block`, `research-external`, `research-genre`, `research-internal`, `voice-save-as`, `voice-import`, `extract-learnings`, `ship`, `resolve`, `resume`, `run`, `settings`, `update`, `debug`, `doctor`, `config`, `guidelines`, `contribute-genre`, `list`, `analyze-session`, `write-section:draft`, `write-section:edit`, `write-section:factcheck`, `write-section:market`. Перевод запланирован на 0.1.6 или 0.2.
 - **Префикс `/book:` против `/bookbench:`** — если перенос `slash_prefix` в `.claude-plugin/plugin.json` не сработает (Claude Code 2.1.x может игнорировать поле или брать имя из `name`), это известное ограничение остаётся до 0.2 без насилия над конфигом.
 
 ---
@@ -131,22 +192,22 @@ Patch-релиз. Делает плагин устанавливаемым че�
 ### Added
 
 - **Команда из 9 субагентов:** `book-coordinator` (оркестратор), `book-strategist` (планирует главу), `book-writer` (пишет драфт), `book-factchecker` (проверяет факты), `book-editor` (правит стиль и связность), `book-marketer` (упаковывает финал), `book-doc-classifier` и `book-doc-synthesizer` (импорт), `book-tuner` (анализирует замечания и предлагает правки гайдлайнов).
-- **5-фазный микро-цикл главы:** `spec.md → draft.md → factcheck.md → edited.md → marketing.md → summary.md`. Команда `/book:write-chapter <N>` запускает полный цикл; atomic-подкоманды `:draft`, `:factcheck`, `:edit`, `:market` — для повтора отдельной фазы.
+- **5-фазный микро-цикл главы:** `spec.md → draft.md → factcheck.md → edited.md → marketing.md → summary.md`. Команда `/book:write-section <N>` запускает полный цикл; atomic-подкоманды `:draft`, `:factcheck`, `:edit`, `:market` — для повтора отдельной фазы.
 - **Гейты автора и петли верификации.** Два обязательных гейта (после `spec.md` и после `marketing.md`); две автоматические петли (writer ↔ factchecker max 3 итерации; editor ↔ factchecker re-check при изменении фактов).
 - **Анти-ИИ-клише hook.** 46 паттернов (34 английских + 12 русско-специфичных), три уровня реакции (block / warn / info). Срабатывает после каждого Write писателя и редактора. Bash 3.2-совместимый engine на perl-PCRE.
 - **Voice management — голос автора:** шестипараметрическая модель (formality / paragraph length / sentence variety / emotional intensity / dash typography / anglicism tolerance). Voice gate в теле `book-writer` блокирует первый `draft.md` без заполненного `voice-profile.md`. Три пути формирования: B1 (быстрое интервью), B2 (отдельная сессия `/book:voice build`), B3 (агент сам предлагает на основе плана).
 - **Личная библиотека голосов `~/.bookbench/voices/`** — per-машина, per-автор, вне плагина и вне книги. Пять команд: `/book:voice extract|save-as|import|list|build`. Голоса переносятся между книгами одной командой `/book:voice import <name>`.
 - **Импорт существующих материалов.** Сценарий B: автор кладёт чаты `claude.ai`, заметки Obsidian, черновики `.docx` — `/book:start --from-existing` или `/book:import` запускает оркестратор: классификатор разбирает фрагменты по 11 типам, синтезатор собирает в структуру книги, реестры памяти стартуют пополненными.
-- **Реестры уникальности через `memory: project` per role** для 5 ролей цикла. Двухуровневая компакция (live `MEMORY.md` + `archive/chapters-N-M.md` с порогом 10 KB) — на 50-й главе live-реестр всё ещё ≤10 KB.
+- **Реестры уникальности через `memory: project` per role** для 5 ролей цикла. Двухуровневая компакция (live `MEMORY.md` + `archive/sections-N-M.md` с порогом 10 KB) — на 50-й главе live-реестр всё ещё ≤10 KB.
 - **Трёхуровневая архитектура.** Код плагина (`${CLAUDE_PLUGIN_ROOT}`, стирается при `/plugin update`) + данные плагина (`${CLAUDE_PLUGIN_DATA}`, переживает обновления) + папка книги (`.book/`, собственность автора, не трогается обновлениями).
-- **Каскад настроек.** `defaults.yaml` (плагин) → `settings.yaml` (пользователь) → `.book/config.yaml` (книга) → override per-chapter в `spec.md`.
+- **Каскад настроек.** `defaults.yaml` (плагин) → `settings.yaml` (пользователь) → `.book/config.yaml` (книга) → override per-section в `spec.md`.
 - **Гайдлайны команды.** `.book/agent-guidelines/<role>/` — индивидуальность книги (запрещённые фразы, доверенные источники, маркетинговые голоса). Никогда не трогаются обновлениями плагина. Принцип Universal Body + Local Guidelines (`D-15`).
 - **`book-tuner` (9-я роль).** Анализирует `TUNING-LOG.md` и `REJECTIONS-LOG.md`, находит систематические паттерны (≥3 повторений), предлагает правки гайдлайнов и конфига. Команды: `/book:tune`, `/book:tune apply <id>`, `/book:tune:guidelines`, `/book:tune:workflow`.
-- **`bookbench-evolver`** — dev-команда для меж-книжного анализа. Видна только в local-dev режиме. Команды: `/book:evolve propose|apply|status`. Структурные гарантии приватности: не читает `chapters/`, `inputs/`, `intel/`, `debug/`, `agent-memory/MEMORY.md`. Уважает флаги `private: true` и `include_in_evolver: false`.
+- **`bookbench-evolver`** — dev-команда для меж-книжного анализа. Видна только в local-dev режиме. Команды: `/book:evolve propose|apply|status`. Структурные гарантии приватности: не читает `sections/`, `inputs/`, `intel/`, `debug/`, `agent-memory/MEMORY.md`. Уважает флаги `private: true` и `include_in_evolver: false`.
 - **40+ команд** в slash-namespace `/book:`:
   - **Жизненный цикл книги:** `/book:start`, `/book:status`, `/book:resume`, `/book:next`, `/book:run`, `/book:update`, `/book:help`.
-  - **Планирование:** `/book:plan-book`, `/book:plan-chapter <N>`, `/book:discuss-chapter <N>`.
-  - **Написание:** `/book:write-chapter <N>` + 4 atomic подкоманды.
+  - **Планирование:** `/book:plan-book`, `/book:plan-section <N>`, `/book:discuss-chapter <N>`.
+  - **Написание:** `/book:write-section <N>` + 4 atomic подкоманды.
   - **Аудит:** `/book:audit-chapter <N>`, `/book:audit-book`, `/book:re-edit-chapter <N>`.
   - **Импорт:** `/book:import`, `/book:resolve <variant-id>`.
   - **Реестр книг:** `/book:list`, `/book:doctor`, `/book:register`, `/book:archive`, `/book:forget`.
@@ -179,7 +240,7 @@ _n/a — первый публичный релиз._
 
 ### Security
 
-- **Privacy guarantees evolver'а — структурные**, не «обещанные». Запретные пути (`chapters/`, `inputs/`, `intel/`, `debug/`, `agent-memory/MEMORY.md`) — на уровне `disallowedTools` в системном промпте `bookbench-evolver`. 4 privacy-теста в `commands/evolve.eval/`.
+- **Privacy guarantees evolver'а — структурные**, не «обещанные». Запретные пути (`sections/`, `inputs/`, `intel/`, `debug/`, `agent-memory/MEMORY.md`) — на уровне `disallowedTools` в системном промпте `bookbench-evolver`. 4 privacy-теста в `commands/evolve.eval/`.
 
 ---
 
@@ -188,7 +249,7 @@ _n/a — первый публичный релиз._
 Эти ограничения известны нам и фиксы пойдут минорными релизами 0.1.x по мере боевого использования. Подробное описание и workaround — в [`docs/faq.md`](docs/faq.md), кластер 5 «Troubleshooting».
 
 - **B-14-01:** микро-цикл главы не прогонялся на реальной главе автора до релиза (только simulation). Граничные случаи восстановления могут потребовать ручной правки `chapter-state.yaml`. Workaround: использовать `/book:resume`, при необходимости — `/book:debug <slug>` для persistent debug-сессии.
-- **B-14-02:** 4 privacy-теста evolver'а прогонялись только на пустых запретных папках. На реальной книге с непустыми `chapters/`, `inputs/`, `intel/`, `agent-memory/` теоретически возможны неучтённые случаи. Workaround: для конфиденциальных книг ставить `privacy.private: true` в `config.yaml`.
+- **B-14-02:** 4 privacy-теста evolver'а прогонялись только на пустых запретных папках. На реальной книге с непустыми `sections/`, `inputs/`, `intel/`, `agent-memory/` теоретически возможны неучтённые случаи. Workaround: для конфиденциальных книг ставить `privacy.private: true` в `config.yaml`.
 - **B-14-03:** `/book:research-genre` не прогонялся на реальном неизвестном жанре. Может зависать на этапе deep research при нестандартных жанрах или без интернета. Workaround: установить timeout (`--timeout 300`); сформулировать жанр ближе к известным.
 - **B-14-04:** tuner не прогонялся на реальных REJECTIONS до релиза. Может выдавать «no patterns found», когда паттерны есть. Workaround: использовать `/book:tune` напрямую (внутри книги) — на одиночной книге алгоритмы те же.
 - **B-14-05:** hook anti-ai-cliche не настраивался на реальных текстах глав. Возможны false positives на правомерных конструкциях. Workaround: добавить исключения в `agent-guidelines/writer/forbidden-phrases.md` → секция `# Allowed (overrides default block)`.

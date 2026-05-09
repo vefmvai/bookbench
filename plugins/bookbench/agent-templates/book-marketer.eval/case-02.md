@@ -2,7 +2,7 @@
 
 ## Input
 
-Coordinator calls marketer for chapter 7. The chapter is about "data flow in
+Coordinator calls marketer for section 7. The section is about "data flow in
 distributed systems". The first generated Midjourney prompt accidentally contains
 "abstract data flow" (which is on the visual-blacklist).
 

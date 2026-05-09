@@ -1,5 +1,5 @@
 ---
-chapter_id: TBD
+section_id: TBD
 packaged_by: book-marketer
 packaged: TBD
 title_variants:
@@ -10,9 +10,9 @@ hook_phrase: null                     # ≤120 chars
 visual_motifs_used: []
 ---
 
-<!-- автогенерируется при /book:write-chapter в Phase 6 (если workflow.chapter_loop.enable_marketer: true); не загружается субагентами в следующие главы — только маркетолог читает свою прошлую marketing.md для проверки повторов -->
+<!-- автогенерируется при /book:write-section в Phase 6 (если workflow.section_loop.enable_marketer: true); не загружается субагентами в следующие главы — только маркетолог читает свою прошлую marketing.md для проверки повторов -->
 
-# Chapter marketing pack
+# Section marketing pack
 
 ## Hook phrase
 
@@ -42,4 +42,4 @@ visual_motifs_used: []
 
 ## Visual motifs used
 
-(Listed for the marketer's MEMORY — to avoid repetition across chapters.)
+(Listed for the marketer's MEMORY — to avoid repetition across sections.)

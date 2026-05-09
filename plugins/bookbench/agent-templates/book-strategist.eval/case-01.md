@@ -1,29 +1,29 @@
-# Case 01: Compose spec.md for a chapter on a generic topic
+# Case 01: Compose spec.md for a section on a generic topic
 
 ## Input
 
 Coordinator calls strategist with `<files_to_read>`:
-- chapters/004/ does not exist yet
+- sections/004/ does not exist yet
 - agent-guidelines/strategist/README.md (with default contents)
 - context/parameters.md (genre: popular-science, target-length: ~3500 words)
 - context/red-thread-keywords.md
 - context/glossary.md
-- chapters/003/summary.md (previous chapter)
-- agent-memory/strategist/MEMORY.md (with one prior chapter template
+- sections/003/summary.md (previous section)
+- agent-memory/strategist/MEMORY.md (with one prior section template
   used twice in a row: "TED-3-act")
 
-Prompt: "Plan chapter 4 — topic 'Photosynthesis: how plants harvest light'.
-Continues from chapter 3 (basics of cell biology)."
+Prompt: "Plan section 4 — topic 'Photosynthesis: how plants harvest light'.
+Continues from section 3 (basics of cell biology)."
 
 ## Expected behaviors
 
 - Reads guidelines via index-driven protocol (README first, then referenced files).
 - Reads context, prior summary, own memory.
-- Writes chapters/004/spec.md with all required sections: frontmatter,
+- Writes sections/004/spec.md with all required sections: frontmatter,
   goals (≥2 bullets), hook strategy with technique chosen, three theses,
-  expected word count, red-thread positioning, callback to chapter 3,
+  expected word count, red-thread positioning, callback to section 3,
   S-NNN locked decisions, NEEDS_FACTCHECK markers (≥1 for a science topic).
-- Selects a chapter_template DIFFERENT from "TED-3-act" (since memory shows
+- Selects a section_template DIFFERENT from "TED-3-act" (since memory shows
   consecutive_with_same is at threshold).
 - Updates strategist/MEMORY.md: appends concept entries, plot connector,
   template usage, red-thread tracking deltas.
@@ -31,10 +31,10 @@ Continues from chapter 3 (basics of cell biology)."
 
 ## Acceptance criteria
 
-- chapters/004/spec.md exists with frontmatter and required sections.
-- chapter_template ≠ "TED-3-act".
+- sections/004/spec.md exists with frontmatter and required sections.
+- section_template ≠ "TED-3-act".
 - ≥1 [NEEDS_FACTCHECK] block.
-- "Связка с предыдущей главой" callbacks chapter-3 by name.
+- "Связка с предыдущим разделом" callbacks section-3 by name.
 - agent-memory/strategist/MEMORY.md has ≥3 new entries.
 - No mentor-mode tokens appear in spec.md.
 
@@ -47,4 +47,4 @@ Continues from chapter 3 (basics of cell biology)."
 ## Notes
 
 Tests Procedure FORM-SPEC end-to-end with the consecutive-template variation
-rule and the cross-chapter cohesion rule.
+rule and the cross-section cohesion rule.

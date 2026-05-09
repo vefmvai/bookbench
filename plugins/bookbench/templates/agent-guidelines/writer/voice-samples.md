@@ -1,6 +1,6 @@
 # Voice samples
 
-(Author fills with 3+ passages of 200-500 words each from their own writing. The writer reads these at chapter start to calibrate voice.)
+(Author fills with 3+ passages of 200-500 words each from their own writing. The writer reads these at section start to calibrate voice.)
 
 ## Sample 1 (TBD)
 

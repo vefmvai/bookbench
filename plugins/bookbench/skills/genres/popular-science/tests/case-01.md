@@ -2,7 +2,7 @@
 
 ## Input
 
-A chapter spec for a popular-science chapter on a generic topic. The skill
+A section spec for a popular-science section on a generic topic. The skill
 is invoked to set 8 genre variables (target audience level, density of
 analogies, factcheck rigour, ...).
 

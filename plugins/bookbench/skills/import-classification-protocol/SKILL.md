@@ -25,7 +25,7 @@ Every fragment of an imported source is classified into exactly one of:
 | `source` | `.book/agent-guidelines/factchecker/trusted-sources.md` |
 | `hook-phrase` | `.book/.claude/agent-memory/marketer/MEMORY.md` |
 | `visual-reference` | `.book/.claude/agent-memory/marketer/MEMORY.md` |
-| `other` | flagged for synthesizer review; may become a fragment of a chapter draft |
+| `other` | flagged for synthesizer review; may become a fragment of a section draft |
 
 ## Output format
 

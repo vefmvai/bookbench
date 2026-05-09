@@ -48,21 +48,21 @@ Required top-level keys:
 - `bookbench_version` (string)
 - `genre` (string)
 - `book_level` (list)
-- `chapter_loop` (list)
+- `section_loop` (list)
 - `cross_cutting` (list, may be empty)
 - `post_book` (list)
 
 Optional:
 
 - `inherits_skill` (string)
-- `chapter_overrides` (map)
-- `chapter_loop_skip_chapters` (list of ints)
-- `chapter_loop_resume_at` (int)
+- `section_overrides` (map)
+- `section_loop_skip_sections` (list of ints)
+- `section_loop_resume_at` (int)
 
 ```bash
 # Best-effort YAML key extraction
 HAS_BOOK_LEVEL=$(awk '/^book_level:/ {print 1; exit}' .book/workflow.md || echo 0)
-HAS_CHAPTER_LOOP=$(awk '/^chapter_loop:/ {print 1; exit}' .book/workflow.md || echo 0)
+HAS_SECTION_LOOP=$(awk '/^section_loop:/ {print 1; exit}' .book/workflow.md || echo 0)
 HAS_POST_BOOK=$(awk '/^post_book:/ {print 1; exit}' .book/workflow.md || echo 0)
 ```
 
@@ -91,7 +91,7 @@ For each `requires:` field, confirm referenced blocks exist either above in the 
 [HIGH] line <L>: block '<X>' requires '<Y>' but '<Y>' is not defined in the workflow.
 ```
 
-For `chapter_overrides` keys, confirm they are valid chapter numbers (positive integers, ≤ ROADMAP chapter count).
+For `section_overrides` keys, confirm they are valid section numbers (positive integers, ≤ ROADMAP section count).
 
 ### Step 5 — Render report
 
@@ -104,7 +104,7 @@ Blocks referenced: N
   • valid:   M
   • unknown: K
 Gates:     P
-Sections:  ☑️ book_level  ☑️ chapter_loop  ☑️ post_book  ☑️ cross_cutting
+Sections:  ☑️ book_level  ☑️ section_loop  ☑️ post_book  ☑️ cross_cutting
 
 Issues:
   [CRITICAL] ...

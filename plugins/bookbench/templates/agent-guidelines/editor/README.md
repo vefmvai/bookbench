@@ -4,7 +4,7 @@
 
 ## Index
 
-- `cohesion-rules.md` — connectivity rules between chapters.
+- `cohesion-rules.md` — connectivity rules between sections.
 - `author-deviations.md` — accepted style deviations the editor must not "fix".
 
 ## What goes here
@@ -15,4 +15,4 @@
 ## What does NOT go here
 
 - The 46 anti-cliche corpus → `skills/anti-ai-cliche/`.
-- Per-chapter editing decisions → editor's MEMORY.md.
+- Per-section editing decisions → editor's MEMORY.md.

@@ -1,14 +1,14 @@
-# Base-methodology evaluation case 01: invariants are present in any chapter
+# Base-methodology evaluation case 01: invariants are present in any section
 
 ## Input
 
-A draft.md from a hypothetical popular-science chapter on photosynthesis,
+A draft.md from a hypothetical popular-science section on photosynthesis,
 roughly 3000 words.
 
 ## Expected behaviors
 
 - Skill is consulted by writer / editor.
-- Output identifies whether the chapter satisfies the 23 base-methodology
+- Output identifies whether the section satisfies the 23 base-methodology
   invariants (concrete-anchor frequency, hook structure, hedging discipline,
   registry uniqueness, ...).
 - Returns a structured list of findings, not free-form prose.

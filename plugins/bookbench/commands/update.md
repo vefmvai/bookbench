@@ -1,5 +1,5 @@
 ---
-description: Selectively updates the local copies of nine agent bodies and the anti-AI-cliche hook script in the current book to match the latest plugin version. Performs three-way merge with backup, asks the author per file, never touches guidelines, registries, chapters or context. By default does NOT touch workflow.md (UX-08); --migrate-workflow opts in. D-21 from stage 6.
+description: Selectively updates the local copies of nine agent bodies and the anti-AI-cliche hook script in the current book to match the latest plugin version. Performs three-way merge with backup, asks the author per file, never touches guidelines, registries, sections or context. By default does NOT touch workflow.md (UX-08); --migrate-workflow opts in. D-21 from stage 6.
 argument-hint: "[--major] [--migrate-workflow] [--from-local-dev <path>]"
 allowed-tools: [Read, Write, Edit, Bash, Glob, AskUserQuestion]
 ---
@@ -210,7 +210,7 @@ Recommended next:
 
 ### Constitutional rules
 
-- **MUST** never touch `.book/agent-guidelines/`, `.book/agent-memory/`, `.book/context/`, `.book/chapters/`, `.book/config.yaml` content (except `bookbench_version` field), or any log file.
+- **MUST** never touch `.book/agent-guidelines/`, `.book/agent-memory/`, `.book/context/`, `.book/sections/`, `.book/config.yaml` content (except `bookbench_version` field), or any log file.
 - **MUST** ask per-file, not batch. The author retains veto on every file.
 - **MUST** create a backup before any overwrite. The backup includes the previous version of each replaced file.
 - **MUST** require `--major` to cross a major version boundary.

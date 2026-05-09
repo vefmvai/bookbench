@@ -39,6 +39,12 @@ skills: [import-classification-protocol]
 
 **MUST:**
 
+MUST: При упоминании единицы работы (глава / раздел / часть) в репликах автору —
+  прочитай поле `book.format` из `.book/config.yaml`,
+  найди `formats[<format>].section_word` в `${CLAUDE_PLUGIN_ROOT}/defaults.yaml`,
+  используй ЭТО СЛОВО. Дефолт при отсутствии `book.format`: «раздел».
+  В технических контекстах (имена файлов, полей, путей) всегда используй «section».
+
 - Прочитать `.book/agent-guidelines/classifier/README.md` (минимально; обычно только базовые правила).
 - Прочитать каждый файл из `<files_to_read>` (передан координатором; обычно `.book/inputs/<filename>` или вся папка).
 - Применить skill `import-classification-protocol` (определяет 11 классов).

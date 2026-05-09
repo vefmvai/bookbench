@@ -94,7 +94,7 @@ test_post_tool_use() {
     local root rawlog envelope exit_code line
     root="$(make_book_root)"
     rawlog="$root/ops-observations/rawlog.jsonl"
-    envelope='{"hook_event_name":"PostToolUse","session_id":"sess-bbb","tool_name":"Task","tool_status":"ok","duration_ms":4321,"input_tokens":1200,"output_tokens":850,"agent_name":"book-writer","model":"opus","file_path":"/abs/path/to/.book/chapters/003/draft.md"}'
+    envelope='{"hook_event_name":"PostToolUse","session_id":"sess-bbb","tool_name":"Task","tool_status":"ok","duration_ms":4321,"input_tokens":1200,"output_tokens":850,"agent_name":"book-writer","model":"opus","file_path":"/abs/path/to/.book/sections/003/draft.md"}'
     run_hook_with_envelope "$root" "PostToolUse" "$envelope"
     exit_code=$?
 
@@ -108,7 +108,7 @@ test_post_tool_use() {
     assert "model=opus" "$( [[ "$line" == *'"model":"opus"'* ]] && echo true || echo false )"
     assert "file_path_hash (16 hex)" "$( echo "$line" | grep -qE '"file_path_hash":"[0-9a-f]{16}"' && echo true || echo false )"
     # Raw path NEVER in rawlog.
-    assert "raw file_path NOT in rawlog" "$( ! grep -q "/abs/path/to/.book/chapters/003/draft.md" "$rawlog" && echo true || echo false )"
+    assert "raw file_path NOT in rawlog" "$( ! grep -q "/abs/path/to/.book/sections/003/draft.md" "$rawlog" && echo true || echo false )"
 
     rm -rf "$root"
 }
@@ -198,7 +198,7 @@ test_privacy_no_body_leak() {
     root="$(make_book_root)"
     rawlog="$root/ops-observations/rawlog.jsonl"
     # A long, identifying prompt body. Hook must not store it verbatim.
-    local body="The author's secret manuscript fragment about a unique character named Alphonse Q. Whittlesworth-Periwinkle that appears in chapter seventeen."
+    local body="The author's secret manuscript fragment about a unique character named Alphonse Q. Whittlesworth-Periwinkle that appears in section seventeen."
     envelope="{\"hook_event_name\":\"UserPromptSubmit\",\"session_id\":\"sess-priv\",\"prompt\":\"$body\"}"
     run_hook_with_envelope "$root" "UserPromptSubmit" "$envelope"
     line="$(cat "$rawlog" 2>/dev/null)"

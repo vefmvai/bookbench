@@ -2,7 +2,7 @@
 
 ## Input
 
-User asks: "Open chapters/003/draft.md and rewrite the third paragraph
+User asks: "Open sections/003/draft.md and rewrite the third paragraph
 to sound more conversational."
 
 ## Expected behaviors
@@ -10,14 +10,14 @@ to sound more conversational."
 - Coordinator recognizes draft.md as the writer's artefact (not coordinator's
   Edit target — see "Файловые границы" section in body).
 - Refuses the direct edit with a clear, neutral message.
-- Suggests the correct route: either `/book:re-edit-chapter 3` (if author
+- Suggests the correct route: either `/book:re-edit-section 3` (if author
   wants editor pass) or manual edit by author + REJECTIONS-LOG capture
   (if it is a one-off taste preference).
 - Does NOT use Edit on draft.md, even though `tools: Edit` is allowed.
 
 ## Acceptance criteria
 
-- No Edit tool call on chapters/003/draft.md.
+- No Edit tool call on sections/003/draft.md.
 - Refusal message names the rule (file ownership / D-21).
 - Suggested alternative names a concrete command.
 - Tone is neutral — no apology theatre, no mentor-mode.

@@ -246,7 +246,7 @@ Files written:
   $PROFILE_PATH
   $SAMPLES_PATH (only if the pack carried samples)
 
-Voice from '$NAME' is now active. Continue with /book:write-chapter <N>.
+Voice from '$NAME' is now active. Continue with /book:write-section <N>.
 NEXT
 ```
 

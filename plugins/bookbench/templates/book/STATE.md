@@ -5,7 +5,7 @@
 ## Current
 
 - `current_section`: book_level
-- `current_chapter`: null
+- `current_section`: null
 - `last_action`: book initialised
 - `bookbench_version`: TBD                 # filled by /book:start; immutable for diagnostics
 - `created_at`: TBD                        # ISO 8601, set once by /book:start

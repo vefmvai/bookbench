@@ -1,6 +1,6 @@
 ---
-description: Activates the book-observer agent to analyse the latest Claude Code session. Reads .book/ops-observations/rawlog.jsonl plus the matching session transcript, classifies author replies as content vs process, writes abstracted notes to chapter-N-process-notes.md and chapter-N-content-notes.md, and promotes recurring patterns to upgrade-candidates.md. Optional --chapter N restricts the scope; otherwise the whole session is processed.
-argument-hint: "[--chapter N]"
+description: Activates the book-observer agent to analyse the latest Claude Code session. Reads .book/ops-observations/rawlog.jsonl plus the matching session transcript, classifies author replies as content vs process, writes abstracted notes to section-N-process-notes.md and section-N-content-notes.md, and promotes recurring patterns to upgrade-candidates.md. Optional --section N restricts the scope; otherwise the whole session is processed.
+argument-hint: "[--section N]"
 allowed-tools: [Read, Write, Glob, Bash, Task]
 ---
 
@@ -9,7 +9,7 @@ allowed-tools: [Read, Write, Glob, Bash, Task]
 <purpose>
 Run the book-observer agent over the latest session's rawlog and
 transcript. Produces digested notes that feed back into the next
-chapter's writing AND seed BookBench 0.2+ upgrade candidates.
+section's writing AND seed BookBench 0.2+ upgrade candidates.
 </purpose>
 
 <!-- Stage 14.1, Wave B, T8: full implementation. -->
@@ -18,14 +18,14 @@ chapter's writing AND seed BookBench 0.2+ upgrade candidates.
 
 ```bash
 RAW="${ARGUMENTS:-}"
-CHAPTER_FILTER=""
+SECTION_FILTER=""
 
 set -- $RAW
 while [ $# -gt 0 ]; do
   case "$1" in
-    --chapter)
+    --section)
       shift
-      CHAPTER_FILTER="${1:-}"
+      SECTION_FILTER="${1:-}"
       ;;
     *)
       echo "analyze-session: unknown flag '$1'" 1>&2
@@ -34,10 +34,10 @@ while [ $# -gt 0 ]; do
   shift 2>/dev/null || true
 done
 
-if [ -n "$CHAPTER_FILTER" ]; then
-  echo "analyze-session: scope limited to chapter $CHAPTER_FILTER"
+if [ -n "$SECTION_FILTER" ]; then
+  echo "analyze-session: scope limited to section $SECTION_FILTER"
 else
-  echo "analyze-session: scope = whole session (no --chapter filter)"
+  echo "analyze-session: scope = whole session (no --section filter)"
 fi
 ```
 
@@ -59,14 +59,14 @@ CANDIDATES="$BOOK_ROOT/ops-observations/upgrade-candidates.md"
 
 if [ ! -f "$RAWLOG" ]; then
   echo "analyze-session: $RAWLOG does not exist yet."
-  echo "  No telemetry has been recorded. Run at least one /book:write-chapter first."
+  echo "  No telemetry has been recorded. Run at least one /book:write-section first."
   exit 0
 fi
 
 LINES=$(wc -l < "$RAWLOG" | tr -d ' ')
 if [ "$LINES" -lt 3 ]; then
   echo "analyze-session: rawlog has only $LINES line(s) — too thin for analysis."
-  echo "  Continue working on a chapter; the observer needs more data."
+  echo "  Continue working on a section; the observer needs more data."
   exit 0
 fi
 
@@ -100,14 +100,14 @@ fi
 ## Step 4 — Pre-flight existing notes
 
 ```bash
-EXISTING_NOTES=$(find "$BOOK_ROOT/ops-observations" -name "chapter-*-process-notes.md" -o -name "chapter-*-content-notes.md" 2>/dev/null | wc -l | tr -d ' ')
-echo "analyze-session: existing chapter notes = $EXISTING_NOTES file(s)"
+EXISTING_NOTES=$(find "$BOOK_ROOT/ops-observations" -name "section-*-process-notes.md" -o -name "section-*-content-notes.md" 2>/dev/null | wc -l | tr -d ' ')
+echo "analyze-session: existing section notes = $EXISTING_NOTES file(s)"
 ```
 
 ## Step 5 — Compose Task input for book-observer
 
 The observer needs the rawlog path, the (optional) transcript path,
-the existing candidates file, and the chapter filter.
+the existing candidates file, and the section filter.
 
 The Task call below is the explicit invocation form. The observer
 reads only the files declared in `files_to_read`; its `tools` set
@@ -126,23 +126,23 @@ Task(
     rawlog_path:           ${RAWLOG}
     transcript_path:       ${TRANSCRIPT_PATH:-<none — analyse rawlog metadata only>}
     existing_candidates:   ${CANDIDATES}
-    chapter_filter:        ${CHAPTER_FILTER:-<all>}
+    section_filter:        ${SECTION_FILTER:-<all>}
     book_root:             ${BOOK_ROOT}
 
   Files you may Read (whitelist):
     - ${RAWLOG}
     - ${CANDIDATES}
-    - ${BOOK_ROOT}/ops-observations/chapter-*-process-notes.md
-    - ${BOOK_ROOT}/ops-observations/chapter-*-content-notes.md
+    - ${BOOK_ROOT}/ops-observations/section-*-process-notes.md
+    - ${BOOK_ROOT}/ops-observations/section-*-content-notes.md
     - ${TRANSCRIPT_PATH}      # only if non-empty
 
   Files you may Write (whitelist):
-    - ${BOOK_ROOT}/ops-observations/chapter-${CHAPTER_FILTER:-N}-process-notes.md
-    - ${BOOK_ROOT}/ops-observations/chapter-${CHAPTER_FILTER:-N}-content-notes.md
+    - ${BOOK_ROOT}/ops-observations/section-${SECTION_FILTER:-N}-process-notes.md
+    - ${BOOK_ROOT}/ops-observations/section-${SECTION_FILTER:-N}-content-notes.md
     - ${CANDIDATES}
 
   Apply your privacy Constitution literally:
-    - NEVER read ${BOOK_ROOT}/chapters/, ${BOOK_ROOT}/inputs/, or ${BOOK_ROOT}/agent-memory/.
+    - NEVER read ${BOOK_ROOT}/sections/, ${BOOK_ROOT}/inputs/, or ${BOOK_ROOT}/agent-memory/.
     - NEVER quote author replies verbatim; abstract every reply.
     - NEVER record proper nouns from the book.
 
@@ -157,8 +157,8 @@ Task(
 
 After the Task call returns, the model should:
 
-1. Confirm `chapter-<N>-process-notes.md` and `chapter-<N>-content-notes.md`
-   exist (or `session-<session_id>-*` if no chapter filter).
+1. Confirm `section-<N>-process-notes.md` and `section-<N>-content-notes.md`
+   exist (or `session-<session_id>-*` if no section filter).
 2. Confirm `upgrade-candidates.md` was modified (compare mtime to start time).
 3. If the observer returned `Privacy self-check: clean` — proceed to Step 8.
    If the observer returned any `dirty` flag — surface it loudly to the
@@ -170,7 +170,7 @@ After the Task call returns, the model should:
 Append a one-line entry to `.book/STATE.md` History section:
 
 ```text
-- <ISO timestamp> | /book:analyze-session ${CHAPTER_FILTER:+--chapter $CHAPTER_FILTER}
+- <ISO timestamp> | /book:analyze-session ${SECTION_FILTER:+--section $SECTION_FILTER}
   events_analysed=$LINES
   notes_written=2
   candidates_added=<N>
@@ -183,14 +183,14 @@ Append a one-line entry to `.book/STATE.md` History section:
 analyze-session: done.
 
 Files updated:
-  - .book/ops-observations/chapter-${CHAPTER_FILTER:-N}-process-notes.md
-  - .book/ops-observations/chapter-${CHAPTER_FILTER:-N}-content-notes.md
+  - .book/ops-observations/section-${SECTION_FILTER:-N}-process-notes.md
+  - .book/ops-observations/section-${SECTION_FILTER:-N}-content-notes.md
   - .book/ops-observations/upgrade-candidates.md (if any new candidates promoted)
 
 Suggested next steps:
-  - Read the chapter notes to confirm the observer caught the right signals.
+  - Read the section notes to confirm the observer caught the right signals.
   - Inspect upgrade-candidates.md for new high-severity entries.
-  - Continue writing the next chapter; telemetry recording is automatic.
+  - Continue writing the next section; telemetry recording is automatic.
 ```
 
 ## Notes
@@ -200,7 +200,7 @@ Suggested next steps:
   once we have data on false-positive rates.
 - The observer never modifies anything outside `.book/ops-observations/`.
   Even if you ran this command from the wrong directory, it cannot
-  damage existing chapters.
+  damage existing sections.
 - Privacy is enforced by the observer's Constitution (its `tools` set
   excludes `Edit`, `Bash`, `WebSearch`, `WebFetch`, `Task`,
   `AskUserQuestion`). The narrow `tools: Read, Write, Glob, Grep` set

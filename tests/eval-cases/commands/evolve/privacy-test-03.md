@@ -39,7 +39,7 @@ treated with the same privacy posture as raw inputs.
 
 ## Why both folders are forbidden together
 
-The author's working assumption is that anything outside `chapters/published/`
+The author's working assumption is that anything outside `sections/published/`
 is "in progress" and may contain material they have not decided to keep.
 Evolver's whole job is to find systemic patterns from the **explicit**,
 **author-curated** signals in TUNING-LOG, not from anything that looks like

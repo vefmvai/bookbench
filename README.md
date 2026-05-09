@@ -89,7 +89,7 @@ BookBench разделяет три уровня данных, чтобы обн
 
 ### Микро-цикл главы — пять фаз
 
-Сердце фреймворка. Команда `/book:write-chapter <N>` запускает цепочку из пяти фаз с двумя гейтами автора и двумя петлями верификации:
+Сердце фреймворка. Команда `/book:write-section <N>` запускает цепочку из пяти фаз с двумя гейтами автора и двумя петлями верификации:
 
 ```
 spec.md (стратег)
@@ -109,7 +109,7 @@ summary.md (автогенерация)
    ✋ финальный обзор главы
 ```
 
-Внутри пяти фаз — полностью автономно. Гейты автора срабатывают только в двух точках цикла: после `spec.md` (утверждение ТЗ) и после `marketing.md` (финальный обзор). Это снимает с автора когнитивную нагрузку «вручную переключать роли», характерную для работы в `claude.ai web`. Полный гайд по циклу — в [`docs/chapter-cycle.md`](docs/chapter-cycle.md).
+Внутри пяти фаз — полностью автономно. Гейты автора срабатывают только в двух точках цикла: после `spec.md` (утверждение ТЗ) и после `marketing.md` (финальный обзор). Это снимает с автора когнитивную нагрузку «вручную переключать роли», характерную для работы в `claude.ai web`. Полный гайд по циклу — в [`docs/section-cycle.md`](docs/section-cycle.md).
 
 ### Голос автора
 
@@ -135,7 +135,7 @@ claude
 > /book:start
 ```
 
-После `/book:start` команда задаст несколько вопросов (жанр, рабочее название, аудитория, объём, два стартовых сценария — см. ниже) и развернёт в папке всё нужное: `.book/PROJECT.md`, `.book/ROADMAP.md`, шаблоны 9 субагентов в `.book/.claude/agents/`, гайдлайны, hooks, реестры памяти. Дальше — `/book:plan-book`, `/book:plan-chapter 1`, `/book:write-chapter 1`.
+После `/book:start` команда задаст несколько вопросов (жанр, рабочее название, аудитория, объём, два стартовых сценария — см. ниже) и развернёт в папке всё нужное: `.book/PROJECT.md`, `.book/ROADMAP.md`, шаблоны 9 субагентов в `.book/.claude/agents/`, гайдлайны, hooks, реестры памяти. Дальше — `/book:plan-book`, `/book:plan-section 1`, `/book:write-section 1`.
 
 Полный пошаговый прогон «первые 30 минут» — в [`docs/quickstart.md`](docs/quickstart.md).
 
@@ -151,8 +151,8 @@ claude
 | `/book:status` | Текущее состояние книги: на какой главе, сколько готово |
 | `/book:next` | Что делать следующим шагом (умная подсказка по workflow) |
 | `/book:plan-book` | Стратег предлагает план книги (chapter list) |
-| `/book:plan-chapter <N>` | Стратег пишет ТЗ главы → `spec.md` |
-| `/book:write-chapter <N>` | Полный 5-фазный цикл главы (writer → factcheck → edit → market) |
+| `/book:plan-section <N>` | Стратег пишет ТЗ главы → `spec.md` |
+| `/book:write-section <N>` | Полный 5-фазный цикл главы (writer → factcheck → edit → market) |
 | `/book:tune` | Tuner анализирует замечания и предлагает правки гайдлайнов |
 | `/book:voice build` | Отдельная сессия для построения профиля голоса |
 | `/book:audit-book` | Аудит всей книги (red thread, cross-references, ИИ-клише) |
@@ -178,8 +178,8 @@ BookBench принимает автора с любого старта — эт�
 - **[`docs/architecture.md`](docs/architecture.md)** — трёхуровневая архитектура; полная ASCII-схема и Mermaid; контракт «не трогать .book/».
 - **[`docs/quickstart.md`](docs/quickstart.md)** — первые 30 минут с псевдо-диалогами для обоих сценариев.
 - **[`docs/installation.md`](docs/installation.md)** — три режима установки (local-dev / GitHub release / Marketplace), перенос между машинами.
-- **[`docs/chapter-cycle.md`](docs/chapter-cycle.md)** — полный гайд по 5-фазному циклу главы; что в каждом артефакте; гейты; recovery от ошибок.
-- **[`docs/customization.md`](docs/customization.md)** — каскад настроек (config / guidelines / tuner); override per-chapter.
+- **[`docs/section-cycle.md`](docs/section-cycle.md)** — полный гайд по 5-фазному циклу главы; что в каждом артефакте; гейты; recovery от ошибок.
+- **[`docs/customization.md`](docs/customization.md)** — каскад настроек (config / guidelines / tuner); override per-section.
 - **[`docs/voice-management.md`](docs/voice-management.md)** — голос автора, шестипараметрическая модель, личная библиотека `~/.bookbench/voices/`.
 - **[`docs/models-and-subscriptions.md`](docs/models-and-subscriptions.md)** — какая модель работает на каждом субагенте; три профиля (`budget` / `balanced` / `quality`); подбор под план Claude.
 - **[`docs/dev-mode.md`](docs/dev-mode.md)** — local-dev режим; `/book:evolve`; гарантии приватности.

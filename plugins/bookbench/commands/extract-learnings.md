@@ -17,7 +17,7 @@ Help the author look back on the project: what stuck, what got rejected, which p
 - `.book/TUNING-LOG.md`, `REJECTIONS-LOG.md`, `UPDATE-LOG.md`, `STATE.md`.
 - All `.book/agent-guidelines/<role>/*.md` (current state).
 - `.book/context/audit-book-report.md` (if exists).
-- All `.book/chapters/*/audit-report.md` (if exist).
+- All `.book/sections/*/audit-report.md` (if exist).
 
 ## Outputs
 
@@ -33,11 +33,11 @@ Eight-step pattern with one Task delegation to `book-tuner` in cross-book retros
 ```bash
 [ -d .book ] || { echo "No .book/ directory."; exit 0; }
 
-# Count chapters with edited.md (proxy for "book is done enough to extract learnings")
-N_CHAPTERS=$(find .book/chapters -maxdepth 2 -name 'edited.md' -type f | wc -l | tr -d ' ')
-if [ "$N_CHAPTERS" -lt 3 ]; then
-  echo "Warning: only $N_CHAPTERS chapters finished — learnings will be thin."
-  echo "Recommended: run /book:extract-learnings after >= 3 chapters."
+# Count sections with edited.md (proxy for "book is done enough to extract learnings")
+N_SECTIONS=$(find .book/sections -maxdepth 2 -name 'edited.md' -type f | wc -l | tr -d ' ')
+if [ "$N_SECTIONS" -lt 3 ]; then
+  echo "Warning: only $N_SECTIONS sections finished — learnings will be thin."
+  echo "Recommended: run /book:extract-learnings after >= 3 sections."
 fi
 ```
 
@@ -47,11 +47,11 @@ Present an `AskUserQuestion`:
 
 - Title: «Extract learnings from this book?»
 - Body:
-  - `Chapters with edited.md: <N_CHAPTERS>`
+  - `Sections with edited.md: <N_SECTIONS>`
   - `Output:                  .book/context/learnings.md`
   - `TUNING-LOG entries:      <count>`
   - `REJECTIONS-LOG entries:  <count>`
-  - Note: «Read-only with respect to chapters and guidelines. Takes ~2-5 minutes.»
+  - Note: «Read-only with respect to sections and guidelines. Takes ~2-5 minutes.»
 - Options:
   - `Run extraction` — proceed.
   - `Cancel` — exit.
@@ -98,7 +98,7 @@ Task(
        «for the next memoir, avoid X».
 
     Constraints:
-      • Read-only with respect to chapter content. Do NOT modify any chapter
+      • Read-only with respect to section content. Do NOT modify any section
         file. You may only WRITE to .book/context/learnings.md.
       • Cite specific TUNING/REJECTIONS ids when referring to past decisions.
       • Be concrete: 1-2 sentence bullets, not paragraphs.
@@ -163,10 +163,10 @@ Recommended next:
 
 ### Constitutional rules
 
-- **MUST** be read-only with respect to chapters and guidelines. Only `.book/context/learnings.md` is written.
+- **MUST** be read-only with respect to sections and guidelines. Only `.book/context/learnings.md` is written.
 - **MUST** delegate to `book-tuner` (it is the role with the right system prompt for analysis).
 - **MUST** not propose changes to guidelines from this command — that is `/book:tune`.
 - **NEVER** invoke `/book:evolve` automatically — the author decides explicitly.
-- **NEVER** read inside `chapters/*/draft.md` or `factcheck.md` (only `audit-report.md` and aggregate logs).
+- **NEVER** read inside `sections/*/draft.md` or `factcheck.md` (only `audit-report.md` and aggregate logs).
 
 </execution>

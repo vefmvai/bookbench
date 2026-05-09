@@ -62,7 +62,7 @@ privacy:
 
 ui:
   default_voice_strictness: standard
-  default_chapter_target_chars: 20000
+  default_section_target_chars: 20000
 
 scan_paths:
   paths: []           # e.g. [/Users/me/Books, /Users/me/Documents/Writing]

@@ -7,9 +7,9 @@ description: Распознаёт 46 типовых паттернов LLM-сг�
 
 ## When to use
 
-This skill is injected into `book-writer` and `book-editor` and consulted whenever they touch chapter prose (`draft.md`, `edited.md`, `marketing.md`). It is the semantic layer of the three-tier defence; the mechanical layer is the post-tool-use hook script and the override layer is in `.book/agent-guidelines/<role>/forbidden-phrases.md`.
+This skill is injected into `book-writer` and `book-editor` and consulted whenever they touch section prose (`draft.md`, `edited.md`, `marketing.md`). It is the semantic layer of the three-tier defence; the mechanical layer is the post-tool-use hook script and the override layer is in `.book/agent-guidelines/<role>/forbidden-phrases.md`.
 
-Activate this skill at three moments in the chapter micro-cycle:
+Activate this skill at three moments in the section micro-cycle:
 
 1. Phase 2 — writer self-check after each 5000 chars (humanity test questions 1–5).
 2. Phase 4 — editor double-pass audit before producing `edited.md`.
@@ -70,11 +70,11 @@ pattern_<id>:
   level: block|warn|info
 ```
 
-Per-chapter overrides go into `chapters/<N>/spec.md` frontmatter under `anti_cliche_overrides:`.
+Per-section overrides go into `sections/<N>/spec.md` frontmatter under `anti_cliche_overrides:`.
 
 ## Hook integration
 
-The mechanical layer is the hook script `templates/hooks/anti-ai-cliche-lint.sh` (copied to `.book/.hooks/` at `/book:start`). It runs PostToolUse on `Write|Edit` for chapter artefacts. Reaction policy:
+The mechanical layer is the hook script `templates/hooks/anti-ai-cliche-lint.sh` (copied to `.book/.hooks/` at `/book:start`). It runs PostToolUse on `Write|Edit` for section artefacts. Reaction policy:
 
 - `block` (exit 2) — Write is cancelled; the model rewrites.
 - `warn` (exit 0 with stderr) — Write proceeds; the model sees a warning and decides.

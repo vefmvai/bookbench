@@ -17,7 +17,7 @@ It captures **how the prose sounds** as a short paragraph plus six parameters:
 - **Anglicism tolerance** — strict / moderate / open.
 
 The full model lives in `skills/voice-profile/SKILL.md` (68 lines). The writer
-calibrates against it at the start of every chapter; the editor uses it as a
+calibrates against it at the start of every section; the editor uses it as a
 cohesion reference; the anti-cliche module reads its YAML twin
 `.book/voice-profile.yaml` to pre-screen for register drift.
 
@@ -30,15 +30,15 @@ through `/book:tune` or `/book:voice rebuild`.
 The voice gate is enforced **inside the body of `book-writer`** (TOV-08), not
 on `/book:start` and not at planning time. The trigger:
 
-> Before generating any line of `chapters/<N>/draft.md`, the writer reads
+> Before generating any line of `sections/<N>/draft.md`, the writer reads
 > `.book/context/voice-profile.md` and stops if the file is empty or contains
 > only TBD placeholders. It returns a `voice_pending` diagnostic to the
 > coordinator, who then surfaces three paths to the author.
 
 Why so late? A voice profile is irrelevant during planning — no prose is being
 generated. Forcing the author into a 15-minute decision while the book idea is
-still being shaped wastes attention. Deferring the gate to the first chapter
-draft means the author already has a chapter spec, a target audience, and a
+still being shaped wastes attention. Deferring the gate to the first section
+draft means the author already has a section spec, a target audience, and a
 plan — the same artefacts the agent will draw on if the author chooses Path B3
 (see below).
 
@@ -55,9 +55,9 @@ When the gate fires, the author chooses one of three paths via
   trial paragraph for the author to react to, with up to two iterations on
   the emotional intensity parameter.
 - **B3 — agent proposes from book artefacts, ~2-3 min to confirm.** The
-  voice-builder reads `PROJECT.md`, `target-audience.md`, the chapter spec,
+  voice-builder reads `PROJECT.md`, `target-audience.md`, the section spec,
   and `ROADMAP.md`, then proposes a profile with a sample paragraph on the
-  current chapter topic. The author confirms, partially edits a parameter, or
+  current section topic. The author confirms, partially edits a parameter, or
   switches to B1.
 
 The full algorithms (5-step projection from abstract answers to six
@@ -114,12 +114,12 @@ cd ../book-b
 ## Editing the voice over time
 
 Voices change as the book takes shape. BookBench supports two ways to evolve
-a voice without losing the connection to past chapters:
+a voice without losing the connection to past sections:
 
 - **`/book:tune`** — the tuner reviews recent `REJECTIONS.md` entries and
   voice-drift signals from the editor; it proposes targeted edits to one or
   two parameters with a sample paragraph for confirmation. Use this after
-  writing 1-3 chapters when small adjustments are needed.
+  writing 1-3 sections when small adjustments are needed.
 - **`/book:voice rebuild`** — full reset of the profile. The voice-builder
   runs again from scratch. The previous profile is backed up to
   `.book/.backup/voice-profile/voice-profile.<timestamp>.md`. Use this when

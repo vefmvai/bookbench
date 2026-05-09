@@ -1,11 +1,11 @@
 # Upgrade candidates — BookBench 0.2+ backlog seeded from this book
 
 > Append-only file maintained by `book-observer`. Each candidate records
-> a recurring signal (≥3 occurrences across distinct chapter sessions)
+> a recurring signal (≥3 occurrences across distinct section sessions)
 > that suggests an improvement to the BookBench plugin itself.
 >
 > **Privacy:** entries are anonymised. NO author names, NO direct quotes
-> from chapters, NO unique character/place names from the book. The
+> from sections, NO unique character/place names from the book. The
 > observer enforces this rule before each `Write`.
 
 ## Format of one entry
@@ -16,12 +16,12 @@
   last_seen:  <ISO 8601 UTC>
   category:   token-efficiency | memory-gaps | ux-friction | quality-regression
   severity:   low | medium | high
-  occurrences: <int>            # number of distinct chapter sessions
+  occurrences: <int>            # number of distinct section sessions
   signal_pattern: |
     <one-paragraph abstract description of the recurring signal;
      no verbatim author quotes, no draft excerpts>
   affected_role:    <book-writer | book-editor | book-factchecker | book-coordinator | ...>
-  affected_step:    <plan-chapter | write-chapter | factcheck | edit | ship | ...>
+  affected_step:    <plan-section | write-section | factcheck | edit | ship | ...>
   suggested_fix:    |
     <abstract description of the proposed BookBench plugin change;
      example: "expand the writer's files_to_read with the
@@ -39,7 +39,7 @@ Wasted budget. The most common sub-patterns:
 - A subagent regenerated a long passage after a one-line feedback that
   could have been applied as a localised edit.
 - A verification role (factchecker, editor) re-checked something that
-  was already in a previous-chapter registry.
+  was already in a previous-section registry.
 - Coordinator made multiple round-trips when one would suffice.
 
 ### Memory gaps
@@ -47,8 +47,8 @@ Wasted budget. The most common sub-patterns:
 The registry layer (`intel/`, `agent-memory/`) missed information that
 should have been there:
 
-- Author manually asked "look at chapter X again" — meaning the
-  cross-chapter registry didn't surface what was relevant from chapter X.
+- Author manually asked "look at section X again" — meaning the
+  cross-section registry didn't surface what was relevant from section X.
 - A subagent issued extra `Read` calls beyond its declared
   `files_to_read` — meaning the declared input set was too narrow.
 - Duplicate facts/examples slipped past the writer because the writer's
@@ -95,8 +95,8 @@ catch it suggests the upstream role had insufficient guidelines:
 
 ## Cross-references
 
-- `chapter-N-process-notes.md` — drill-down on per-chapter friction.
-- `chapter-N-content-notes.md` — drill-down on per-chapter meaning notes
+- `section-N-process-notes.md` — drill-down on per-section friction.
+- `section-N-content-notes.md` — drill-down on per-section meaning notes
   (rarely promoted to upgrade-candidates; usually feeds back into the
-  next chapter's `intel/` and `agent-guidelines/`).
+  next section's `intel/` and `agent-guidelines/`).
 - `rawlog.jsonl` — raw event stream the observer consumes.
