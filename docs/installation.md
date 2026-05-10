@@ -74,20 +74,61 @@ $ cd bookbench
 - Изменения в `${CLAUDE_PLUGIN_ROOT}` сразу подхватываются (этот путь — символическая ссылка или прямой путь к чекауту, в зависимости от платформы).
 - Гарантии приватности evolver сохраняются: `/book:evolve` **не читает текст глав**, только мета-файлы (`TUNING-LOG.md`, `REJECTIONS-LOG.md`, гайдлайны, конфиг).
 
-### Режим 3. Marketplace (с 0.2.0)
+### Режим 3. Marketplace (с 0.3.1, рекомендованный)
 
-Установка из Claude Code plugin marketplace:
+Это самый простой путь. Команды отличаются для двух сред — **CLI** и **VSCode-расширения**, потому что VSCode не поддерживает интерактивные `/plugin`-команды.
+
+#### Если ты в Claude Code CLI (терминал)
 
 ```bash
-# Внутри Claude Code
 > /plugin marketplace add vefmvai/bookbench
 > /plugin install bookbench@bookbench
 > /reload-plugins
 ```
 
-Это **рекомендованный путь начиная с 0.2.0**. До 0.2.0 marketplace-установка спотыкалась на sparse-checkout-фильтре Claude Code 2.1.x (плагин лежал в корне репо, и Claude Code не клонировал подпапки `commands/`, `skills/`, `agent-templates/`). В 0.2.0 структура репозитория переведена на каноническую — плагин теперь в подпапке `plugins/bookbench/`, и `git-subdir`-источник работает корректно.
+После последнего reload в строке статуса должно появиться `1 plugin · 51 skills · …`. Проверь, что команды видны: набери `/book:` — должно открыться автодополнение с ~30 командами (`start`, `write-section`, `plan-section`, `doctor` и т.д.).
 
-> **Пользователям 0.1.x — обновитесь до 0.2.0.** В 0.1.x marketplace-установка работала только при ручном фиксе кэша. См. [`release-020-notes.md`](release-020-notes.md), раздел «Миграция».
+#### Если ты в VSCode (расширение Claude Code)
+
+Расширение не понимает интерактивные `/plugin`-команды (на их вызов отвечает «isn't available in this environment»). Вместо этого добавь две записи в `~/.claude/settings.json` (создать файл, если его нет):
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "bookbench": {
+      "source": {
+        "source": "github",
+        "repo": "vefmvai/bookbench"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "bookbench@bookbench": true
+  }
+}
+```
+
+Затем перезагрузи окно VSCode: **Cmd+Shift+P → «Developer: Reload Window»**. После перезагрузки расширение само склонирует marketplace и установит плагин. Команды `/book:*` появятся в автодополнении.
+
+> **Альтернатива для VSCode-пользователей:** установить плагин один раз через CLI (команды выше), а затем VSCode подхватит его автоматически — реестр установленных плагинов общий (`~/.claude/plugins/installed_plugins.json`). После первой установки в CLI достаточно перезагрузить окно VSCode (Reload Window).
+
+#### Если установка не подхватила команды (диагностика)
+
+Если после reload показывает `0 skills · 0 hooks` или `/book:`-автодополнение пустое — это означает, что Claude Code применил пустой sparse-checkout к кэшу плагина. Симптом: в `~/.claude/plugins/cache/bookbench/bookbench/<sha>/` лежат только `README.md`, `LICENSE`, `CHANGELOG.md` без `commands/`, `skills/`, `manifest.json`.
+
+Чистый фикс — снести кэш и поставить заново:
+
+```bash
+# 1. Закрой Claude Code (CLI и VSCode)
+# 2. Снеси кэш плагина
+rm -rf ~/.claude/plugins/cache/bookbench
+# 3. Снеси указатель в реестре установленных плагинов
+# (отредактируй ~/.claude/plugins/installed_plugins.json — удали запись про bookbench@bookbench
+#  или сотри файл целиком, реестр восстановится при следующем install)
+# 4. Открой Claude Code заново и поставь по инструкции выше
+```
+
+> **Пользователям 0.2.x и старше — обязательно полная переустановка.** Старые версии 0.2.x и 0.3.0 имели сломанный `git-subdir`-источник (Claude Code 2.1.x не разворачивал sparse-checkout до подпапки плагина). С 0.3.1 источник переведён на относительный путь `./plugins/bookbench`, как у официальных Anthropic-плагинов. Если у тебя в кэше остались поломанные сборки 0.2.x/0.3.0 — удали папку `~/.claude/plugins/cache/bookbench` целиком перед `install`. См. [`release-031-notes.md`](release-031-notes.md), раздел «Миграция».
 
 ---
 
