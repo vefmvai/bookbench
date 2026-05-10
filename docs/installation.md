@@ -8,11 +8,12 @@
 
 1. [Предусловия](#предусловия)
 2. [Три режима установки](#три-режима-установки)
-3. [Что инициализируется на первом запуске](#что-инициализируется-на-первом-запуске)
-4. [После установки — два стартовых сценария](#после-установки--два-стартовых-сценария)
-5. [Перенос между машинами](#перенос-между-машинами)
-6. [Удаление и переустановка](#удаление-и-переустановка)
-7. [Совместимость](#совместимость)
+3. [Обновление плагина](#обновление-плагина)
+4. [Что инициализируется на первом запуске](#что-инициализируется-на-первом-запуске)
+5. [После установки — два стартовых сценария](#после-установки--два-стартовых-сценария)
+6. [Перенос между машинами](#перенос-между-машинами)
+7. [Удаление и переустановка](#удаление-и-переустановка)
+8. [Совместимость](#совместимость)
 
 ---
 
@@ -129,6 +130,93 @@ rm -rf ~/.claude/plugins/cache/bookbench
 ```
 
 > **Пользователям 0.2.x и старше — обязательно полная переустановка.** Старые версии 0.2.x и 0.3.0 имели сломанный `git-subdir`-источник (Claude Code 2.1.x не разворачивал sparse-checkout до подпапки плагина). С 0.3.1 источник переведён на относительный путь `./plugins/bookbench`, как у официальных Anthropic-плагинов. Если у тебя в кэше остались поломанные сборки 0.2.x/0.3.0 — удали папку `~/.claude/plugins/cache/bookbench` целиком перед `install`. См. [`release-031-notes.md`](release-031-notes.md), раздел «Миграция».
+
+---
+
+## Обновление плагина
+
+С версии **0.3.3** обновление плагина — одна команда вместо ~6 ручных bash-операций.
+
+### Почему отдельная команда
+
+Claude Code-расширение для VSCode **не умеет автоматически обновлять плагины** из github-marketplace. Локальный клон в `~/.claude/plugins/marketplaces/bookbench/` делается **один раз** при первой установке и потом игнорируется — `Reload Window` его не трогает. До 0.3.3 пользователю приходилось вручную: удалять кэш, править `installed_plugins.json`, делать `git pull` в клоне marketplace, перезагружать окно дважды. С 0.3.3 это закрывает команда **`/bookbench:upgrade`**.
+
+> Команда **дополняет**, не заменяет существующую `/book:update`. `/book:update` переносит обновлённые тела субагентов **из плагина в книгу** (исходит из предположения «плагин уже свежий»). `/bookbench:upgrade` обновляет **сам плагин** — это шаг РАНЬШЕ.
+
+### Стандартное обновление
+
+```bash
+# Внутри Claude Code (CLI или VSCode):
+> /bookbench:upgrade
+🤖 Backup создан: /Users/.../installed_plugins.json.backup-1778398123
+🤖 Готово. 0.3.2 → 0.3.3 (sha 453c30d → abc1234).
+🤖 Чтобы Claude Code увидел свежую версию плагина, перезагрузи окно:
+🤖   CLI: /reload-plugins (если поддерживается)
+🤖   VSCode: Cmd+Shift+P → Developer: Reload Window
+```
+
+После Reload Window: `/bookbench:doctor` покажет `version: 0.3.3`. Все правки реестра обратимы из бэкапа `installed_plugins.json.backup-<timestamp>` в `~/.claude/plugins/`.
+
+**Гарантии безопасности:**
+- ВСЕГДА создаётся бэкап `installed_plugins.json.backup-<unix-timestamp>` ДО любой записи.
+- НЕ трогает другие плагины и другие marketplaces.
+- НЕ делает `git reset --hard` (только `git pull --ff-only`, чтобы fail-fast при дивергенции).
+- НЕ запускает Reload Window сам — это инструкция автору, потому что VSCode не предоставляет программный API для перезагрузки.
+
+### Проверить, есть ли обновление, без правок
+
+```bash
+> /bookbench:upgrade --check
+🤖 Текущая: 453c30d (v0.3.2) | Свежая: abc1234 (v0.3.3) | Доступно обновление: ДА
+```
+
+`--check` — read-only. Ни один файл не правится: `git status` в клоне marketplace остаётся `clean`, реестр не трогается, бэкап не создаётся.
+
+### Перенести новые шаблоны в текущую книгу
+
+После Reload Window в новой версии плагина могли появиться новые шаблоны `agent-guidelines/<role>/` или новые hook-скрипты. Если хочешь подтянуть их в **текущую** инициализированную книгу:
+
+```bash
+# Из папки книги (где есть .book/):
+> /bookbench:upgrade --apply-templates
+🤖 Backup folder: .book/.backup/upgrade-20260510T103000Z
+🤖 === Class A: agent-guidelines (sacred policy D-41) ===
+🤖 ── NEW: agent-guidelines/writer/addressing-rules.md ──
+🤖 (показывает diff)
+🤖 [AskUserQuestion: Добавить новый файл? / Пропустить / Показать полный diff]
+🤖 ...
+🤖 Готово. Backup: .book/.backup/upgrade-20260510T103000Z
+```
+
+**Sacred policy D-41 строго соблюдается:**
+- Для каждого файла в `agent-guidelines/<role>/` — **обязательное подтверждение** (через `AskUserQuestion`).
+- Файлы в `.book/context/<file>.md` со `status: confirmed` (например, `voice-profile.md`) **НЕ перезаписываются никогда** — даже с подтверждением.
+- Перед каждой перезаписью — backup в `.book/.backup/upgrade-<timestamp>/`.
+- Действие записывается в `.book/UPDATE-LOG.md`.
+
+`--apply-templates` опционален — если ты не хочешь подтягивать новые шаблоны в существующую книгу, можно ничего не делать после `/bookbench:upgrade` (default), и книга продолжит работать с теми шаблонами, что были на момент `/book:start`.
+
+### Откат на предыдущую версию
+
+Если новая версия принесла регрессию для твоего workflow:
+
+```bash
+> /bookbench:upgrade --from v0.3.2
+🤖 Готово. 0.3.3 → 0.3.2 (sha abc1234 → 453c30d, ref=v0.3.2).
+🤖 Чтобы Claude Code увидел свежую версию: Cmd+Shift+P → Developer: Reload Window.
+```
+
+`--from` принимает либо тег (`v0.3.2`), либо полный/короткий sha коммита. Клон marketplace остаётся в detached HEAD после `--from` — чтобы вернуться на `main`, повтори `/bookbench:upgrade` (без флагов).
+
+### Если что-то пошло не так
+
+| Симптом | Что делать |
+|---|---|
+| `Error: jq is required but not installed` | macOS: `brew install jq`. Linux: `apt-get install jq`. |
+| `Error: marketplace clone not found at ~/.claude/plugins/marketplaces/bookbench` | Плагин не установлен через marketplace. См. раздел [Режим 3](#режим-3-marketplace-с-031-рекомендованный) выше. |
+| `Error: registry has no entry for bookbench@bookbench` | Плагин не установлен. Прогон `/plugin install bookbench@bookbench`. |
+| `Error: git pull --ff-only failed. Marketplace clone may have local divergence.` | Кто-то вручную правил клон. Восстанови: `cd ~/.claude/plugins/marketplaces/bookbench && git status` — посмотри что не то, и либо откати локальные правки (`git stash`), либо повтори `/bookbench:upgrade --from main`. |
+| Реестр сломался после `/bookbench:upgrade` | Откатись из бэкапа: `cp ~/.claude/plugins/installed_plugins.json.backup-<TS> ~/.claude/plugins/installed_plugins.json` (выбери самый свежий бэкап по timestamp). |
 
 ---
 

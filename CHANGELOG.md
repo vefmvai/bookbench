@@ -6,7 +6,49 @@
 
 ## [Unreleased]
 
-_n/a — все изменения текущего цикла вошли в 0.3.2._
+_n/a — все изменения текущего цикла вошли в 0.3.3._
+
+---
+
+## [0.3.3] — 2026-05-XX <!-- TODO заменить XX на реальную дату публикации при git tag v0.3.3 -->
+
+Patch-релиз: одна команда самообновления плагина. До 0.3.3 пользователю VSCode-расширения нужно было ~6 ручных bash-операций, чтобы перейти с 0.3.1 на 0.3.2, потому что VSCode не умеет обновлять плагины автоматически из github-marketplace. С 0.3.3 — одна команда `/bookbench:upgrade` + Reload Window.
+
+### Added
+
+- **`/bookbench:upgrade`** — новая команда самообновления плагина. Четыре режима:
+  - **default** (`/bookbench:upgrade`) — `git pull` локального клона marketplace + перезапись записи `bookbench@bookbench` в `~/.claude/plugins/installed_plugins.json` (поля `installPath`, `version`, `lastUpdated`, `gitCommitSha`) с предварительным бэкапом реестра. После — инструкция «сделай Cmd+Shift+P → Developer: Reload Window». Команда полностью автономна, без интерактивных вопросов.
+  - **`--check`** — read-only: показывает текущую/свежую версию и наличие обновления, не правит файлы (`git status` в клоне marketplace остаётся clean, реестр не трогается, бэкап не создаётся).
+  - **`--apply-templates`** — после Reload Window переносит в `.book/` текущей книги новые ассеты релиза (новые `templates/agent-guidelines/<role>/*.md`, новые hook-скрипты в `templates/hooks/`) с **подтверждением каждого файла** через `AskUserQuestion`. **Sacred policy D-41 строго соблюдается:** для файлов в `.book/agent-guidelines/<role>/` — диалог обязателен; для файлов в `.book/context/<file>.md` со `status: confirmed` — НЕ перезаписываются никогда. Перед каждой перезаписью — backup в `.book/.backup/upgrade-<timestamp>/`. Запись в `.book/UPDATE-LOG.md`.
+  - **`--from <ref>`** — откат на конкретный коммит/тег (например, `--from v0.3.2`), затем тот же путь правки реестра.
+- **`bookbench/docs/installation.md`** — новый раздел «Обновление плагина» с примерами всех четырёх режимов команды (заменяет ручной workflow с `rm -rf` кэша + ручной правкой `installed_plugins.json` + `git pull`).
+
+### Changed
+
+- **`plugins/bookbench/manifest.json`** — добавлен `commands/upgrade.md` в массив `commands` (между `update.md` и `help.md`); общее количество команд увеличилось на 1.
+
+### Migration (для пользователей 0.3.2)
+
+После установки 0.3.3 у пользователя сама команда `/bookbench:upgrade` появится автоматически:
+
+```
+# Если ты в CLI — старый ручной путь сработает один последний раз:
+/plugin marketplace update bookbench
+/plugin install bookbench@bookbench
+/reload-plugins
+
+# Если ты в VSCode — один последний раз через ручной workflow из docs/installation.md «Если установка не подхватила команды (диагностика)».
+
+# Дальше всегда:
+/bookbench:upgrade
+# (+ Cmd+Shift+P → Developer: Reload Window в VSCode)
+```
+
+Никаких breaking changes по структуре `.book/` или составу субагентов. Existing книги 0.3.2 совместимы — `/bookbench:upgrade --apply-templates` опционален.
+
+### Known issues
+
+- **Live dogfooding-проверка `/bookbench:upgrade` 0.3.2 → 0.3.3 — задача автора** после установки 0.3.3 на dogfooding-машине. Pre-release static review кода команды (T11 этапа 25): backup-логика присутствует, sacred-policy guard для agent-guidelines/ присутствует, NEVER-блок про другие marketplaces присутствует.
 
 ---
 
@@ -351,7 +393,8 @@ _n/a — первый публичный релиз._
 
 ---
 
-[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.3.2...HEAD
+[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.3.3...HEAD
+[0.3.3]: https://github.com/vefmvai/bookbench/releases/tag/v0.3.3
 [0.3.2]: https://github.com/vefmvai/bookbench/releases/tag/v0.3.2
 [0.3.1]: https://github.com/vefmvai/bookbench/releases/tag/v0.3.1
 [0.3.0]: https://github.com/vefmvai/bookbench/releases/tag/v0.3.0
