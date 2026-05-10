@@ -4,10 +4,10 @@ argument-hint: "[--severity-threshold low|medium|high]"
 allowed-tools: [Task, Read, Write, Glob, Grep, Bash, AskUserQuestion]
 ---
 
-# /book:audit-book
+# /bookbench:audit-book
 
 <purpose>
-Whole-book quality gate before `/book:ship`. Read-only with respect to section text; only writes the report and proposes follow-up commands. Cross-section checks complement per-section audits — e.g. red-thread keywords have to appear in 3+ sections, glossary terms must agree across sections.
+Whole-book quality gate before `/bookbench:ship`. Read-only with respect to section text; only writes the report and proposes follow-up commands. Cross-section checks complement per-section audits — e.g. red-thread keywords have to appear in 3+ sections, glossary terms must agree across sections.
 </purpose>
 
 <!-- ЭТАП 14: реализовано — см. <execution> ниже; полный контракт — `audit-design.md` этапа 07 -->
@@ -22,7 +22,7 @@ Whole-book quality gate before `/book:ship`. Read-only with respect to section t
 ## Outputs
 
 - `.book/context/audit-book-report.md` (write).
-- Suggestion list on stdout: which sections need `/book:re-edit-section`.
+- Suggestion list on stdout: which sections need `/bookbench:re-edit-section`.
 
 <execution>
 
@@ -121,7 +121,7 @@ Task(
          • Cross-section cohesion.
          • Anti-cliche aggregate.
          • Per-section issue counts (severity-filtered).
-         • Recommended next actions (which sections need /book:re-edit-section).
+         • Recommended next actions (which sections need /bookbench:re-edit-section).
 
     Constraint — READ-ONLY:
       You may NOT modify any section file. You may only WRITE the audit report.
@@ -178,7 +178,7 @@ echo "$RECOMMENDATIONS"
 ```bash
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 ISSUE_COUNT=$(awk '/^- \[/{count++} END {print count+0}' .book/context/audit-book-report.md)
-printf '\n%s — `/book:audit-book` — wrote audit-book-report.md (%d issues)\n' \
+printf '\n%s — `/bookbench:audit-book` — wrote audit-book-report.md (%d issues)\n' \
   "$NOW" "$ISSUE_COUNT" >> .book/STATE.md
 
 echo ""
@@ -186,9 +186,9 @@ echo "Audit complete. Report: .book/context/audit-book-report.md"
 echo "Total issues: $ISSUE_COUNT (severity threshold: $SEVERITY)"
 echo ""
 echo "Recommended next:"
-echo "  /book:re-edit-section <N> --from-audit   — fix flagged sections."
-echo "  /book:audit-section <N>                  — drill into a single section."
-echo "  /book:ship                                — finalise (only after issues resolved)."
+echo "  /bookbench:re-edit-section <N> --from-audit   — fix flagged sections."
+echo "  /bookbench:audit-section <N>                  — drill into a single section."
+echo "  /bookbench:ship                                — finalise (only after issues resolved)."
 ```
 
 ### Constitutional rules

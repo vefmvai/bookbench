@@ -1,15 +1,15 @@
 ---
-description: Researches a target text format on demand (e.g. screenplay, graphic novel, multimedia long-read) and produces a YAML preset under ${CLAUDE_PLUGIN_DATA}/user-formats/. Symmetric to /book:research-genre. Refresh regenerates an existing preset; offline forces the no-internet fallback. Output is one YAML file saved after a structural validation gate and an explicit author confirmation.
+description: Researches a target text format on demand (e.g. screenplay, graphic novel, multimedia long-read) and produces a YAML preset under ${CLAUDE_PLUGIN_DATA}/user-formats/. Symmetric to /bookbench:research-genre. Refresh regenerates an existing preset; offline forces the no-internet fallback. Output is one YAML file saved after a structural validation gate and an explicit author confirmation.
 argument-hint: "<format-name> [--description \"<text>\"] [--refresh] [--offline]"
 allowed-tools: [Read, Write, AskUserQuestion, WebSearch, WebFetch, Task, Bash, Glob]
 ---
 
-# /book:research-format
+# /bookbench:research-format
 
 <purpose>
 Generate a reusable YAML preset for a non-default text format (screenplay,
 graphic novel, multimedia long-read, transcript of a multi-episode podcast,
-etc.). Symmetric counterpart to /book:research-genre. The preset is saved
+etc.). Symmetric counterpart to /bookbench:research-genre. The preset is saved
 to ${CLAUDE_PLUGIN_DATA}/user-formats/<name>.yaml and becomes available for
 all future books.
 </purpose>
@@ -43,11 +43,11 @@ while [ $# -gt 0 ]; do
 done
 
 if [ -z "$FORMAT_NAME" ]; then
-  echo "Использование: /book:research-format <format-name> [--description \"<текст>\"] [--refresh] [--offline]"
+  echo "Использование: /bookbench:research-format <format-name> [--description \"<текст>\"] [--refresh] [--offline]"
   echo "Примеры:"
-  echo "  /book:research-format screenplay --description \"сценарий полнометражного фильма\""
-  echo "  /book:research-format graphic-novel"
-  echo "  /book:research-format podcast-transcript --offline"
+  echo "  /bookbench:research-format screenplay --description \"сценарий полнометражного фильма\""
+  echo "  /bookbench:research-format graphic-novel"
+  echo "  /bookbench:research-format podcast-transcript --offline"
   exit 0
 fi
 
@@ -127,13 +127,13 @@ fi
 
 if [ "$HAS_BUILTIN" -eq 1 ] && [ "$REFRESH" -eq 0 ]; then
   echo "research-format: формат '$SLUG' уже есть в библиотеке (встроенный)."
-  echo "Используй /book:config book.format $SLUG чтобы применить к текущей книге."
+  echo "Используй /bookbench:config book.format $SLUG чтобы применить к текущей книге."
   exit 0
 fi
 
 if [ "$HAS_USER_PRESET" -eq 1 ] && [ "$REFRESH" -eq 0 ]; then
   echo "research-format: пресет '$SLUG' уже сохранён в $PRESET_FILE."
-  echo "Запусти с --refresh, чтобы перегенерировать, или используй /book:config book.format $SLUG."
+  echo "Запусти с --refresh, чтобы перегенерировать, или используй /bookbench:config book.format $SLUG."
   exit 0
 fi
 
@@ -247,7 +247,7 @@ RESEARCH_RESULTS:
 | `document_sections_range.min < max` | Логическая корректность |
 | `factcheck_density ∈ {standard, enhanced}` | Допустимые значения |
 | `marketing_mode ∈ {one-promo-per-document, promo-per-section, minimal}` | Допустимые значения |
-| `compatible_genres` — массив строк, элементы из библиотеки | Сверка против `defaults.yaml > genres:` ∪ `${CLAUDE_PLUGIN_DATA}/user-presets/`. Если жанра нет — предложить запустить `/book:research-genre` или убрать из массива. |
+| `compatible_genres` — массив строк, элементы из библиотеки | Сверка против `defaults.yaml > genres:` ∪ `${CLAUDE_PLUGIN_DATA}/user-presets/`. Если жанра нет — предложить запустить `/bookbench:research-genre` или убрать из массива. |
 
 При фейле — исправить и повторить Step 11 (показ автору).
 
@@ -281,7 +281,7 @@ mv "$TMP_FILE" "$PRESET_FILE" 2>/dev/null || true
 TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 LOG="$PLUGIN_DATA/research-log.md"
 [ -f "$LOG" ] || printf '# Research log\n\n' > "$LOG"
-echo "- $TS — created format \`$SLUG\` via /book:research-format" >> "$LOG"
+echo "- $TS — created format \`$SLUG\` via /bookbench:research-format" >> "$LOG"
 ```
 
 Атрибут `Write` использовать для самого YAML (через `tools: Write` в front-matter).
@@ -293,15 +293,15 @@ echo "- $TS — created format \`$SLUG\` via /book:research-format" >> "$LOG"
 ```bash
 if [ -d .book ]; then
   TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo "- $TS — /book:research-format $SLUG — preset created" >> .book/STATE.md
+  echo "- $TS — /bookbench:research-format $SLUG — preset created" >> .book/STATE.md
 fi
 ```
 
-Это **не обязательно** при автономном вызове (например, во время `/book:start` до создания `.book/`). В таком случае шаг пропускается без ошибки.
+Это **не обязательно** при автономном вызове (например, во время `/bookbench:start` до создания `.book/`). В таком случае шаг пропускается без ошибки.
 
 ## Step 14 — Return / next-step message
 
-Если команда вызвана из `/book:start` (контекст коуч-диалога):
+Если команда вызвана из `/bookbench:start` (контекст коуч-диалога):
 - Вернуть имя формата `$SLUG` в коуч-диалог.
 - Алгоритм матчинга формата (`matching-design.md` § 3.2 ветка B2) переходит к шагу B1.4 с гипотезой `$SLUG`.
 
@@ -312,16 +312,16 @@ research-format: пресет для `$SLUG` сохранён.
   Файл: $PLUGIN_DATA/user-formats/$SLUG.yaml
 
 Следующие шаги:
-  • Применить к текущей книге:    /book:config book.format $SLUG
-  • Стартовать новую книгу:        /book:start (выбери формат `$SLUG` в коуч-диалоге)
-  • Перегенерировать пресет:       /book:research-format $SLUG --refresh
+  • Применить к текущей книге:    /bookbench:config book.format $SLUG
+  • Стартовать новую книгу:        /bookbench:start (выбери формат `$SLUG` в коуч-диалоге)
+  • Перегенерировать пресет:       /bookbench:research-format $SLUG --refresh
 ```
 
 ## Notes
 
-- Команда работает по той же модели, что `/book:research-genre` (см. `commands/research-genre.md`). Симметрия архитектуры — ключевой принцип D-30: расширяемые библиотеки `genre` и `format`.
+- Команда работает по той же модели, что `/bookbench:research-genre` (см. `commands/research-genre.md`). Симметрия архитектуры — ключевой принцип D-30: расширяемые библиотеки `genre` и `format`.
 - Команда никогда не пишет в `${CLAUDE_PLUGIN_ROOT}` (это файл плагина, read-only во время выполнения). Только `${CLAUDE_PLUGIN_DATA}/user-formats/` и `${CLAUDE_PLUGIN_DATA}/research-log.md`.
-- При совпадении имени пользовательского пресета со встроенным форматом будущей версии плагина — приоритет у пользовательского (каскад D-17, локальное переопределяет глобальное). Это безопасное поведение для D-21 (`/book:update`).
+- При совпадении имени пользовательского пресета со встроенным форматом будущей версии плагина — приоритет у пользовательского (каскад D-17, локальное переопределяет глобальное). Это безопасное поведение для D-21 (`/bookbench:update`).
 - `--refresh` архивирует предыдущий пресет в `research-archives/format-<slug>/<timestamp>-prev-preset.yaml` для возможности отката.
 - `--offline` — резервный режим без интернета: используются значения по умолчанию от `book`, `section_word` берётся из описания автора, `compatible_genres: []`. Пресет помечается в `source_description`: «ресёрч недостаточен; параметры на основе значений по умолчанию формата `book`».
 - Privacy: команда читает только описание автора (через `--description` или AskUserQuestion) и публичные веб-источники. Не читает `.book/sections/`, `.book/inputs/`, `.book/intel/`.
@@ -333,4 +333,4 @@ research-format: пресет для `$SLUG` сохранён.
 - **MUST** атомарная запись YAML (запись во временный файл → mv) — не оставлять полузаписанные пресеты при сбое.
 - **NEVER** писать в `${CLAUDE_PLUGIN_ROOT}/defaults.yaml` — это файл плагина, изменяется только релизами.
 - **NEVER** удалять существующий пресет без `--refresh` (тогда — архивация, не удаление).
-- **NEVER** запускать `/book:research-format` для встроенных форматов без `--refresh` (выйти с подсказкой `/book:config book.format <name>`).
+- **NEVER** запускать `/bookbench:research-format` для встроенных форматов без `--refresh` (выйти с подсказкой `/bookbench:config book.format <name>`).

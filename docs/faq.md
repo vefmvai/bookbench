@@ -47,16 +47,16 @@ Claude Code `^2.0`. Точное требование зафиксировано
 
 Конфигурация — в `.book/.claude/agents/book-factchecker.md` → секция `mcpServers`. Никаких MCP по умолчанию не требуется и не устанавливается.
 
-### 1.4. Что делать, если `/book:doctor` показывает ошибку?
+### 1.4. Что делать, если `/bookbench:doctor` показывает ошибку?
 
-`/book:doctor` диагностирует три вещи: совместимость с Claude Code, наличие папок `${CLAUDE_PLUGIN_ROOT}` и `${CLAUDE_PLUGIN_DATA}`, исполняемость bash-hooks. Типичные ошибки:
+`/bookbench:doctor` диагностирует три вещи: совместимость с Claude Code, наличие папок `${CLAUDE_PLUGIN_ROOT}` и `${CLAUDE_PLUGIN_DATA}`, исполняемость bash-hooks. Типичные ошибки:
 
 - `Bash hooks: not executable` → `chmod +x .book/.hooks/anti-ai-cliche-lint.sh` (если ты в папке книги).
-- `Plugin data dir missing` → запусти любую `/book:*` команду — `${CLAUDE_PLUGIN_DATA}` создастся автоматически.
-- `Registry book at <path> not found` → `/book:forget <book-id>` уберёт осиротевшую запись из реестра.
+- `Plugin data dir missing` → запусти любую `/bookbench:*` команду — `${CLAUDE_PLUGIN_DATA}` создастся автоматически.
+- `Registry book at <path> not found` → `/bookbench:forget <book-id>` уберёт осиротевшую запись из реестра.
 - `Claude Code version too old` → обнови Claude Code до 2.x.
 
-Если `/book:doctor` показывает зелёное «всё ОК» — инфраструктура в порядке, проблема в чём-то другом. Подробности — кластер 5 ниже.
+Если `/bookbench:doctor` показывает зелёное «всё ОК» — инфраструктура в порядке, проблема в чём-то другом. Подробности — кластер 5 ниже.
 
 ---
 
@@ -70,32 +70,32 @@ Claude Code `^2.0`. Точное требование зафиксировано
 - Целевую аудиторию (одна-две строки).
 - Ограничения (если есть — например, «не более 25 глав», «без формул»).
 
-Запусти `/book:plan-book` ещё раз. Стратег идемпотентен — переписывает `ROADMAP.md` каждый раз заново.
+Запусти `/bookbench:plan-book` ещё раз. Стратег идемпотентен — переписывает `ROADMAP.md` каждый раз заново.
 
 Если план всё равно странный — проверь `agent-guidelines/strategist/structural-rules.md`. Возможно, дефолты жанра не подходят твоей книге.
 
-### 2.2. Можно ли писать главы без `/book:plan-book`?
+### 2.2. Можно ли писать главы без `/bookbench:plan-book`?
 
-Технически да: `/book:plan-section 1` сработает и без `ROADMAP.md`. Стратег спросит про основные параметры главы и напишет `spec.md`. Но **не рекомендуется**: без `ROADMAP.md` red thread keywords не извлечены, cohesion между главами не контролируется, реестры памяти растут хаотично.
+Технически да: `/bookbench:plan-section 1` сработает и без `ROADMAP.md`. Стратег спросит про основные параметры главы и напишет `spec.md`. Но **не рекомендуется**: без `ROADMAP.md` red thread keywords не извлечены, cohesion между главами не контролируется, реестры памяти растут хаотично.
 
 Для коротких книг (≤5 глав) можно. Для длинных (20+) — план обязателен.
 
-### 2.3. Как работает `/book:next`?
+### 2.3. Как работает `/bookbench:next`?
 
 Это команда «умной подсказки». Координатор читает `STATE.md`, `workflow.md` и определяет, какой логический шаг следующий:
 
-- Если книга только инициализирована, нет `ROADMAP.md` → `/book:next` подсказывает запустить `/book:plan-book`.
-- Если есть план, но нет `sections/01/` → подсказывает `/book:plan-section 1`.
-- Если глава 1 готова, глава 2 не начата → `/book:plan-section 2`.
-- Если глава недописана (есть `draft.md`, нет `edited.md`) → подсказывает `/book:write-section:edit <N>`.
+- Если книга только инициализирована, нет `ROADMAP.md` → `/bookbench:next` подсказывает запустить `/bookbench:plan-book`.
+- Если есть план, но нет `sections/01/` → подсказывает `/bookbench:plan-section 1`.
+- Если глава 1 готова, глава 2 не начата → `/bookbench:plan-section 2`.
+- Если глава недописана (есть `draft.md`, нет `edited.md`) → подсказывает `/bookbench:write-section:edit <N>`.
 
 Полная карта переходов — в `next-design.md` этапа 7.2 проекта.
 
 ### 2.4. У меня уже есть глава, написанная в Word. Что с ней делать?
 
-Сценарий B — «с существующих материалов». Положи `.docx` в текущую папку и запусти `/book:start` — на стартовом коуч-диалоге приложи файлы к сообщению, импорт сработает автоматически (флаг `--from-existing` отменён в 0.3.0). Если книга уже инициализирована — `/book:import`.
+Сценарий B — «с существующих материалов». Положи `.docx` в текущую папку и запусти `/bookbench:start` — на стартовом коуч-диалоге приложи файлы к сообщению, импорт сработает автоматически (флаг `--from-existing` отменён в 0.3.0). Если книга уже инициализирована — `/bookbench:import`.
 
-Классификатор разберёт `.docx` на типизированные фрагменты (section-draft, voice-sample, glossary-entry, ...). Синтезатор привяжет фрагменты к будущим главам в `INGEST-DECISIONS.md`. Дальше `/book:write-section <N>` запустится в режиме `from-existing`: писатель **дополняет** импортированный черновик, а не переписывает с нуля.
+Классификатор разберёт `.docx` на типизированные фрагменты (section-draft, voice-sample, glossary-entry, ...). Синтезатор привяжет фрагменты к будущим главам в `INGEST-DECISIONS.md`. Дальше `/bookbench:write-section <N>` запустится в режиме `from-existing`: писатель **дополняет** импортированный черновик, а не переписывает с нуля.
 
 Полный путь — в [`quickstart.md`](quickstart.md), сценарий B.
 
@@ -136,22 +136,22 @@ Claude Code `^2.0`. Точное требование зафиксировано
 
 ```bash
 # В книге A, где голос уже сформирован
-> /book:voice save-as my-warm-essay-voice
+> /bookbench:voice save-as my-warm-essay-voice
 🤖 ✅ Сохранён в ~/.bookbench/voices/my-warm-essay-voice.md
 
 # Позже, в новой книге B
 $ cd ../book-b
-> /book:voice list
+> /bookbench:voice list
 🤖 Доступно 3 голоса:
    - my-warm-essay-voice (сохранён 2026-04-15; informal-warm-medium)
    - my-academic-voice  (сохранён 2026-03-20)
    - test-voice         (сохранён 2026-02-10)
 
-> /book:voice import my-warm-essay-voice
+> /bookbench:voice import my-warm-essay-voice
 🤖 ✅ Применён к этой книге.
 ```
 
-Полные команды — `/book:voice extract|save-as|import|list|build` в [`voice-management.md`](voice-management.md).
+Полные команды — `/bookbench:voice extract|save-as|import|list|build` в [`voice-management.md`](voice-management.md).
 
 ### 3.3. Можно ли писать без заполненного `voice-profile.md`?
 
@@ -160,7 +160,7 @@ $ cd ../book-b
 Если голос ещё не настроен — координатор предложит три пути:
 
 - **B1** — быстрое интервью прямо в текущей сессии (5 мин, 5 вопросов).
-- **B2** — отдельная сессия `/book:voice build` (15-20 мин, с пробным абзацем и итерацией).
+- **B2** — отдельная сессия `/bookbench:voice build` (15-20 мин, с пробным абзацем и итерацией).
 - **B3** — агент сам предложит профиль на основе плана книги (2-3 мин на подтверждение).
 
 Подробности — [`voice-management.md`](voice-management.md), раздел «Three paths to build a voice».
@@ -178,11 +178,11 @@ $ cd ../book-b
 
 Это значит: после `/plugin update` все твои книги остаются в той версии, в какой были на момент инициализации (`WF-04`).
 
-### 4.2. Что делает `/book:update`?
+### 4.2. Что делает `/bookbench:update`?
 
 Это команда, которая **внутри одной книги** опционально подтягивает обновления тел субагентов и hook-скрипта из новой версии плагина. Делает 3-way merge с подтверждением для каждого изменённого файла.
 
-`/book:update` **не трогает**:
+`/bookbench:update` **не трогает**:
 
 - `.book/agent-guidelines/<role>/` (твои гайдлайны).
 - `.book/context/` (факты о книге).
@@ -190,7 +190,7 @@ $ cd ../book-b
 - Логи: `TUNING-LOG.md`, `REJECTIONS-LOG.md`, `UPDATE-LOG.md`.
 - Реестры памяти: `.book/.claude/agent-memory/`.
 
-`/book:update` **может** обновить (с подтверждением):
+`/bookbench:update` **может** обновить (с подтверждением):
 
 - `.book/.claude/agents/<role>.md` (тело субагента).
 - `.book/.hooks/anti-ai-cliche-lint.sh` (hook-скрипт).
@@ -199,13 +199,13 @@ $ cd ../book-b
 
 Подробности — [`upgrade-guide.md`](upgrade-guide.md).
 
-### 4.3. Потеряются ли мои правки после `/book:update`?
+### 4.3. Потеряются ли мои правки после `/bookbench:update`?
 
 Нет. Принцип архитектуры: «папка книги — собственность автора». Любые твои правки в `agent-guidelines/`, `context/`, `sections/` и логах **не трогаются никогда**. Тела субагентов и hook-скрипт могут обновиться — но только с твоим явным подтверждением через 3-way merge (см. предыдущий вопрос).
 
-### 4.4. Можно ли откатиться, если `/book:update` сломал что-то?
+### 4.4. Можно ли откатиться, если `/bookbench:update` сломал что-то?
 
-Да. Перед каждым `/book:update` создаётся бэкап:
+Да. Перед каждым `/bookbench:update` создаётся бэкап:
 
 ```
 .book/.backup/2026-05-08-1432/
@@ -241,22 +241,22 @@ $ cp .book/.backup/2026-05-08-1432/.hooks/* .book/.hooks/
 
 Если всё на месте, но клише пропускается — возможно, паттерн уровня `info` (6 семантических, не блокируют). Проверь `reaction_policy` в `config.yaml`.
 
-### 5.2. Воркфлоу-команды (`/book:next`, `/book:run`) не работают как ожидаешь
+### 5.2. Воркфлоу-команды (`/bookbench:next`, `/bookbench:run`) не работают как ожидаешь
 
-**Известное ограничение 0.1.0 — `B-14-06`:** `/book:next --execute` требует подтверждения механизма nested slash command dispatch в Claude Code. Workaround: используй `/book:next` без `--execute` — она покажет рекомендуемую команду текстом, скопируй и вставь. Полный fix — в 0.2+.
+**Известное ограничение 0.1.0 — `B-14-06`:** `/bookbench:next --execute` требует подтверждения механизма nested slash command dispatch в Claude Code. Workaround: используй `/bookbench:next` без `--execute` — она покажет рекомендуемую команду текстом, скопируй и вставь. Полный fix — в 0.2+.
 
-### 5.3. `/book:evolve` пишет «no patterns found», хотя у меня их много
+### 5.3. `/bookbench:evolve` пишет «no patterns found», хотя у меня их много
 
-**Известное ограничение 0.1.0 — `B-14-04`:** tuner не прогонялся на реальных REJECTIONS до релиза (только на синтетических тестах). На реальных данных могут всплыть граничные случаи распознавания паттернов. Workaround: запусти `/book:tune` напрямую (внутри книги) — он использует те же алгоритмы, но на одиночной книге; если там паттерны находятся, проблема в евольвере. Сообщи через issue (см. [`contributing.md`](contributing.md)) — фикс пойдёт минорным релизом 0.1.x.
+**Известное ограничение 0.1.0 — `B-14-04`:** tuner не прогонялся на реальных REJECTIONS до релиза (только на синтетических тестах). На реальных данных могут всплыть граничные случаи распознавания паттернов. Workaround: запусти `/bookbench:tune` напрямую (внутри книги) — он использует те же алгоритмы, но на одиночной книге; если там паттерны находятся, проблема в евольвере. Сообщи через issue (см. [`contributing.md`](contributing.md)) — фикс пойдёт минорным релизом 0.1.x.
 
-### 5.4. `/book:research-genre` зависает на этапе deep research
+### 5.4. `/bookbench:research-genre` зависает на этапе deep research
 
 **Известное ограничение 0.1.0 — `B-14-03`:** genre-researcher не прогонялся на реальном неизвестном жанре до релиза. Возможные причины:
 
 - Без интернета — researcher переходит в fallback-режим (использует встроенные знания), но это медленнее.
 - Нестандартный жанр (например, «эссе о квантовой кулинарии») — researcher делает много итераций.
 
-Workaround: установи timeout на 5 минут (`/book:research-genre <жанр> --timeout 300`); если не успевает — попробуй сформулировать жанр ближе к известным («научпоп о квантовой физике с кулинарными примерами»).
+Workaround: установи timeout на 5 минут (`/bookbench:research-genre <жанр> --timeout 300`); если не успевает — попробуй сформулировать жанр ближе к известным («научпоп о квантовой физике с кулинарными примерами»).
 
 ### 5.5. Privacy evolver — точно ли мой текст не утекает?
 
@@ -270,7 +270,7 @@ privacy:
   include_in_evolver: false
 ```
 
-Это **полностью** исключит книгу из любого анализа `/book:evolve` — структурная гарантия на уровне фильтрации registry, не на уровне tools.
+Это **полностью** исключит книгу из любого анализа `/bookbench:evolve` — структурная гарантия на уровне фильтрации registry, не на уровне tools.
 
 Подробности по архитектуре приватности — в [`dev-mode.md`](dev-mode.md), раздел «Privacy».
 
@@ -279,14 +279,14 @@ privacy:
 Координатор сохраняет состояние в `sections/<N>/section-state.yaml`. Восстановление:
 
 ```
-> /book:resume
+> /bookbench:resume
 🤖 [book-coordinator] Восстанавливаю состояние:
    ├─ section: 7
    ├─ phase: factcheck (loop iteration 2)
    └─ Продолжаю с итерации 3 фактчекера.
 ```
 
-Если `/book:resume` не помогает — `/book:debug <slug>` открывает persistent debug-сессию. Подробности по recovery — в [`section-cycle.md`](section-cycle.md), раздел «Recovery».
+Если `/bookbench:resume` не помогает — `/bookbench:debug <slug>` открывает persistent debug-сессию. Подробности по recovery — в [`section-cycle.md`](section-cycle.md), раздел «Recovery».
 
 **Известное ограничение 0.1.0 — `B-14-01`:** микро-цикл не прогонялся на реальной главе автора до релиза (только simulation). Граничные случаи восстановления могут потребовать ручной правки `section-state.yaml`.
 
@@ -294,7 +294,7 @@ privacy:
 
 **Известное ограничение 0.1.0 — `B-14-05`:** hook не настраивался на реальных текстах глав (только на синтетических тестах). Возможны ложные срабатывания на правомерных конструкциях.
 
-Workaround: добавляй исключения в `agent-guidelines/writer/forbidden-phrases.md` → секция `# Allowed (overrides default block)`. Если 3+ false positives на одну тему — `/book:tune` обобщит правило.
+Workaround: добавляй исключения в `agent-guidelines/writer/forbidden-phrases.md` → секция `# Allowed (overrides default block)`. Если 3+ false positives на одну тему — `/bookbench:tune` обобщит правило.
 
 ### 5.8. Где сообщить о баге или предложить фичу?
 

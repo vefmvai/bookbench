@@ -4,7 +4,7 @@ argument-hint: ""
 allowed-tools: [Read, Bash, Glob, Grep]
 ---
 
-# /book:status
+# /bookbench:status
 
 <purpose>
 Show progress: how many sections are done, what was last touched, whether plugin and book versions are still compatible, what is recommended next.
@@ -32,13 +32,13 @@ This command is read-only. It reads files, computes a summary, prints it. No `Ta
 
 ### Step 1 — Resolve paths
 
-Run the same Bash recipe as `/book:start` Step 2 to compute `PLUGIN_ROOT`, `PLUGIN_DATA`, `PLUGIN_VERSION`. (Reference: `${CLAUDE_PLUGIN_ROOT}/lib/plugin-data-helpers.md` H1, H2, H6.)
+Run the same Bash recipe as `/bookbench:start` Step 2 to compute `PLUGIN_ROOT`, `PLUGIN_DATA`, `PLUGIN_VERSION`. (Reference: `${CLAUDE_PLUGIN_ROOT}/lib/plugin-data-helpers.md` H1, H2, H6.)
 
 ### Step 2 — Detect book initialisation
 
 ```bash
 [ -d .book ] || {
-  echo "No .book/ directory. Run /book:start to initialise a book here."
+  echo "No .book/ directory. Run /bookbench:start to initialise a book here."
   exit 0
 }
 ```
@@ -51,7 +51,7 @@ Read these files (each ≤ 5 KB; total ≤ 25 KB):
 
 - `.book/STATE.md`
 - `.book/config.yaml`
-- `.book/ROADMAP.md` (it may be empty if `/book:plan-book` has not run yet)
+- `.book/ROADMAP.md` (it may be empty if `/bookbench:plan-book` has not run yet)
 
 Extract via Bash and Glob:
 
@@ -105,12 +105,12 @@ if [ -n "$BOOK_VERSION" ] && [ -n "$PLUGIN_VERSION" ] && [ "$PLUGIN_VERSION" != 
   BMAJ="${BOOK_VERSION%%.*}"
   PMAJ="${PLUGIN_VERSION%%.*}"
   if [ "$BMAJ" != "$PMAJ" ]; then
-    COMPAT_NOTE="WARNING: book was created on bookbench $BOOK_VERSION, plugin is $PLUGIN_VERSION. Run /book:update to migrate (stage 14)."
+    COMPAT_NOTE="WARNING: book was created on bookbench $BOOK_VERSION, plugin is $PLUGIN_VERSION. Run /bookbench:update to migrate (stage 14)."
   fi
 fi
 ```
 
-PS-13-04: warning, never hard-fail. The author should always be able to inspect `/book:status` even after a major bump.
+PS-13-04: warning, never hard-fail. The author should always be able to inspect `/bookbench:status` even after a major bump.
 
 ### Step 6 — Registry sanity (optional, soft)
 
@@ -152,21 +152,21 @@ Recent history
 ${COMPAT_NOTE}
 
 Recommended next:
-  /book:resume       — short briefing on what to do next.
+  /bookbench:resume       — short briefing on what to do next.
 ```
 
 The «recommended next» line varies by state:
 
-- If `PLANNED_SECTIONS == 0` and `IN_PROGRESS_COUNT == 0`: «Run `/book:plan-book` to draft the section list.»
-- If `PLANNED_SECTIONS > 0` and `COMPLETED_COUNT == 0`: «Run `/book:plan-section 1` to draft the spec for section 1.»
-- If `IN_PROGRESS_COUNT > 0`: «Run `/book:resume` for a briefing on the in-progress section.»
-- Otherwise: «Run `/book:plan-section <next-id>` to start the next section.»
+- If `PLANNED_SECTIONS == 0` and `IN_PROGRESS_COUNT == 0`: «Run `/bookbench:plan-book` to draft the section list.»
+- If `PLANNED_SECTIONS > 0` and `COMPLETED_COUNT == 0`: «Run `/bookbench:plan-section 1` to draft the spec for section 1.»
+- If `IN_PROGRESS_COUNT > 0`: «Run `/bookbench:resume` for a briefing on the in-progress section.»
+- Otherwise: «Run `/bookbench:plan-section <next-id>` to start the next section.»
 
 ### Constitutional rules for this command
 
 - **MUST** be read-only — never Write, Edit, or Bash a destructive command.
 - **MUST** complete in under 5 seconds on a 200-section book (no full-text reads).
-- **MUST** never throw on missing optional files (`ROADMAP.md` may not exist before `/book:plan-book`).
+- **MUST** never throw on missing optional files (`ROADMAP.md` may not exist before `/bookbench:plan-book`).
 - **NEVER** modify `STATE.md`.
 - **NEVER** call any subagent through `Task`.
 

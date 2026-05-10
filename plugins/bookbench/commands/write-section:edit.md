@@ -4,7 +4,7 @@ argument-hint: "<section-number>"
 allowed-tools: [Task, Read, Write, Edit, AskUserQuestion]
 ---
 
-# /book:write-section:edit
+# /bookbench:write-section:edit
 
 <purpose>
 Atomic re-run of the editor phase. See `phases-spec.md` § 4 and § 5 (etap 11).
@@ -25,19 +25,19 @@ Atomic re-run of the editor phase. See `phases-spec.md` § 4 and § 5 (etap 11).
 
 <execution>
 
-Thin wrapper around `/book:write-section` Step 8 (editor) and optional Step 9 (skill-mode passes).
+Thin wrapper around `/bookbench:write-section` Step 8 (editor) and optional Step 9 (skill-mode passes).
 
 ### Step 1 — Validate
 
 ```bash
 ARG="$ARGUMENTS"
 N=$(printf '%s' "$ARG" | sed -E 's/[^0-9]//g')
-[ -z "$N" ] && { echo "Usage: /book:write-section:edit <section-number>"; exit 0; }
+[ -z "$N" ] && { echo "Usage: /bookbench:write-section:edit <section-number>"; exit 0; }
 PADDED=$(printf '%03d' "$N")
 CHDIR=".book/sections/section-${PADDED}"
 [ -d "$SECDIR" ] || { echo "$CHDIR does not exist."; exit 0; }
 [ -s "$SECDIR/draft.md" ] || { echo "$SECDIR/draft.md is missing."; exit 0; }
-[ -s "$SECDIR/factcheck.md" ] || { echo "$SECDIR/factcheck.md is missing. Run /book:write-section:factcheck $N first."; exit 0; }
+[ -s "$SECDIR/factcheck.md" ] || { echo "$SECDIR/factcheck.md is missing. Run /bookbench:write-section:factcheck $N first."; exit 0; }
 STATUS=$(awk '/^status:/{print $2; exit}' "$SECDIR/factcheck.md" || echo unknown)
 ```
 
@@ -47,7 +47,7 @@ If `STATUS != pass`, present an `AskUserQuestion`:
 
 - Title: «Factcheck status is `${STATUS}`»
 - Options:
-  - `Re-run factcheck first` — print «Run /book:write-section:factcheck $N»; exit.
+  - `Re-run factcheck first` — print «Run /bookbench:write-section:factcheck $N»; exit.
   - `Edit anyway (force)` — proceed.
   - `Cancel`.
 
@@ -62,11 +62,11 @@ rm -f "$SECDIR/section-state.yaml.bak"
 
 ### Step 4 — Call editor
 
-Identical to `/book:write-section` Step 8 (book-editor base-mode). Same `Task` invocation, same `<files_to_read>`.
+Identical to `/bookbench:write-section` Step 8 (book-editor base-mode). Same `Task` invocation, same `<files_to_read>`.
 
 ### Step 5 — Optional Phase 5 skill-modes
 
-Same as `/book:write-section` Step 9. Stage 13 default config has no skill reviews enabled.
+Same as `/bookbench:write-section` Step 9. Stage 13 default config has no skill reviews enabled.
 
 ### Step 6 — Verify and report
 
@@ -74,7 +74,7 @@ Same as `/book:write-section` Step 9. Stage 13 default config has no skill revie
 [ -s "$SECDIR/edited.md" ] || { echo "Editor did not produce edited.md"; exit 1; }
 NEEDS_RECHECK=$(awk '/^needs_recheck_blocks:/{print $2; exit}' "$SECDIR/edited.md" || echo 0)
 echo "edited.md regenerated for section $N. NEEDS_RECHECK blocks: $NEEDS_RECHECK"
-echo "Recommended next: /book:write-section:market $N (if marketer enabled) or finalise via /book:write-section $N (full pipeline)."
+echo "Recommended next: /bookbench:write-section:market $N (if marketer enabled) or finalise via /bookbench:write-section $N (full pipeline)."
 ```
 
 ### Step 7 — STATE update
@@ -83,7 +83,7 @@ echo "Recommended next: /book:write-section:market $N (if marketer enabled) or f
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 sed -i.bak -E "s/^- \`last_action\`:.*/- \`last_action\`: write-section:edit ${N} re-run/" .book/STATE.md
 rm -f .book/STATE.md.bak
-printf '\n%s — `/book:write-section:edit %s` — edited.md regenerated\n' "$NOW" "$N" >> .book/STATE.md
+printf '\n%s — `/bookbench:write-section:edit %s` — edited.md regenerated\n' "$NOW" "$N" >> .book/STATE.md
 ```
 
 ### Constitutional rules

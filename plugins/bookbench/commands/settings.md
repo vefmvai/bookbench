@@ -1,10 +1,10 @@
 ---
-description: Views or edits the global plugin settings ${CLAUDE_PLUGIN_DATA}/settings.yaml. Without arguments lists all sections. With <section> shows section-level fields. With <section>.<key>=<value> sets a field and verifies. Distinct from /book:config (which edits per-book .book/config.yaml). Affects every book on this machine.
+description: Views or edits the global plugin settings ${CLAUDE_PLUGIN_DATA}/settings.yaml. Without arguments lists all sections. With <section> shows section-level fields. With <section>.<key>=<value> sets a field and verifies. Distinct from /bookbench:config (which edits per-book .book/config.yaml). Affects every book on this machine.
 argument-hint: "[<section>] [<key>=<value>]"
 allowed-tools: [Read, Write, Edit, Bash, AskUserQuestion]
 ---
 
-# /book:settings
+# /bookbench:settings
 
 <purpose>
 Editor for `${CLAUDE_PLUGIN_DATA}/settings.yaml` — the global per-user plugin settings. Settings here are inherited by every book unless overridden by genre defaults (`defaults.yaml`) or per-book config (`.book/config.yaml`).
@@ -93,9 +93,9 @@ echo ""
 cat "$SETTINGS"
 echo ""
 echo "Recommended next:"
-echo "  /book:settings mcp_servers          — see MCP server config."
-echo "  /book:settings evolver              — see evolver thresholds."
-echo "  /book:settings ui.default_voice_strictness=strict   — change a field."
+echo "  /bookbench:settings mcp_servers          — see MCP server config."
+echo "  /bookbench:settings evolver              — see evolver thresholds."
+echo "  /bookbench:settings ui.default_voice_strictness=strict   — change a field."
 ```
 
 ### Step 4 — Mode B: section view (`<section>` only)
@@ -109,7 +109,7 @@ Known sections: mcp_servers | evolver | privacy | ui | scan_paths
 
 ### Step 5 — Mode C: assignment
 
-Same parser as `/book:config` Step 5. Compute `OLD_VALUE`. If unchanged — print «no-op» and exit.
+Same parser as `/bookbench:config` Step 5. Compute `OLD_VALUE`. If unchanged — print «no-op» and exit.
 
 ### Step 6 — Confirmation gate
 
@@ -131,7 +131,7 @@ TS=$(date -u +%Y%m%dT%H%M%SZ)
 mkdir -p "$PLUGIN_DATA/.backup"
 cp -p "$SETTINGS" "$PLUGIN_DATA/.backup/settings-$TS.yaml"
 
-# Apply (similar awk to /book:config Step 7)
+# Apply (similar awk to /bookbench:config Step 7)
 SECT=$(echo "$KEY_PATH" | cut -d. -f1)
 KEY=$(echo "$KEY_PATH" | cut -d. -f2)
 awk -v s="$SECT" -v k="$KEY" -v v="$NEW_VALUE" '
@@ -154,8 +154,8 @@ Updated $KEY_PATH: $OLD_VALUE → $NEW_VALUE
 Backup: $PLUGIN_DATA/.backup/settings-$TS.yaml
 
 Recommended next:
-  /book:settings $SECT          — see other fields in this section.
-  /book:settings                — full settings view.
+  /bookbench:settings $SECT          — see other fields in this section.
+  /bookbench:settings                — full settings view.
 ```
 
 ### Constitutional rules
@@ -163,7 +163,7 @@ Recommended next:
 - **MUST** create a backup before any edit.
 - **MUST** confirm with the author before writing global settings (these affect every book on the machine).
 - **MUST** keep an append-only log at `${CLAUDE_PLUGIN_DATA}/settings.log` for audit.
-- **NEVER** read or write any book's `.book/config.yaml` from this command — that is `/book:config`.
+- **NEVER** read or write any book's `.book/config.yaml` from this command — that is `/bookbench:config`.
 - **NEVER** edit `defaults.yaml` (those are genre defaults shipped with the plugin).
 
 </execution>

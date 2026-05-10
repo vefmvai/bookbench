@@ -1,6 +1,6 @@
 # Guidelines for book-tuner
 
-> The tuner reads this file at the start of every /book:tune analysis.
+> The tuner reads this file at the start of every /bookbench:tune analysis.
 
 ## Index
 

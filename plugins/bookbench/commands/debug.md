@@ -4,7 +4,7 @@ argument-hint: "[<slug>] [--new] [--close]"
 allowed-tools: [Read, Write, Edit, Bash, Glob, AskUserQuestion]
 ---
 
-# /book:debug
+# /bookbench:debug
 
 <purpose>
 A separate "investigator mode" of the main dialog — not a subagent invocation. Holds reasoning state across sessions in a markdown file. Useful when chasing down subtle bugs in factcheck, voice drift, glossary inconsistency, or any other multi-session investigation.
@@ -29,7 +29,7 @@ Read-modify pattern. Six steps.
 ### Step 1 — Pre-flight
 
 ```bash
-[ -d .book ] || { echo "No .book/ directory. Run /book:start first."; exit 0; }
+[ -d .book ] || { echo "No .book/ directory. Run /bookbench:start first."; exit 0; }
 mkdir -p .book/debug
 
 # Parse arguments: first positional = slug; flags --new, --close
@@ -56,7 +56,7 @@ if [ -z "$SLUG" ]; then
     echo "No active debug sessions."
     echo ""
     echo "Recommended next:"
-    echo "  /book:debug --new <slug>     — start a new investigation."
+    echo "  /bookbench:debug --new <slug>     — start a new investigation."
     exit 0
   fi
   echo "Active debug sessions:"
@@ -68,8 +68,8 @@ if [ -z "$SLUG" ]; then
   done
   echo ""
   echo "Recommended next:"
-  echo "  /book:debug <slug>           — resume an investigation."
-  echo "  /book:debug --new <slug>     — start a new one."
+  echo "  /bookbench:debug <slug>           — resume an investigation."
+  echo "  /bookbench:debug --new <slug>     — start a new one."
   exit 0
 fi
 ```
@@ -80,13 +80,13 @@ fi
 if [ "$ACTION" = "new" ]; then
   [ -z "$SLUG" ] && {
     echo "Error: --new requires a slug."
-    echo "Usage: /book:debug --new <slug>"
+    echo "Usage: /bookbench:debug --new <slug>"
     exit 0
   }
 
   DBG=".book/debug/$SLUG.md"
   if [ -f "$DBG" ]; then
-    echo "Error: $DBG already exists. Use /book:debug $SLUG to resume."
+    echo "Error: $DBG already exists. Use /bookbench:debug $SLUG to resume."
     exit 0
   fi
 
@@ -116,14 +116,14 @@ Status: open
 
 ## Resolution
 
-(filled in when /book:debug --close $SLUG)
+(filled in when /bookbench:debug --close $SLUG)
 MD
 
   echo "Created $DBG. Open it in your editor or describe the problem here in the dialog."
   echo ""
   echo "Recommended next:"
-  echo "  /book:debug $SLUG          — resume to add findings."
-  echo "  /book:debug --close $SLUG  — close when resolved."
+  echo "  /bookbench:debug $SLUG          — resume to add findings."
+  echo "  /bookbench:debug --close $SLUG  — close when resolved."
   exit 0
 fi
 ```
@@ -135,7 +135,7 @@ if [ "$ACTION" = "resume" ] && [ -n "$SLUG" ]; then
   DBG=".book/debug/$SLUG.md"
   [ -f "$DBG" ] || {
     echo "Error: $DBG does not exist."
-    echo "Use /book:debug --new $SLUG to create it."
+    echo "Use /bookbench:debug --new $SLUG to create it."
     exit 0
   }
 
@@ -195,17 +195,17 @@ fi
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 case "$ACTION" in
   new)
-    printf '\n%s — `/book:debug --new` — opened debug session %s\n' "$NOW" "$SLUG" >> .book/STATE.md ;;
+    printf '\n%s — `/bookbench:debug --new` — opened debug session %s\n' "$NOW" "$SLUG" >> .book/STATE.md ;;
   resume)
-    printf '\n%s — `/book:debug` — resumed debug session %s\n' "$NOW" "$SLUG" >> .book/STATE.md ;;
+    printf '\n%s — `/bookbench:debug` — resumed debug session %s\n' "$NOW" "$SLUG" >> .book/STATE.md ;;
   close)
-    printf '\n%s — `/book:debug --close` — closed debug session %s\n' "$NOW" "$SLUG" >> .book/STATE.md ;;
+    printf '\n%s — `/bookbench:debug --close` — closed debug session %s\n' "$NOW" "$SLUG" >> .book/STATE.md ;;
 esac
 
 echo ""
 echo "Recommended next:"
-echo "  /book:debug                  — list other active sessions."
-echo "  /book:debug --new <slug>     — start a new investigation."
+echo "  /bookbench:debug                  — list other active sessions."
+echo "  /bookbench:debug --new <slug>     — start a new investigation."
 ```
 
 ### Constitutional rules

@@ -22,7 +22,7 @@ Every author voice projects onto six parameters that the writer must calibrate a
 | Dash typography | medium dash (–) — long dash (—) | medium |
 | Anglicism tolerance | strict (Russian only) — moderate — loose | moderate |
 
-Each value lives in `.book/voice-profile.yaml` (set during `/book:start`) and overrides the genre defaults from `defaults.yaml`.
+Each value lives in `.book/voice-profile.yaml` (set during `/bookbench:start`) and overrides the genre defaults from `defaults.yaml`.
 
 ## Calibration procedure for writer at section start
 

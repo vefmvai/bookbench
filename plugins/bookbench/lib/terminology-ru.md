@@ -19,7 +19,7 @@
 
 **НЕ подлежат замене** (технические термины фреймворка, оставляем как есть):
 - Имена полей YAML/JSON (`default`, `workflow`, `addressing_mode`).
-- Имена команд и подкоманд (`/book:start`, `/book:research-format`).
+- Имена команд и подкоманд (`/bookbench:start`, `/bookbench:research-format`).
 - Имена скиллов и субагентов (`book-writer`, `book-editor`, `voice-builder`).
 - Frontmatter и идентификаторы.
 - Английские заголовки служебных файлов (`# Book project`).

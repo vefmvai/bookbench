@@ -1,6 +1,6 @@
 # Case 04 — Экзотический формат: автор пишет киносценарий (B2 ресёрч)
 
-> **Покрытие:** ни один встроенный формат не описывает то, что делает автор. Активируется ветка B2 в § 2 — вызов `/book:research-format screenplay`. После генерации пресета — возврат к B1.4 с гипотезой `screenplay`.
+> **Покрытие:** ни один встроенный формат не описывает то, что делает автор. Активируется ветка B2 в § 2 — вызов `/bookbench:research-format screenplay`. После генерации пресета — возврат к B1.4 с гипотезой `screenplay`.
 >
 > **Источник правды:** `lib/start-coach-prompt.md` § 2 ветка B2; `matching-design.md` § 3.2 ветка B2; `research-format-spec.md` (шаги 1–7).
 
@@ -22,7 +22,7 @@
 
 > «Запускай ресёрч, давай создадим пресет для screenplay.»
 
-**Сообщение 3 (после генерации пресета `/book:research-format`):**
+**Сообщение 3 (после генерации пресета `/bookbench:research-format`):**
 
 > «Согласен с пресетом, сохраняй.»
 
@@ -44,7 +44,7 @@
 - Стартовая реплика, ожидание ответа.
 
 ### § 6. Trigger → Action
-- Файлов нет → «Окей, работаем с нуля; если позже найдёшь черновики — есть `/book:import`».
+- Файлов нет → «Окей, работаем с нуля; если позже найдёшь черновики — есть `/bookbench:import`».
 
 ### § 2. Format — ветка B2 (нет пресета)
 - Анализ признаков: «сценарий полнометражного фильма», «90-100 страниц», «три акта», «питчинг продюсерам» → ни один из 5 встроенных форматов не покрывает (article/long-read/book/monograph/dissertation — европейская рамка прозы).
@@ -67,8 +67,8 @@
 
 - Автор: «Запускай ресёрч».
 
-### § 2 продолжение: вызов `/book:research-format`
-- `Task` (или прямой вызов команды): `/book:research-format screenplay --description "сценарий полнометражного фильма, 90-100 страниц, три акта, для питчинга продюсерам"`.
+### § 2 продолжение: вызов `/bookbench:research-format`
+- `Task` (или прямой вызов команды): `/bookbench:research-format screenplay --description "сценарий полнометражного фильма, 90-100 страниц, три акта, для питчинга продюсерам"`.
 - В команде:
   - **Step 3** валидирует `slug=screenplay` — не зарезервировано, в библиотеке нет.
   - **Step 6** показывает план Deep Research → автор подтверждает.
@@ -79,7 +79,7 @@
     - structure_skeleton: «трёхактная структура (setup / confrontation / resolution); inciting incident в первом акте; midpoint в середине второго; climax в третьем»
     - factcheck_density: «standard» (для драмы — но если biopic, то enhanced)
     - marketing_mode: «one-promo-per-document» (питчинговый pack: logline + synopsis + sample pages)
-    - compatible_genres: `["fiction"]` (предположим, что в библиотеке уже есть `fiction` или будет создан через `/book:research-genre`)
+    - compatible_genres: `["fiction"]` (предположим, что в библиотеке уже есть `fiction` или будет создан через `/bookbench:research-genre`)
   - **Step 11** показывает сгенерированный пресет автору.
 - Автор: «Согласен с пресетом, сохраняй.»
 - **Step 12** записывает в `${CLAUDE_PLUGIN_DATA}/user-formats/screenplay.yaml`.
@@ -95,7 +95,7 @@
 - Автор: «Жанр — драма, можно записать как fiction-screenplay или просто fiction.»
 - Агент уточняет: «Раз пресет screenplay уже есть в библиотеке, жанр запишу как `fiction` — это тип, форма уже отражена в `format`. Согласен?»
 - Подтверждение → `BOOK_GENRE = fiction`.
-  - **Примечание:** на 0.3.0 `fiction` — встроенный жанр (см. `defaults.yaml > genres > fiction`). Если на момент кейса его нет — кейс продолжается через ветку B2 жанра (`/book:research-genre fiction`). Для упрощения предположим, что `fiction` уже встроен.
+  - **Примечание:** на 0.3.0 `fiction` — встроенный жанр (см. `defaults.yaml > genres > fiction`). Если на момент кейса его нет — кейс продолжается через ветку B2 жанра (`/bookbench:research-genre fiction`). Для упрощения предположим, что `fiction` уже встроен.
 
 ### § 4. Audience (B1, готовый портрет)
 - 4 аспекта в сообщении 6:
@@ -152,13 +152,13 @@ workflow:
   ID в реестре: <slug>-<date>
 
 Рекомендуемый следующий шаг:
-  /book:plan-book   — собрать план сцен (через book-strategist).
+  /bookbench:plan-book   — собрать план сцен (через book-strategist).
 ```
 
 ## Acceptance criteria
 
 - ✅ Ветка B2 в § 2 сработала.
-- ✅ `/book:research-format screenplay` вызвана.
+- ✅ `/bookbench:research-format screenplay` вызвана.
 - ✅ Пресет сохранён в `${CLAUDE_PLUGIN_DATA}/user-formats/screenplay.yaml`.
 - ✅ После ресёрча — возврат к B1.4 с гипотезой `screenplay`.
 - ✅ В `.book/config.yaml` `format: screenplay`.

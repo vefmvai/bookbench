@@ -7,7 +7,7 @@
 ## Setup
 
 - Папка: `/tmp/test-book-longread/`.
-- Запуск: `/book:start`.
+- Запуск: `/bookbench:start`.
 
 ## Author messages
 
@@ -38,8 +38,8 @@
      ID в реестре: kognitivnaya-nagruzka-2026-05-10
 
    Рекомендуемый следующий шаг:
-     /book:plan-book   — собрать план часть-ов (через book-strategist).
-     /book:status      — посмотреть текущее состояние лонгрида в любой момент.
+     /bookbench:plan-book   — собрать план часть-ов (через book-strategist).
+     /bookbench:status      — посмотреть текущее состояние лонгрида в любой момент.
    ```
 
 ## Pass criteria

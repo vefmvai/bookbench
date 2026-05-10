@@ -11,7 +11,7 @@ prerequisites: []
 override_quantitative: {}             # see quantitative-checklists.md (etap 11) — only set when this section must override the book defaults
 ---
 
-<!-- автогенерируется при /book:plan-section; редактируется только стратегом или автором через /book:plan-section --revise -->
+<!-- автогенерируется при /bookbench:plan-section; редактируется только стратегом или автором через /bookbench:plan-section --revise -->
 
 # Section specification
 

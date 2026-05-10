@@ -117,7 +117,7 @@ workflow:
   ID в реестре: <slug>-<date>
 
 Рекомендуемый следующий шаг:
-  /book:plan-book   — собрать план частей (через book-strategist).
+  /bookbench:plan-book   — собрать план частей (через book-strategist).
 ```
 
 ## Acceptance criteria

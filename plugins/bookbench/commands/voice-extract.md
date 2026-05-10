@@ -4,10 +4,10 @@ argument-hint: "[--to-stdout | --to-file <path>]"
 allowed-tools: [Read, Write, Bash, Glob, Grep]
 ---
 
-# /book:voice extract
+# /bookbench:voice extract
 
 <purpose>
-Pack .book/context/voice-profile.md + .book/agent-guidelines/writer/voice-samples.md into a single markdown file (the "voice pack" format from voices-helpers H2). The pack is what /book:voice save-as later stores in the personal library.
+Pack .book/context/voice-profile.md + .book/agent-guidelines/writer/voice-samples.md into a single markdown file (the "voice pack" format from voices-helpers H2). The pack is what /bookbench:voice save-as later stores in the personal library.
 </purpose>
 
 <!-- Stage 08.1, Wave B, T4: full implementation. PS-08.1-07 privacy enforcement. -->
@@ -107,7 +107,7 @@ fi
 MEANINGFUL=$(grep -vE '^\s*$|^\s*#|^>|TBD|\(Add entries here\.\)|<!-- ' "$PROFILE_PATH" | wc -l | tr -d ' ')
 if [ "${MEANINGFUL:-0}" -le 3 ]; then
   echo "voice extract: voice-profile.md looks empty (only TBD placeholders detected)." 1>&2
-  echo "  Run /book:voice build first." 1>&2
+  echo "  Run /bookbench:voice build first." 1>&2
   exit 1
 fi
 ```
@@ -174,9 +174,9 @@ cat <<'NEXT'
 voice extract: done.
 
 Next steps:
-  /book:voice save-as <name>     — save the pack into ~/.bookbench/voices/<name>.md
-  /book:voice import <name>      — replace the current book's voice with a saved one
-  /book:voice list               — see all voices in your personal library
+  /bookbench:voice save-as <name>     — save the pack into ~/.bookbench/voices/<name>.md
+  /bookbench:voice import <name>      — replace the current book's voice with a saved one
+  /bookbench:voice list               — see all voices in your personal library
 NEXT
 ```
 
@@ -185,6 +185,6 @@ NEXT
 - **MUST** be read-only on `.book/` — never modifies `voice-profile.md` or `voice-samples.md`.
 - **MUST** apply privacy guard before every Write/cp site (PS-08.1-07).
 - **NEVER** writes inside `${CLAUDE_PLUGIN_ROOT}`. The `--to-file` path is checked.
-- **NEVER** writes inside `~/.bookbench/voices/` directly — that is the job of `/book:voice save-as`.
+- **NEVER** writes inside `~/.bookbench/voices/` directly — that is the job of `/bookbench:voice save-as`.
 
 </execution>

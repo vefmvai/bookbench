@@ -1,5 +1,5 @@
 # Telegram tone
 
-(Filled at /book:start with genre defaults.)
+(Filled at /bookbench:start with genre defaults.)
 
 - TBD

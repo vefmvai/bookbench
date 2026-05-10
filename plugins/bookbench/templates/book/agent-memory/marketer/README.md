@@ -24,4 +24,4 @@ cat .book/.claude/agent-memory/marketer/MEMORY.md
 
 ## How to edit
 
-Do NOT edit by hand. The agent owns this file. Use `/book:guidelines marketer` to influence its behaviour through guidelines instead.
+Do NOT edit by hand. The agent owns this file. Use `/bookbench:guidelines marketer` to influence its behaviour through guidelines instead.

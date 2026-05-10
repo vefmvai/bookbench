@@ -7,7 +7,7 @@ description: Описывает протокол синтезатора, пре�
 
 ## When to use
 
-Injected into `book-doc-synthesizer`. Activated only by `/book:import` after `book-doc-classifier` produces `intel/classifications/*.json`.
+Injected into `book-doc-synthesizer`. Activated only by `/bookbench:import` after `book-doc-classifier` produces `intel/classifications/*.json`.
 
 ## Two modes — propose and write
 
@@ -28,7 +28,7 @@ The synthesizer runs in one of two modes per coordinator invocation:
 - F-0001 from inputs/notes.md → writer/MEMORY.md > used_metaphors. Confidence 0.91. No conflict.
 - ...
 
-## Competing-variants (conflict found, awaits /book:resolve)
+## Competing-variants (conflict found, awaits /bookbench:resolve)
 
 - V-01: F-0023 (inputs/draft-v1.md) and F-0098 (inputs/draft-v2.md) both propose to add the same concept to glossary; texts differ.
 - V-02: F-0044 proposes a voice-sample that contradicts an existing voice-sample (different register).
@@ -54,7 +54,7 @@ A conflict arises when:
 - Two fragments propose different content for the same target slot (same `glossary-term`, same `parameter` ID).
 - A fragment proposes content that contradicts an existing entry (e.g., outdated source vs new trusted source).
 
-Conflicts go into `INGEST-DECISIONS.md > Competing-variants` with a `V-NN` ID. The author resolves them via `/book:resolve <variant-id> <a|b|merge|reject>`.
+Conflicts go into `INGEST-DECISIONS.md > Competing-variants` with a `V-NN` ID. The author resolves them via `/bookbench:resolve <variant-id> <a|b|merge|reject>`.
 
 ## Procedure (propose mode)
 

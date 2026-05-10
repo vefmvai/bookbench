@@ -4,7 +4,7 @@ argument-hint: "[<path>] [--mode new|merge] [--from claudeai|obsidian|fs] [--man
 allowed-tools: [Task, Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 ---
 
-# /book:import
+# /bookbench:import
 
 <purpose>
 Bring legacy notes into a structured book. Implements the second of the two starting scenarios — author has drafts, chat exports, or vault notes and wants them ingested into the BookBench structure. Two-stage pipeline: classifier sorts each file into one of 11 classes; synthesizer proposes a destination per item with an INGEST-DECISIONS gate.
@@ -15,7 +15,7 @@ Bring legacy notes into a structured book. Implements the second of the two star
 ## Inputs
 
 - `<path>` (positional, optional): file or directory; defaults to `.book/inputs/`.
-- `--mode new` (default at `/book:start --from-existing`) or `--mode merge` (running on an established book).
+- `--mode new` (default at `/bookbench:start --from-existing`) or `--mode merge` (running on an established book).
 - `--from <type>` for source-format hints (`claudeai`, `obsidian`, `fs`).
 - `--manifest <file>` for an external manifest of files to consider (overrides `<path>` glob).
 
@@ -33,7 +33,7 @@ This is the largest orchestrator in stage 14. It implements `import-scenario-flo
 
 ```bash
 [ -d .book ] || {
-  echo "No .book/ directory. Run /book:start first or use /book:start --from-existing."
+  echo "No .book/ directory. Run /bookbench:start first or use /bookbench:start --from-existing."
   exit 0
 }
 
@@ -83,7 +83,7 @@ If existing INGEST-DECISIONS.md is present and the new mode is `merge`, ask:
 
 ### Step 3 — Build the file list
 
-If `--manifest` is given — read line-by-line. Otherwise, glob the source path. Limit to 100 files per invocation (per `/book:import` design); if the glob returns more, ask the author whether to take the first 100 alphabetically or to cancel and re-run with a manifest.
+If `--manifest` is given — read line-by-line. Otherwise, glob the source path. Limit to 100 files per invocation (per `/bookbench:import` design); if the glob returns more, ask the author whether to take the first 100 alphabetically or to cancel and re-run with a manifest.
 
 ```bash
 # Build file list
@@ -179,7 +179,7 @@ After Task returns, verify INGEST-DECISIONS.md exists and has at least one bucke
 
 ```
 Synthesizer returned no decisions. Inspect .book/intel/classifications/
-manually or re-run /book:import.
+manually or re-run /bookbench:import.
 ```
 
 ### Step 6 — INGEST-DECISIONS gate (batch confirm)
@@ -189,7 +189,7 @@ Read INGEST-DECISIONS.md and extract the three bucket counters (e.g., `Auto-reso
 - Title: «Import decisions ready»
 - Body: «Synthesizer proposes:
   - Auto-resolved: N items (will be applied directly)
-  - Competing variants: M items (require manual `/book:resolve <V-id>`)
+  - Competing variants: M items (require manual `/bookbench:resolve <V-id>`)
   - Rejected: K items (no destination found)»
 - Options:
   - `Apply auto-resolved now` — proceed to Step 7.
@@ -218,22 +218,22 @@ APPLIED=$(grep -c '^\* applied' .book/INGEST-DECISIONS.md || echo 0)
 PENDING=$(grep -c '^- V-' .book/INGEST-DECISIONS.md || echo 0)
 
 # Update STATE.md
-printf '\n%s — `/book:import` — applied %d auto-resolved; %d competing variants pending\n' \
+printf '\n%s — `/bookbench:import` — applied %d auto-resolved; %d competing variants pending\n' \
   "$NOW" "$APPLIED" "$PENDING" >> .book/STATE.md
 
 if [ "$PENDING" -gt 0 ]; then
   echo "Import done: $APPLIED items applied, $PENDING competing variants pending."
   echo ""
   echo "Recommended next:"
-  echo "  /book:resolve V-01    — resolve the first competing variant."
-  echo "  /book:resolve V-02    — and so on."
-  echo "  /book:status          — overview after import."
+  echo "  /bookbench:resolve V-01    — resolve the first competing variant."
+  echo "  /bookbench:resolve V-02    — and so on."
+  echo "  /bookbench:status          — overview after import."
 else
   echo "Import done: $APPLIED items applied. No competing variants."
   echo ""
   echo "Recommended next:"
-  echo "  /book:status         — overview after import."
-  echo "  /book:plan-book      — (re-)plan now that material is in place."
+  echo "  /bookbench:status         — overview after import."
+  echo "  /bookbench:plan-book      — (re-)plan now that material is in place."
 fi
 ```
 
@@ -242,9 +242,9 @@ fi
 - **MUST** call classifier and synthesizer with `memory: none` (per MEM-01).
 - **MUST** treat classifier and synthesizer as the only roles permitted to read raw author materials (`<path>` content) — the orchestrator only reads them via the Tasks' `<files_to_read>`.
 - **MUST** present an INGEST-DECISIONS gate before applying anything (Brief-Then-Execute, Part VII methodology).
-- **MUST** keep competing variants pending — never auto-resolve them (that is `/book:resolve`).
+- **MUST** keep competing variants pending — never auto-resolve them (that is `/bookbench:resolve`).
 - **NEVER** delete original files in `<path>` or `.book/inputs/` — they remain as authoritative source.
-- **NEVER** invoke writer / editor / factchecker — these come later via `/book:write-section`.
+- **NEVER** invoke writer / editor / factchecker — these come later via `/bookbench:write-section`.
 - **NEVER** exceed the per-invocation limit of 100 files; for larger imports, ask the author for a manifest split.
 
 </execution>

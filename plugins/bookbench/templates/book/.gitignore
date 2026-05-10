@@ -5,7 +5,7 @@
 # Voice profile (TOV-05): the author's voice is personal data and should not
 # be committed to a public book repository by default. The voice itself lives
 # in the personal library at ~/.bookbench/voices/ (TOV-02), portable across
-# books via /book:voice extract|save-as|import|list.
+# books via /bookbench:voice extract|save-as|import|list.
 #
 # If you are running a public research project and DO want to commit the
 # voice (e.g. to share writing style as part of an experiment), comment out

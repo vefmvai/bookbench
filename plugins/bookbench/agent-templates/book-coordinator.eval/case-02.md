@@ -2,7 +2,7 @@
 
 ## Input
 
-User runs `/book:write-section 5`. Coordinator orchestrates strategist →
+User runs `/bookbench:write-section 5`. Coordinator orchestrates strategist →
 writer → factchecker. Factchecker returns `factcheck.md` with
 `status: revise-required` for the third time in a row (factcheck_iteration_count
 becomes 3 after this iteration). Two `[UNVERIFIABLE]` claims remain.

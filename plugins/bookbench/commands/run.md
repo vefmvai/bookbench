@@ -4,10 +4,10 @@ argument-hint: "<block-name> [--section <N>] [--params <key=value>...]"
 allowed-tools: [Read, Write, Edit, Bash, Glob, Task, AskUserQuestion]
 ---
 
-# /book:run
+# /bookbench:run
 
 <purpose>
-Generic block runner. Bridges the gap between «I want to run this specific block» and the curated wrappers (`/book:plan-book`, `/book:write-section`, etc.). For most popular blocks there is a dedicated command; `/book:run` covers everything else in the catalog.
+Generic block runner. Bridges the gap between «I want to run this specific block» and the curated wrappers (`/bookbench:plan-book`, `/bookbench:write-section`, etc.). For most popular blocks there is a dedicated command; `/bookbench:run` covers everything else in the catalog.
 </purpose>
 
 <!-- ЭТАП 14: реализовано — см. <execution> ниже; полный дизайн — UX-02 в `tradeoffs-and-decisions.md` этапа 7.2 -->
@@ -34,7 +34,7 @@ Eight-step orchestrator. Most of the work is dispatch — the actual block logic
 ### Step 1 — Pre-flight
 
 ```bash
-[ -d .book ] || { echo "No .book/ directory. Run /book:start first."; exit 0; }
+[ -d .book ] || { echo "No .book/ directory. Run /bookbench:start first."; exit 0; }
 
 # Parse arguments
 BLOCK_NAME=""
@@ -50,8 +50,8 @@ for arg in $ARGUMENTS; do
 done
 
 if [ -z "$BLOCK_NAME" ]; then
-  echo "Error: /book:run requires a block name."
-  echo "Usage: /book:run <block-name> [--section <N>] [--params key=value...]"
+  echo "Error: /bookbench:run requires a block name."
+  echo "Usage: /bookbench:run <block-name> [--section <N>] [--params key=value...]"
   echo "See $CLAUDE_PLUGIN_ROOT/blocks-catalog.md for the full list."
   exit 0
 fi
@@ -149,7 +149,7 @@ Re-read each declared output from disk. Confirm that the file exists and is non-
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 SCOPE_LABEL="book"
 [ -n "$SECTION_N" ] && SCOPE_LABEL="section $SECTION_N"
-printf '\n%s — `/book:run %s` — block ran for %s\n' \
+printf '\n%s — `/bookbench:run %s` — block ran for %s\n' \
   "$NOW" "$BLOCK_NAME" "$SCOPE_LABEL" >> .book/STATE.md
 ```
 
@@ -160,8 +160,8 @@ Block <BLOCK_NAME> done.
 Outputs: <list>
 
 Recommended next:
-  /book:next        — see what to do next.
-  /book:status      — see overall progress.
+  /bookbench:next        — see what to do next.
+  /bookbench:status      — see overall progress.
 ```
 
 ### Constitutional rules
@@ -170,7 +170,7 @@ Recommended next:
 - **MUST** confirm with the author before executing (Brief-Then-Execute, Part VII methodology).
 - **MUST** keep block logic in the catalog or in the subagent — the orchestrator only dispatches.
 - **NEVER** invent block names or invent block parameters not in the catalog.
-- **NEVER** chain multiple blocks in one invocation — one block per `/book:run` call.
-- **NEVER** override a wrapper command — for blocks with dedicated commands (`/book:plan-book` for `book-plan`, etc.), recommend the wrapper instead of running the block directly.
+- **NEVER** chain multiple blocks in one invocation — one block per `/bookbench:run` call.
+- **NEVER** override a wrapper command — for blocks with dedicated commands (`/bookbench:plan-book` for `book-plan`, etc.), recommend the wrapper instead of running the block directly.
 
 </execution>

@@ -14,7 +14,7 @@
 6. [Фаза 4. Редактор → edited.md](#фаза-4-редактор--editedmd)
 7. [Фаза 5. Маркетолог → marketing.md](#фаза-5-маркетолог--marketingmd)
 8. [Гейты автора и петли верификации](#гейты-автора-и-петли-верификации)
-9. [Atomic subcommands `/book:write-section:*`](#atomic-subcommands-bookwrite-section)
+9. [Atomic subcommands `/bookbench:write-section:*`](#atomic-subcommands-bookwrite-section)
 10. [Recovery — что делать при ошибках](#recovery--что-делать-при-ошибках)
 11. [Связь с workflow.md и параметризация](#связь-с-workflowmd-и-параметризация)
 
@@ -68,10 +68,10 @@ sections/01/
 ### Команда
 
 ```
-> /book:plan-section <N>
+> /bookbench:plan-section <N>
 ```
 
-Эта команда — **отдельная** от `/book:write-section <N>`. Её можно вызвать заранее, обсудить с автором, поправить руками, и только потом запустить полный цикл. Это специально: ТЗ — самая важная точка обсуждения; гейт автора после `spec.md` — обязательный (см. ниже).
+Эта команда — **отдельная** от `/bookbench:write-section <N>`. Её можно вызвать заранее, обсудить с автором, поправить руками, и только потом запустить полный цикл. Это специально: ТЗ — самая важная точка обсуждения; гейт автора после `spec.md` — обязательный (см. ниже).
 
 ### Вход
 
@@ -146,7 +146,7 @@ sections/01/
 | Проблема | Как чинить |
 |----------|------------|
 | Стратег предложил странный governing thought | Прервать, отредактировать `spec.md` руками или попросить переделать с уточнениями |
-| Ключевые примеры пересекаются с уже использованными | Стратег это ловит автоматически (читает `agent-memory/strategist/MEMORY.md`); если пропустил — открыть файл и добавить вручную, перезапустить `/book:plan-section <N>` |
+| Ключевые примеры пересекаются с уже использованными | Стратег это ловит автоматически (читает `agent-memory/strategist/MEMORY.md`); если пропустил — открыть файл и добавить вручную, перезапустить `/bookbench:plan-section <N>` |
 | ТЗ слишком объёмное (10+ supports) | Это нарушение принципа Pyramid. Сократить до ≤3 supports вручную или переформулировать `parameters.md` |
 
 ---
@@ -155,7 +155,7 @@ sections/01/
 
 ### Команда
 
-Запускается автоматически после `spec.md` в составе `/book:write-section <N>`. Atomic-аналог — `/book:write-section:draft <N>` (только эта фаза, без последующих).
+Запускается автоматически после `spec.md` в составе `/bookbench:write-section <N>`. Atomic-аналог — `/bookbench:write-section:draft <N>` (только эта фаза, без последующих).
 
 ### Вход
 
@@ -185,9 +185,9 @@ sections/01/
 | Проблема | Как чинить |
 |----------|------------|
 | Hook блокирует правомерную фразу (false positive) | Добавить исключение в `agent-guidelines/writer/forbidden-phrases.md` → `# Allowed (overrides default block)` |
-| Текст звучит как ИИ, несмотря на hook | Запустить `/book:tune` — tuner проанализирует и предложит обобщённое правило. Или править голос: уточнить параметры в `voice-profile.md` (например, `emotional intensity: warm` → `restrained`) |
-| Писатель повторяет пример из главы 3 | Открыть `agent-memory/writer/MEMORY.md`, проверить, что пример там зафиксирован. Если нет — добавить вручную, перезапустить `/book:write-section:draft <N>` |
-| Voice gate сработал «не вовремя» | Выбрать B3 — агент сам предложит за 2-3 минуты. Или B2 (`/book:voice build` в отдельной сессии) |
+| Текст звучит как ИИ, несмотря на hook | Запустить `/bookbench:tune` — tuner проанализирует и предложит обобщённое правило. Или править голос: уточнить параметры в `voice-profile.md` (например, `emotional intensity: warm` → `restrained`) |
+| Писатель повторяет пример из главы 3 | Открыть `agent-memory/writer/MEMORY.md`, проверить, что пример там зафиксирован. Если нет — добавить вручную, перезапустить `/bookbench:write-section:draft <N>` |
+| Voice gate сработал «не вовремя» | Выбрать B3 — агент сам предложит за 2-3 минуты. Или B2 (`/bookbench:voice build` в отдельной сессии) |
 
 ---
 
@@ -195,7 +195,7 @@ sections/01/
 
 ### Команда
 
-Запускается автоматически. Atomic — `/book:write-section:factcheck <N>`.
+Запускается автоматически. Atomic — `/bookbench:write-section:factcheck <N>`.
 
 ### Вход
 
@@ -307,7 +307,7 @@ RECOMMENDATION: переформулировать на «была частью 
 
 | Проблема | Как чинить |
 |----------|------------|
-| Фактчекер не находит источник на простой факт | Проверить `agent-guidelines/factchecker/trusted-sources.md` — возможно, ваш домен не в списке. Добавить через `/book:guidelines factchecker` |
+| Фактчекер не находит источник на простой факт | Проверить `agent-guidelines/factchecker/trusted-sources.md` — возможно, ваш домен не в списке. Добавить через `/bookbench:guidelines factchecker` |
 | Слишком много `[ASSUMED]` | Возможно, тема специфическая, и WebSearch не покрывает. Подключить релевантный MCP-сервер (например, MCP-PubMed для медицины) — конфигурация в `book-factchecker.md` → `mcpServers:` |
 | Loop max reached | Прогнать decision (a/b/c/d) сознательно. Это нормально — некоторые утверждения нон-фикшна действительно требуют ручной проверки в библиотеке |
 
@@ -317,7 +317,7 @@ RECOMMENDATION: переформулировать на «была частью 
 
 ### Команда
 
-Запускается автоматически. Atomic — `/book:write-section:edit <N>`.
+Запускается автоматически. Atomic — `/bookbench:write-section:edit <N>`.
 
 ### Вход
 
@@ -350,7 +350,7 @@ RECOMMENDATION: переформулировать на «была частью 
 | Проблема | Как чинить |
 |----------|------------|
 | Редактор слишком агрессивно сокращает | Поправить `config.yaml > editor.target_compression: 0.05` (5% вместо 10%) |
-| Cohesion с предыдущей главой плохой | Открыть `sections/<N-1>/summary.md` — возможно, неполный. Регенерировать через `/book:write-section:edit <N-1>` (повторно прогон только редактора предыдущей главы) — он перепишет summary |
+| Cohesion с предыдущей главой плохой | Открыть `sections/<N-1>/summary.md` — возможно, неполный. Регенерировать через `/bookbench:write-section:edit <N-1>` (повторно прогон только редактора предыдущей главы) — он перепишет summary |
 | Редактор поменял факт, фактчекер re-check fail | Loop инициируется автоматически. Если fail после 3 итераций → escalate-flow как в фазе 3 |
 
 ---
@@ -359,7 +359,7 @@ RECOMMENDATION: переформулировать на «была частью 
 
 ### Команда
 
-Запускается автоматически. Atomic — `/book:write-section:market <N>`.
+Запускается автоматически. Atomic — `/bookbench:write-section:market <N>`.
 
 ### Вход
 
@@ -399,7 +399,7 @@ RECOMMENDATION: переформулировать на «была частью 
 В стандартном пресете научпопа гейтов автора **только два**:
 
 1. **После `spec.md`** — обязательный (`MC-03`). Автор подтверждает ТЗ, вносит правки, или отменяет цикл.
-2. **После `marketing.md`** — финальный обзор. Автор смотрит готовую главу и упаковку, может править руками; если правит — координатор записывает в `REJECTIONS-LOG.md` (вход для будущего `/book:tune`).
+2. **После `marketing.md`** — финальный обзор. Автор смотрит готовую главу и упаковку, может править руками; если правит — координатор записывает в `REJECTIONS-LOG.md` (вход для будущего `/bookbench:tune`).
 
 Внутри пяти фаз — **полностью автономно**. Это сознательный архитектурный выбор: цель — снять с автора нагрузку «вручную переключать роли», характерную для работы в `claude.ai web`.
 
@@ -424,26 +424,26 @@ gates:
 
 ---
 
-## Atomic subcommands `/book:write-section:*`
+## Atomic subcommands `/bookbench:write-section:*`
 
 Если одна фаза провалилась или нужна повторная только для части — есть атомарные подкоманды:
 
 ```
-/book:write-section:draft <N>      # только писатель; перепишет draft.md
-/book:write-section:factcheck <N>  # только фактчекер; перепишет factcheck.md
-/book:write-section:edit <N>       # только редактор; перепишет edited.md
-/book:write-section:market <N>     # только маркетолог; перепишет marketing.md
+/bookbench:write-section:draft <N>      # только писатель; перепишет draft.md
+/bookbench:write-section:factcheck <N>  # только фактчекер; перепишет factcheck.md
+/bookbench:write-section:edit <N>       # только редактор; перепишет edited.md
+/bookbench:write-section:market <N>     # только маркетолог; перепишет marketing.md
 ```
 
 **Когда использовать:**
 
 | Сценарий | Команда |
 |----------|---------|
-| Hook анти-клише не пропустил, переписал спорное место | `/book:write-section:draft <N>` |
-| Подключил новый MCP-сервер, хочу прогнать фактчек заново | `/book:write-section:factcheck <N>` |
-| Поправил `agent-guidelines/editor/cohesion-rules.md` | `/book:write-section:edit <N>` |
-| Маркетолог отключён, потом включил — нужна marketing.md задним числом | `/book:write-section:market <N>` |
-| Глава полностью устарела, переделать всё | `/book:write-section <N>` (полный цикл) |
+| Hook анти-клише не пропустил, переписал спорное место | `/bookbench:write-section:draft <N>` |
+| Подключил новый MCP-сервер, хочу прогнать фактчек заново | `/bookbench:write-section:factcheck <N>` |
+| Поправил `agent-guidelines/editor/cohesion-rules.md` | `/bookbench:write-section:edit <N>` |
+| Маркетолог отключён, потом включил — нужна marketing.md задним числом | `/bookbench:write-section:market <N>` |
+| Глава полностью устарела, переделать всё | `/bookbench:write-section <N>` (полный цикл) |
 
 **Идемпотентность.** Каждая atomic-команда — идемпотентна: можно вызвать сколько угодно раз, результат стабилен (если входы не менялись). Артефакты перезаписываются; бэкап предыдущих — в `sections/<N>/.history/<timestamp>/` (если включен в `config.yaml > section.keep_history`).
 
@@ -463,21 +463,21 @@ gates:
 
 | Симптом | Команда recovery |
 |---------|------------------|
-| Сессия упала посреди цикла | `/book:resume` — координатор читает `STATE.md` и `sections/<N>/section-state.yaml`, возобновляет с прерванной фазы |
-| `spec.md` устарел (изменил `parameters.md`) | `/book:plan-section <N>` — стратег переписывает spec; затем `/book:write-section <N>` |
-| `draft.md` неудачный, всё переделать | `/book:write-section:draft <N>` — только фаза 2 |
-| Фактчекер выдал FALSE BLOCKER (claim правильный) | Открыть `factcheck.md`, поправить тэг вручную (`[OUTDATED]` → `[VERIFIED: <ваш-источник>]`); затем `/book:write-section:edit <N>` |
-| Cohesion с главой `<N-1>` плохой после правок | `/book:re-edit-section <N>` — переоткрывает редактуру с свежими сводками |
-| Глава готова, но вы потом обновили `voice-profile.md` | `/book:re-edit-section <N>` — редактор пройдёт ещё раз с новым голосом |
-| Координатор не помнит, на какой главе остановился | `/book:status` — читает `STATE.md`. `/book:next` — даёт умную подсказку (откуда продолжить, по `workflow.md`) |
+| Сессия упала посреди цикла | `/bookbench:resume` — координатор читает `STATE.md` и `sections/<N>/section-state.yaml`, возобновляет с прерванной фазы |
+| `spec.md` устарел (изменил `parameters.md`) | `/bookbench:plan-section <N>` — стратег переписывает spec; затем `/bookbench:write-section <N>` |
+| `draft.md` неудачный, всё переделать | `/bookbench:write-section:draft <N>` — только фаза 2 |
+| Фактчекер выдал FALSE BLOCKER (claim правильный) | Открыть `factcheck.md`, поправить тэг вручную (`[OUTDATED]` → `[VERIFIED: <ваш-источник>]`); затем `/bookbench:write-section:edit <N>` |
+| Cohesion с главой `<N-1>` плохой после правок | `/bookbench:re-edit-section <N>` — переоткрывает редактуру с свежими сводками |
+| Глава готова, но вы потом обновили `voice-profile.md` | `/bookbench:re-edit-section <N>` — редактор пройдёт ещё раз с новым голосом |
+| Координатор не помнит, на какой главе остановился | `/bookbench:status` — читает `STATE.md`. `/bookbench:next` — даёт умную подсказку (откуда продолжить, по `workflow.md`) |
 | Hook сломался, exit code не возвращает | Проверить chmod: `ls -l .book/.hooks/anti-ai-cliche-lint.sh` — должен быть `755`. Если нет — `chmod +x .book/.hooks/anti-ai-cliche-lint.sh` |
 
 ### Чек-лист «глава не записывается»
 
-1. `/book:doctor` — есть ли проблемы с инфраструктурой?
+1. `/bookbench:doctor` — есть ли проблемы с инфраструктурой?
 2. `sections/<N>/section-state.yaml` — на какой фазе застряли?
 3. `STATE.md` — что записано последним?
-4. Если фаза-исполнитель — ошибка subagent'а: `/book:debug <slug>` — открывает persistent debug-сессию для расследования.
+4. Если фаза-исполнитель — ошибка subagent'а: `/bookbench:debug <slug>` — открывает persistent debug-сессию для расследования.
 
 ---
 
@@ -513,7 +513,7 @@ section_loop:
 
 Полный список параметров блока — в `section-loop-block.md` каталога блоков (этап 7.1 проекта).
 
-Жанровый скилл (`/book:research-genre <жанр>`) генерирует свой пресет workflow с другим набором параметров. Например, fiction-пресет в 0.2+ может выглядеть как:
+Жанровый скилл (`/bookbench:research-genre <жанр>`) генерирует свой пресет workflow с другим набором параметров. Например, fiction-пресет в 0.2+ может выглядеть как:
 
 ```yaml
 section_loop:

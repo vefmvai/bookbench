@@ -7,7 +7,7 @@ A registered book at `~/example-books/my-book/` with:
 - A populated `.book/sections/section-001/edited.md` containing 8000 characters of prose.
 - A populated `.book/TUNING-LOG.md` with three entries for `role: writer`.
 
-User runs `/book:evolve propose` from a local-dev installation with two other
+User runs `/bookbench:evolve propose` from a local-dev installation with two other
 eligible books in the registry (so the eligibility threshold passes).
 
 ## Expected behaviors

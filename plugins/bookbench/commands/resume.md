@@ -4,7 +4,7 @@ argument-hint: ""
 allowed-tools: [Read, Edit, Bash, Glob, Grep]
 ---
 
-# /book:resume
+# /bookbench:resume
 
 <purpose>
 Re-enter the project after a break — give the author a short situational briefing and a recommended next command.
@@ -32,7 +32,7 @@ This command is a short read + brief. PS-13-03: a very small write is allowed (o
 
 ```bash
 [ -d .book ] || {
-  echo "No .book/ directory. Run /book:start to initialise a book here."
+  echo "No .book/ directory. Run /bookbench:start to initialise a book here."
   exit 0
 }
 ```
@@ -89,14 +89,14 @@ fi
 
 Print 5–12 lines, neutral partner tone. Recommendation logic (Trigger → Action):
 
-- If `PLANNED_SECTIONS == 0` → recommend `/book:plan-book`.
-- Else if no `sections/section-*` directories — recommend `/book:plan-section 1`.
+- If `PLANNED_SECTIONS == 0` → recommend `/bookbench:plan-book`.
+- Else if no `sections/section-*` directories — recommend `/bookbench:plan-section 1`.
 - Else if `CURRENT_SECTION` set and `COMPLETED == false` and `PHASE` known — recommend resuming the appropriate phase. The phase-to-command mapping:
-  - `planning|spec-review` → `/book:plan-section ${N}` (re-run / continue spec).
-  - `writing|factcheck|editing|reviewing` → `/book:write-section ${N}` (the coordinator will pick up at the right phase based on which artefacts exist).
-  - `marketing|review|approval-pending` → `/book:write-section ${N}` (coordinator finalises).
-  - `done` → recommend `/book:audit-section ${N}` or `/book:plan-section $((N+1))`.
-- Else if `CURRENT_SECTION` set and `COMPLETED == true` — recommend `/book:plan-section $((N+1))`.
+  - `planning|spec-review` → `/bookbench:plan-section ${N}` (re-run / continue spec).
+  - `writing|factcheck|editing|reviewing` → `/bookbench:write-section ${N}` (the coordinator will pick up at the right phase based on which artefacts exist).
+  - `marketing|review|approval-pending` → `/bookbench:write-section ${N}` (coordinator finalises).
+  - `done` → recommend `/bookbench:audit-section ${N}` or `/bookbench:plan-section $((N+1))`.
+- Else if `CURRENT_SECTION` set and `COMPLETED == true` — recommend `/bookbench:plan-section $((N+1))`.
 - If `PENDING_INGEST > 0` — add a separate line: «You have ${PENDING_INGEST} pending ingest decisions in INGEST-DECISIONS.md».
 
 Sample format:
@@ -126,7 +126,7 @@ Recommended next:
 This is the only mutation. Edit `.book/STATE.md`:
 
 - Update the `last_action: ` line in the «Current» section to `last_action: resume`.
-- Append a new History line: `<ISO 8601> — /book:resume — printed briefing`.
+- Append a new History line: `<ISO 8601> — /bookbench:resume — printed briefing`.
 
 Use the Edit tool (replace `last_action:` line) and Bash append (for History) to keep the change minimal.
 

@@ -41,9 +41,9 @@ BookBench читает значения параметров из четырёх
 
 ## Уровень 1. Количественные параметры — `config.yaml`
 
-Файл `.book/config.yaml` — основной инструмент настройки книги. Создаётся при `/book:start` из дефолтов жанра (для научпопа — из `${CLAUDE_PLUGIN_ROOT}/defaults.yaml > genres.popular-science`).
+Файл `.book/config.yaml` — основной инструмент настройки книги. Создаётся при `/bookbench:start` из дефолтов жанра (для научпопа — из `${CLAUDE_PLUGIN_ROOT}/defaults.yaml > genres.popular-science`).
 
-Редактировать можно через интерактивную команду `/book:config` или руками — это обычный YAML с inline-комментариями (выбран YAML, а не JSON, именно ради комментариев).
+Редактировать можно через интерактивную команду `/bookbench:config` или руками — это обычный YAML с inline-комментариями (выбран YAML, а не JSON, именно ради комментариев).
 
 ### Что обычно настраивают
 
@@ -108,18 +108,18 @@ hooks:
       info: 6                    # info, default 6
 
 privacy:
-  include_in_evolver: true       # участвует ли книга в /book:evolve анализе
+  include_in_evolver: true       # участвует ли книга в /bookbench:evolve анализе
   private: false                 # full opt-out (evolver вообще не видит)
 ```
 
 Полный список параметров — в `defaults.yaml` плагина (~50 параметров). 19 из них имеют трассировку на этап 03 проекта (см. `quantitative-checklists.md`).
 
-### Команда `/book:config`
+### Команда `/bookbench:config`
 
 Интерактивный редактор:
 
 ```
-> /book:config section.target_length.min
+> /bookbench:config section.target_length.min
 🤖 Текущее значение: 6500
    Новое: 7000
    Записать? (y/n)
@@ -127,7 +127,7 @@ privacy:
 🤖 ✅ .book/config.yaml обновлён.
 ```
 
-Любое изменение через команду логируется в `TUNING-LOG.md` (вход для `/book:tune`).
+Любое изменение через команду логируется в `TUNING-LOG.md` (вход для `/bookbench:tune`).
 
 ---
 
@@ -164,7 +164,7 @@ privacy:
 ├── doc-classifier/, doc-synthesizer/, tuner/
 ```
 
-> **Принцип Universal Body + Local Guidelines.** Тело субагента (`.book/.claude/agents/<role>.md`) — стабильное, обновляется через `/book:update`. Индивидуальность книги — в гайдлайнах, **никогда не трогается** обновлениями. Это решает фундаментальный конфликт «централизованное обновление ↔ индивидуальность под книгу». См. `D-15` в `PROJECT.md`.
+> **Принцип Universal Body + Local Guidelines.** Тело субагента (`.book/.claude/agents/<role>.md`) — стабильное, обновляется через `/bookbench:update`. Индивидуальность книги — в гайдлайнах, **никогда не трогается** обновлениями. Это решает фундаментальный конфликт «централизованное обновление ↔ индивидуальность под книгу». См. `D-15` в `PROJECT.md`.
 
 ### Пример: настройка фактчекера
 
@@ -191,12 +191,12 @@ privacy:
 - Schapira, J. (2001) "The World of Caffeine"
 ```
 
-Стартовый набор гайдлайнов копируется при `/book:start` из шаблонов плагина (с подстановкой жанровых дефолтов). Дальше — пишешь руками или через `/book:guidelines <role>`.
+Стартовый набор гайдлайнов копируется при `/bookbench:start` из шаблонов плагина (с подстановкой жанровых дефолтов). Дальше — пишешь руками или через `/bookbench:guidelines <role>`.
 
-### Команда `/book:guidelines <role>`
+### Команда `/bookbench:guidelines <role>`
 
 ```
-> /book:guidelines factchecker
+> /bookbench:guidelines factchecker
 🤖 [book-coordinator] Что хочешь поправить в гайдлайнах фактчекера?
    1) trusted-sources.md
    2) outdated-sources.md
@@ -212,14 +212,14 @@ privacy:
 
 ## Уровень 3. Тонкая настройка через `book-tuner`
 
-Команда `/book:tune` — это **9-я роль команды**, специализированная на анализе паттернов замечаний автора.
+Команда `/bookbench:tune` — это **9-я роль команды**, специализированная на анализе паттернов замечаний автора.
 
 ### Когда использовать
 
 После 5-10 написанных глав. Tuner смотрит на:
 
 - `TUNING-LOG.md` — все ручные правки гайдлайнов и конфига.
-- `REJECTIONS-LOG.md` — все случаи, когда автор после `/book:write-section` правил готовую главу руками (координатор фиксирует это автоматически на финальном гейте).
+- `REJECTIONS-LOG.md` — все случаи, когда автор после `/bookbench:write-section` правил готовую главу руками (координатор фиксирует это автоматически на финальном гейте).
 
 И ищет **систематические паттерны** (≥3 повторений). Например:
 
@@ -228,7 +228,7 @@ privacy:
 ### Workflow tuner'а
 
 ```
-> /book:tune
+> /bookbench:tune
 🤖 [book-tuner] Анализирую TUNING-LOG.md (16 записей) и REJECTIONS-LOG.md (8 записей).
 
    Нашёл 3 систематических паттерна (≥3 повторений):
@@ -267,19 +267,19 @@ privacy:
 🤖 ✅ Применил 3 правки. Записал в TUNING-LOG.md.
 ```
 
-Tuner **не правит сам** — только предлагает. Применение через `/book:tune apply <id>` идёт через координатора. Это `D-18` в `PROJECT.md`.
+Tuner **не правит сам** — только предлагает. Применение через `/bookbench:tune apply <id>` идёт через координатора. Это `D-18` в `PROJECT.md`.
 
 ### Команды
 
 ```
-/book:tune                  # анализ; пишет предложения в stdout
-/book:tune apply <id>       # применить конкретное предложение
-/book:tune apply all        # применить все
-/book:tune:guidelines       # анализ только в части гайдлайнов
-/book:tune:workflow         # анализ только в части workflow.md
+/bookbench:tune                  # анализ; пишет предложения в stdout
+/bookbench:tune apply <id>       # применить конкретное предложение
+/bookbench:tune apply all        # применить все
+/bookbench:tune:guidelines       # анализ только в части гайдлайнов
+/bookbench:tune:workflow         # анализ только в части workflow.md
 ```
 
-См. также [`dev-mode.md`](dev-mode.md) — там описана эволюция плагина через `/book:evolve`, который агрегирует tuner-паттерны **между книгами**.
+См. также [`dev-mode.md`](dev-mode.md) — там описана эволюция плагина через `/bookbench:evolve`, который агрегирует tuner-паттерны **между книгами**.
 
 ---
 
@@ -291,7 +291,7 @@ Tuner **не правит сам** — только предлагает. При
 - Сэмплы стиля — в `.book/agent-guidelines/writer/voice-samples.md`.
 - Маркетинговые голоса — в `.book/agent-guidelines/marketer/brand-voice.md` и `telegram-tone.md`. **Независимы** от базового (TOV-10).
 
-Между книгами голос переносится через личную библиотеку `~/.bookbench/voices/` (вне плагина и вне книги) — пять команд `/book:voice extract|save-as|import|list|build`.
+Между книгами голос переносится через личную библиотеку `~/.bookbench/voices/` (вне плагина и вне книги) — пять команд `/bookbench:voice extract|save-as|import|list|build`.
 
 Полный гайд — в [`voice-management.md`](voice-management.md).
 
@@ -328,7 +328,7 @@ Tuner **не правит сам** — только предлагает. При
 Если жанр вашей книги не научпоп, а, например, «нарративный нон-фикшн с элементами биографии» — запустите genre-researcher:
 
 ```
-> /book:research-genre "нарративный нон-фикшн с элементами биографии"
+> /bookbench:research-genre "нарративный нон-фикшн с элементами биографии"
 🤖 [genre-researcher skill] запускаю 5-фазный workflow:
    1. Genre profiling — сравнить с известными жанрами
    2. Deep research — внешние источники по жанру
@@ -354,7 +354,7 @@ Tuner **не правит сам** — только предлагает. При
 
 Эти вещи захардкожены архитектурно и менять их можно только контрибуцией в код плагина (см. [`contributing.md`](contributing.md)):
 
-- **23 инварианта `base-methodology`.** Универсальные принципы (структура, связность, черновик, нон-фикшн, анти-ИИ-клише) — общие для всех жанров. Если они блокируют твой кейс — это сигнал, что либо жанр требует своего скилла (`/book:research-genre`), либо нужна контрибуция в `base-methodology` через issue.
+- **23 инварианта `base-methodology`.** Универсальные принципы (структура, связность, черновик, нон-фикшн, анти-ИИ-клише) — общие для всех жанров. Если они блокируют твой кейс — это сигнал, что либо жанр требует своего скилла (`/bookbench:research-genre`), либо нужна контрибуция в `base-methodology` через issue.
 - **Структура микро-цикла главы (`section-loop` block).** Состав фаз `strategist → writer → factchecker → editor → marketer` фиксирован для научпопа. Параметризуется через `workflow.md > section_loop.params` (можно отключать factchecker / marketer; нельзя поменять порядок). См. `WF-02` в `PROJECT.md`.
 - **`tools` и `disallowedTools` ролей.** Например, фактчекер не имеет `Edit` (адверсариальная стойка); writer имеет `WebSearch` только если включён в `config.yaml`. Эти ограничения — структурные гарантии (`DEC-10`, `MEM-01`, `MEM-07` в `PROJECT.md`); меняются только через PR в `agent-templates/`.
 - **9 ролей команды.** Состав ролей фиксирован для 0.x (`TR-06`). Новые роли — это мажорное архитектурное решение, не настройка под книгу.
@@ -365,6 +365,6 @@ Tuner **не правит сам** — только предлагает. При
 
 - [`section-cycle.md`](section-cycle.md) — какие параметры на какой фазе срабатывают
 - [`voice-management.md`](voice-management.md) — голос как отдельная настраиваемая сущность
-- [`dev-mode.md`](dev-mode.md) — `/book:evolve` для меж-книжного анализа паттернов
-- [`upgrade-guide.md`](upgrade-guide.md) — что не трогается при `/book:update`
+- [`dev-mode.md`](dev-mode.md) — `/bookbench:evolve` для меж-книжного анализа паттернов
+- [`upgrade-guide.md`](upgrade-guide.md) — что не трогается при `/bookbench:update`
 - [`contributing.md`](contributing.md) — что менять через PR, а не через настройку

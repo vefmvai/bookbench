@@ -6,7 +6,7 @@
 
 - `cohesion-rules.md` — connectivity rules between sections.
 - `author-deviations.md` — accepted style deviations the editor must not "fix".
-- `addressing-rules.md` — режим обращения к читателю (ты / вы / безличное / смешанное); заполняется на `/book:start` § 4a (D-37, этап 24). Editor сверяет согласованность каждого `draft.md`.
+- `addressing-rules.md` — режим обращения к читателю (ты / вы / безличное / смешанное); заполняется на `/bookbench:start` § 4a (D-37, этап 24). Editor сверяет согласованность каждого `draft.md`.
 
 ## What goes here
 

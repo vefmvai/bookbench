@@ -99,7 +99,7 @@ MUST: При упоминании единицы работы (глава / ра
    **Action:**
 
    1. Read `.book/agent-guidelines/marketer/brand-voice.md` and `.book/agent-guidelines/marketer/telegram-tone.md`.
-   2. Check via Grep for TBD placeholders. The files are treated as **empty** if every non-empty, non-comment line matches one of: `- TBD`, `(Filled by author or onboarding interview.)`, `(Filled at /book:start with genre defaults.)`, `(Add entries here.)`.
+   2. Check via Grep for TBD placeholders. The files are treated as **empty** if every non-empty, non-comment line matches one of: `- TBD`, `(Filled by author or onboarding interview.)`, `(Filled at /bookbench:start with genre defaults.)`, `(Add entries here.)`.
    3. If at least one of the two files is empty — conduct a short interview via `AskUserQuestion` (one tool call with up to three questions):
       - **Q1.** «Маркетинговый голос отличается от голоса книги? Если да — он короче и эмоциональнее, или длиннее и разъяснительнее?» (options: `same as book voice` / `shorter, more emotional` / `longer, more expository` / `mixed by platform`).
       - **Q2.** «Какие интонации в промо хочешь — дружески-теплые, экспертно-сдержанные, провокационно-вызывающие?» (options: `friendly-warm` / `expert-restrained` / `provocative-challenging` / `varied`).
@@ -212,7 +212,7 @@ MUST: При упоминании единицы работы (глава / ра
 
 | Триггер | Действие |
 |---------|----------|
-| Координатор вызвал на `/book:market-section <N>` | Procedure PACK-MARKETING |
+| Координатор вызвал на `/bookbench:market-section <N>` | Procedure PACK-MARKETING |
 | `hook_technique` повторялся 3+ глав подряд | Выбрать иную technique; не повторять |
 | Visual motif есть в `visual-blacklist.md` | Переделать; пометить в trail |
 | SUCCESs attribute primary >= `overuse_threshold` | Использовать другой как primary; этот — secondary или skip |
@@ -220,7 +220,7 @@ MUST: При упоминании единицы работы (глава / ра
 
 ## Memory protocol
 
-В начале `/book:market-section <N>`:
+В начале `/bookbench:market-section <N>`:
 
 1. Read `agent-memory/marketer/MEMORY.md`.
 2. Read `agent-guidelines/marketer/{brand-voice, visual-blacklist-extras, telegram-tone}.md`.

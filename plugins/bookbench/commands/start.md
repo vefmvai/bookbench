@@ -1,10 +1,10 @@
 ---
-description: Initialises a new BookBench book in the current folder. Runs an open coach-mode dialogue (no radio buttons), assembles four orthogonal dimensions (format, genre, audience, style-marker) plus addressing mode per matching-design.md, presents a Step 4b confirmation gate to the author, scaffolds the .book/ skeleton only after explicit approval, copies templates, registers the nine local subagents, and records the new book in the global registry. If the author attaches drafts, /book:import is invoked automatically. Author-attached drafts never auto-populate voice-profile.md or agent-guidelines/ (see lib/sacred-policy.md and lib/voice-profile-lifecycle.md).
+description: Initialises a new BookBench book in the current folder. Runs an open coach-mode dialogue (no radio buttons), assembles four orthogonal dimensions (format, genre, audience, style-marker) plus addressing mode per matching-design.md, presents a Step 4b confirmation gate to the author, scaffolds the .book/ skeleton only after explicit approval, copies templates, registers the nine local subagents, and records the new book in the global registry. If the author attaches drafts, /bookbench:import is invoked automatically. Author-attached drafts never auto-populate voice-profile.md or agent-guidelines/ (see lib/sacred-policy.md and lib/voice-profile-lifecycle.md).
 argument-hint: ""
 allowed-tools: [Task, Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion]
 ---
 
-# /book:start
+# /bookbench:start
 
 <purpose>
 Initialise a new book project in coach-mode (D-30 four dimensions; D-33 inline coach;
@@ -14,17 +14,17 @@ D-41 sacred policy for auto-created files).
 Run open coach dialogue, assemble format/genre/audience/style-marker plus addressing
 per matching-design.md, write a draft to .book.proposed.yaml, present a confirmation
 gate, scaffold .book/ ONLY after explicit per-dimension approval, copy templates and
-subagent bodies, auto-invoke /book:import if author attached drafts.
+subagent bodies, auto-invoke /bookbench:import if author attached drafts.
 </purpose>
 
-<!-- Этап 22 (Milestone 2 0.3.0): Step 4 переписан под коуч-режим (D-33 inline; коуч-промпт вынесен в lib/start-coach-prompt.md по R-22-B=(б)). Step 11 — автоматический /book:import. Закрывает issues I-01, I-02, I-04, I-06. -->
+<!-- Этап 22 (Milestone 2 0.3.0): Step 4 переписан под коуч-режим (D-33 inline; коуч-промпт вынесен в lib/start-coach-prompt.md по R-22-B=(б)). Step 11 — автоматический /bookbench:import. Закрывает issues I-01, I-02, I-04, I-06. -->
 <!-- Этап 24 (Milestone 2 0.3.2): добавлен Step 4b шлюз подтверждения; промежуточный конфиг .book.proposed.yaml; ветка B3 genre pending; § 4a addressing_mode; voice-profile lifecycle (запрет автозаписи voice-profile.md без .draft); адаптивный финал через document_word; sacred-policy ссылка в шапке. Закрывает 6 классов ошибок live-теста «Спираль» 2026-05-10. -->
 
 ## Контракт безопасности перед изменениями
 
 Перед каждой записью в `.book/agent-guidelines/<role>/` и `.book/context/<file>` со `status: confirmed` — обязательная сверка с `${PLUGIN_ROOT}/lib/sacred-policy.md`:
 - Правило 1: запись в `agent-guidelines/` только с явным подтверждением автора (Step 4b).
-- Правило 2: запись в `context/` со `status: confirmed` запрещена на `/book:start`. Только `status: draft` или указатель.
+- Правило 2: запись в `context/` со `status: confirmed` запрещена на `/bookbench:start`. Только `status: draft` или указатель.
 - Правило 3: каждый авто-создаваемый артефакт несёт frontmatter `created_by: book-coordinator-coach` + `requires_confirmation: true|false` + `status:`.
 
 Для voice-profile дополнительно действует `${PLUGIN_ROOT}/lib/voice-profile-lifecycle.md` (4 состояния none/draft/confirmed/calibrating; коуч пишет только `.draft` или указатель).
@@ -33,19 +33,19 @@ subagent bodies, auto-invoke /book:import if author attached drafts.
 
 - Empty or near-empty current working directory.
 - Author's free-text description (and optionally voice transcript / attached files) collected through the coach dialogue.
-- Optional attached drafts/notes/screenshots — handled automatically via `/book:import` (no flag needed).
+- Optional attached drafts/notes/screenshots — handled automatically via `/bookbench:import` (no flag needed).
 
 ## Outputs
 
 - A populated `.book/` folder per `templates/book/` (only after Step 4b confirmation).
 - A `CLAUDE.md` at the project root.
 - A new entry in `${CLAUDE_PLUGIN_DATA}/registry.yaml` with `format` and `genre`.
-- A next-step message inviting `/book:plan-book` (with adaptive `${DOCUMENT_WORD}` substitution).
-- Если genre оказался `pending` — `.book/context/genre-pending.md` stub и сообщение про необходимость `/book:research-genre <slug>`.
+- A next-step message inviting `/bookbench:plan-book` (with adaptive `${DOCUMENT_WORD}` substitution).
+- Если genre оказался `pending` — `.book/context/genre-pending.md` stub и сообщение про необходимость `/bookbench:research-genre <slug>`.
 
 <execution>
 
-This command is a markdown prompt executed by Claude Code. The orchestrator pattern (validate → resolve paths → coach-dialogue → proposed-config → confirmation gate → scaffold → atomic state update) applies. The coach dialogue (Step 4) is conducted by the main coordinator inline (D-33) using the procedure file `lib/start-coach-prompt.md`. No subagent is invoked for the coach itself; subagents are invoked only for the optional `/book:import` branch.
+This command is a markdown prompt executed by Claude Code. The orchestrator pattern (validate → resolve paths → coach-dialogue → proposed-config → confirmation gate → scaffold → atomic state update) applies. The coach dialogue (Step 4) is conducted by the main coordinator inline (D-33) using the procedure file `lib/start-coach-prompt.md`. No subagent is invoked for the coach itself; subagents are invoked only for the optional `/bookbench:import` branch.
 
 ### Step 1 — Resolve plugin paths
 
@@ -86,10 +86,10 @@ echo "CWD=$CWD COUNT=$COUNT HAS_BOOK=$HAS_BOOK HAS_PROPOSED=$HAS_PROPOSED"
 
 Decision tree:
 
-- If `HAS_BOOK=1` → STOP. Print: «В этой папке уже есть `.book/`. Запусти `/book:resume`, чтобы продолжить.» Exit.
+- If `HAS_BOOK=1` → STOP. Print: «В этой папке уже есть `.book/`. Запусти `/bookbench:resume`, чтобы продолжить.» Exit.
 - If `HAS_PROPOSED=1` and `HAS_BOOK=0` → present an `AskUserQuestion`:
   - Title: «Найден черновик конфигурации»
-  - Question: «В папке есть `.book.proposed.yaml` (черновик с прошлого незаконченного `/book:start`). Что делаем?»
+  - Question: «В папке есть `.book.proposed.yaml` (черновик с прошлого незаконченного `/bookbench:start`). Что делаем?»
   - Options: `Удалить и начать сначала` / `Показать содержимое и решить` / `Прервать`.
   - On `Удалить и начать сначала` — `rm .book.proposed.yaml`, продолжить.
   - On `Показать содержимое` — Read и показать, затем re-ask.
@@ -111,9 +111,9 @@ Read `${PLUGIN_ROOT}/lib/start-coach-prompt.md` into context. This file contains
 Apply the procedure from `lib/start-coach-prompt.md`:
 
 1. **§ 1. Открытое приглашение** — say the opening line (с предупреждением «дальше будет короткая дискуссия, каждое решение — после твоего «да»»); wait silently for author's reply (text / voice / attached files).
-2. **§ 6. Trigger → Action** — if author attached files → invoke `/book:import` automatically (Step 4a below) BEFORE forming hypotheses. If no files → print the explicit reassurance per R-22-D=(б): «Окей, работаем с нуля; если позже найдёшь черновики — есть `/book:import`».
-3. **§ 2. Сборка format** — analyse the inputs by signals (matching-design.md § 3.2); ranked B1 (one hypothesis with reasoning) / B2 (`/book:research-format` if no preset matches). Получить явное «да» от автора.
-4. **§ 3. Сборка genre** — analyse (matching-design.md § 3.3); B1 (one hypothesis filtered by `compatible_genres`) / B2-research (`/book:research-genre`) / **B3-pending** (sentinel `pending`, см. §3 ветка B3 — этап 24) / closest. Получить явное «да» от автора.
+2. **§ 6. Trigger → Action** — if author attached files → invoke `/bookbench:import` automatically (Step 4a below) BEFORE forming hypotheses. If no files → print the explicit reassurance per R-22-D=(б): «Окей, работаем с нуля; если позже найдёшь черновики — есть `/bookbench:import`».
+3. **§ 2. Сборка format** — analyse the inputs by signals (matching-design.md § 3.2); ranked B1 (one hypothesis with reasoning) / B2 (`/bookbench:research-format` if no preset matches). Получить явное «да» от автора.
+4. **§ 3. Сборка genre** — analyse (matching-design.md § 3.3); B1 (one hypothesis filtered by `compatible_genres`) / B2-research (`/bookbench:research-genre`) / **B3-pending** (sentinel `pending`, см. §3 ветка B3 — этап 24) / closest. Получить явное «да» от автора.
 5. **§ 4. Сборка audience** — gather portrait (matching-design.md § 3.4); B1 (ready portrait) / B2 (open question + structured back-formulation) / B3 (archetypes as examples, not enum) / fallback (level of complexity). Получить явное «да» от автора.
 6. **§ 4a. Addressing mode** — НОВОЕ в этапе 24 (D-37). Резолвить `derived_default` из `defaults.yaml` (приоритет: `genres.<genre>.addressing_default` > `formats.<format>.addressing_default` > `«вы»`). Задать прямой вопрос, получить явный ответ. **NEVER**: не выводить из черновиков, не выводить из voice-profile, не пропускать.
 7. **§ 5. Style-marker** — TOV-08 preserved verbatim. ONLY collect path-marker per the four sub-branches (B1-confirmed / B1-derived / B2-pending / B2-confirmed / B3 / B3-pending — см. § 5 коуч-промпта). NEVER auto-extract voice-profile from drafts/briefs (D-35 voice-profile lifecycle). Save `.book/context/voice-profile.md.draft` (B1-confirmed) or `.book/context/voice-source-pointer.md` (B1-derived) или `.book/inputs/staged-voice-samples/<slug>.md` (B2-pending) ON STEP 6 — не сейчас.
@@ -131,7 +131,7 @@ After the four assemblies + § 4a + the optional auto-import, proceed to Step 5 
 - `BOOK_ADDRESSING_MODE` — one of `ты | вы | безличное | смешанное` from § 4a.
 - `STYLE_MARKER` — `B1-confirmed | B1-derived | B2-pending | B2-confirmed | B3 | B3-pending` from § 5.
 - `VOICE_SOURCE_PATH` — path to attached voice file (if any).
-- `IMPORT_TRIGGERED` — `1` if author attached files and `/book:import` was invoked, `0` otherwise.
+- `IMPORT_TRIGGERED` — `1` if author attached files and `/bookbench:import` was invoked, `0` otherwise.
 
 ### Step 4a — Auto-import branch (Trigger → Action § 6 of coach prompt)
 
@@ -140,10 +140,10 @@ If author attached files in Step 4:
 ```text
 Task(
   subagent_type="book-classifier",
-  description="Auto-import attached drafts during /book:start.",
+  description="Auto-import attached drafts during /bookbench:start.",
   prompt="""
   Run the import-classification skill on the files attached by the author
-  to the current /book:start session. Classify each file into:
+  to the current /bookbench:start session. Classify each file into:
     - section-draft (chapter/section/scene draft)
     - notes (research notes, ideas, references)
     - voice-samples (passages in the author's style)
@@ -154,7 +154,7 @@ Task(
   Save extracted texts to a temp staging directory under
   ${CLAUDE_PLUGIN_DATA}/staging/<session-id>/.
 
-  After Step 6 of /book:start (scaffold), the coordinator will
+  After Step 6 of /bookbench:start (scaffold), the coordinator will
   move staging files into the appropriate slots:
     - section-draft → .book/inputs/source-drafts/
     - notes → .book/inputs/notes/
@@ -178,7 +178,7 @@ Task(
    ```yaml
    # .book.proposed.yaml — черновик конфигурации, ещё не применён.
    # Удаляется автоматически после успешного развёртывания .book/, либо при отмене.
-   # Не редактировать вручную — этот файл переживает один прогон /book:start.
+   # Не редактировать вручную — этот файл переживает один прогон /bookbench:start.
    proposed_at: <ISO 8601 timestamp>
    book:
      title: "${BOOK_TITLE}"
@@ -215,7 +215,7 @@ Task(
    Полная конфигурация — в .book.proposed.yaml.
    ```
 
-   `GENRE_PENDING_NOTE` = ` (отложен — потребует /book:research-genre)` если `BOOK_GENRE = pending`, иначе пусто.
+   `GENRE_PENDING_NOTE` = ` (отложен — потребует /bookbench:research-genre)` если `BOOK_GENRE = pending`, иначе пусто.
 
 4. **`AskUserQuestion`:**
    - **question:** «Всё верно? Если что-то надо переобсудить — скажи.»
@@ -298,10 +298,10 @@ If `IMPORT_TRIGGERED=1`, move the artefacts from `${CLAUDE_PLUGIN_DATA}/staging/
   ---
   ```
 
-**NEVER на этапе /book:start (TOV-08 + D-35 + D-41):**
+**NEVER на этапе /bookbench:start (TOV-08 + D-35 + D-41):**
 - НЕ создавать `.book/context/voice-profile.md` (без `.draft`!). Только `.book/context/voice-profile.md.draft` со `status: draft`, либо указатель `.book/context/voice-source-pointer.md` со `status: pointer`.
 - НЕ записывать в `.book/agent-guidelines/writer/voice-samples.md` напрямую. Использовать `.book/inputs/staged-voice-samples/`.
-- НЕ помечать style_marker как `B1-confirmed` только потому, что есть тексты автора — это `B2-pending`, требует `/book:voice-build --from-staged`.
+- НЕ помечать style_marker как `B1-confirmed` только потому, что есть тексты автора — это `B2-pending`, требует `/bookbench:voice-build --from-staged`.
 
 #### Style-marker artefacts (по § 5 коуч-промпта)
 
@@ -316,7 +316,7 @@ If `IMPORT_TRIGGERED=1`, move the artefacts from `${CLAUDE_PLUGIN_DATA}/staging/
   requires_confirmation: true
   source_kind: imported_voice_profile_file
   source_pointer: <VOICE_SOURCE_PATH>
-  note: "Этот файл — черновик. Субагенты его не читают. Запусти /book:voice-build для подтверждения."
+  note: "Этот файл — черновик. Субагенты его не читают. Запусти /bookbench:voice-build для подтверждения."
   ---
   ```
 
@@ -335,14 +335,14 @@ If `IMPORT_TRIGGERED=1`, move the artefacts from `${CLAUDE_PLUGIN_DATA}/staging/
 
 - **B2-pending / B2-confirmed / B3-pending:** см. § 5 коуч-промпта; voice-samples в `inputs/staged-voice-samples/`. Перенос в `agent-guidelines/writer/voice-samples.md` — только при `B2-confirmed` после явного «готовая работа / образец» от автора.
 
-- **B3:** ничего не записывается; первая секция запустит `/book:voice-build`.
+- **B3:** ничего не записывается; первая секция запустит `/bookbench:voice-build`.
 
 #### Genre pending artefact (если `BOOK_GENRE = pending`) — D-36
 
 Если `BOOK_GENRE = pending`:
 
 - НЕ копировать жанровые гайдлайны из `defaults.yaml > genres.<X>` в `.book/agent-guidelines/<role>/`. Стартовые шаблоны из `templates/agent-guidelines/<role>/` уже скопированы Step 6 — этого достаточно.
-- Создать `.book/context/genre-pending.md` со stub-шаблоном вопросов для `/book:research-genre`. Frontmatter:
+- Создать `.book/context/genre-pending.md` со stub-шаблоном вопросов для `/bookbench:research-genre`. Frontmatter:
   ```yaml
   ---
   status: pending
@@ -353,7 +353,7 @@ If `IMPORT_TRIGGERED=1`, move the artefacts from `${CLAUDE_PLUGIN_DATA}/staging/
   ---
   ```
   Тело — список вопросов: «какой кастомный жанр нужен / какие близкие пресеты / что ещё нужно прояснить».
-- В `.book/STATE.md` добавить строку: `genre: pending — required before /book:plan-book`.
+- В `.book/STATE.md` добавить строку: `genre: pending — required before /bookbench:plan-book`.
 
 #### Addressing-rules artefacts (по § 4a) — D-37
 
@@ -394,9 +394,9 @@ Patch `.book/STATE.md`:
 - `last_touched_at`: same ISO 8601 timestamp
 - Append History line:
   ```
-  <ISO 8601> — /book:start — initialised "${BOOK_TITLE}" (format=${BOOK_FORMAT}, genre=${BOOK_GENRE}, audience="${BOOK_AUDIENCE}", addressing=${BOOK_ADDRESSING_MODE}, style_marker=${STYLE_MARKER}, import=${IMPORT_TRIGGERED})
+  <ISO 8601> — /bookbench:start — initialised "${BOOK_TITLE}" (format=${BOOK_FORMAT}, genre=${BOOK_GENRE}, audience="${BOOK_AUDIENCE}", addressing=${BOOK_ADDRESSING_MODE}, style_marker=${STYLE_MARKER}, import=${IMPORT_TRIGGERED})
   ```
-- Если `BOOK_GENRE = pending` — добавить отдельную строку: `genre: pending — required before /book:plan-book`.
+- Если `BOOK_GENRE = pending` — добавить отдельную строку: `genre: pending — required before /bookbench:plan-book`.
 
 Patch `.book/PROJECT.md` with title, genre, format, audience, addressing_mode, style-marker, import-flag. Использовать адаптивный `${DOCUMENT_WORD_CAPITALIZED}` в первой строке-комментарии (служебный заголовок `# Book project` оставляем как есть).
 
@@ -466,7 +466,7 @@ rm -f .book.proposed.yaml
 echo "proposed config removed"
 ```
 
-При отмене `/book:start` (например, в Step 4b опция «Отмена») — `.book.proposed.yaml` тоже удаляется. При падении команды на середине — файл остаётся; при следующем запуске Step 2 предложит автору удалить его и начать сначала.
+При отмене `/bookbench:start` (например, в Step 4b опция «Отмена») — `.book.proposed.yaml` тоже удаляется. При падении команды на середине — файл остаётся; при следующем запуске Step 2 предложит автору удалить его и начать сначала.
 
 ### Step 10 — Verify outputs
 
@@ -488,7 +488,7 @@ ls .book/.claude/agents/ | wc -l   # expect 9
 
 # Sacred policy invariants — после Step 6a / Step 7 / Step 9a:
 [ ! -f .book.proposed.yaml ] || { echo "ERROR: .book.proposed.yaml not cleaned up"; exit 1; }
-[ ! -f .book/context/voice-profile.md ] || { echo "ERROR: voice-profile.md (without .draft) created on /book:start (forbidden by D-35)"; exit 1; }
+[ ! -f .book/context/voice-profile.md ] || { echo "ERROR: voice-profile.md (without .draft) created on /bookbench:start (forbidden by D-35)"; exit 1; }
 echo "verify ok"
 ```
 
@@ -511,13 +511,13 @@ ${DOCUMENT_WORD_CAPITALIZED} инициализирован${DOCUMENT_WORD_GENDE
 В .book/ создано 25+ файлов; CLAUDE.md в корне проекта.
 
 ${IMPORT_BLOCK}      # если IMPORT_TRIGGERED=1: «Прикреплённые файлы импортированы и разложены по слотам.»
-${PENDING_BLOCK}     # если BOOK_GENRE=pending: «Жанр в статусе pending. Запусти /book:research-genre <slug> перед /book:plan-book.»
-${VOICE_BLOCK}       # если STYLE_MARKER=B1-confirmed: «Профиль голоса — черновик. Перед первой ${SECTION_WORD} запусти /book:voice-build (займёт пару минут).»
-                     # если B2-pending: «Образцы голоса в .book/inputs/staged-voice-samples/. Перед первой ${SECTION_WORD} — /book:voice-build --from-staged.»
+${PENDING_BLOCK}     # если BOOK_GENRE=pending: «Жанр в статусе pending. Запусти /bookbench:research-genre <slug> перед /bookbench:plan-book.»
+${VOICE_BLOCK}       # если STYLE_MARKER=B1-confirmed: «Профиль голоса — черновик. Перед первой ${SECTION_WORD} запусти /bookbench:voice-build (займёт пару минут).»
+                     # если B2-pending: «Образцы голоса в .book/inputs/staged-voice-samples/. Перед первой ${SECTION_WORD} — /bookbench:voice-build --from-staged.»
 
 Рекомендуемый следующий шаг:
-  /book:plan-book   — собрать план ${SECTION_WORD}-ов (через book-strategist).
-  /book:status      — посмотреть текущее состояние ${DOCUMENT_WORD} в любой момент.
+  /bookbench:plan-book   — собрать план ${SECTION_WORD}-ов (через book-strategist).
+  /bookbench:status      — посмотреть текущее состояние ${DOCUMENT_WORD} в любой момент.
 ```
 
 ### Constitutional rules for this command
@@ -528,7 +528,7 @@ ${VOICE_BLOCK}       # если STYLE_MARKER=B1-confirmed: «Профиль го
 - **Получать явное «да» по КАЖДОМУ измерению отдельно** через Step 4b шлюз. Сводное «да» по всем измерениям сразу принимается ТОЛЬКО при выполнении узкого MAY (см. § 0 коуч-промпта).
 - **Адаптивная обёртка глава/раздел/часть.** В репликах автору используем `formats.<format>.section_word` (D-31).
 - **Адаптивный термин документа.** В репликах автору про сам артефакт (книга / лонгрид / статья) используем `formats.<format>.document_word` (D-38). Финальное сообщение Step 11 — через `document_word_capitalized + document_word_gender_suffix`.
-- **Если автор приложил файлы — автоматически вызвать `/book:import`** (Step 4a) ДО формирования гипотез. Без флага `--from-existing`.
+- **Если автор приложил файлы — автоматически вызвать `/bookbench:import`** (Step 4a) ДО формирования гипотез. Без флага `--from-existing`.
 - **Если автор НЕ приложил файлы — явно зафиксировать «работаем с нуля»** (R-22-D=(б)).
 - **Сохранить TOV-08 дословно + усилить через voice-profile lifecycle.** Step 4 § 5 собирает только метку пути B1-confirmed/B1-derived/B2-pending/B2-confirmed/B3/B3-pending; вопросы про 6 параметров `voice-profile` НЕ задаются. Gate стиля остаётся в `book-writer` перед первой `draft.md` + проверка frontmatter `status:` (D-35).
 - **`chmod 0755`** для hook-скрипта (Step 6).
@@ -542,12 +542,12 @@ ${VOICE_BLOCK}       # если STYLE_MARKER=B1-confirmed: «Профиль го
 - **Не блокировать старт книги отсутствием audience-портрета.** Фолбэк через уровень сложности в `lib/start-coach-prompt.md` § 4.
 - **Не показывать жанры/форматы/аудиторию как закрытый enum.** Audience B3 — архетипы как примеры, не radio.
 - **Не использовать узкоконтекстные категории аудитории** (типа «студенты и преподаватели» из конкретного образовательного кейса).
-- **Не перезаписывать существующий `.book/`.** Останавливаемся с подсказкой `/book:resume` (Step 2).
-- **Не вызывать `/book:import` если автор не приложил файлы.** Тогда — короткая фиксация «работаем с нуля» (R-22-D).
+- **Не перезаписывать существующий `.book/`.** Останавливаемся с подсказкой `/bookbench:resume` (Step 2).
+- **Не вызывать `/bookbench:import` если автор не приложил файлы.** Тогда — короткая фиксация «работаем с нуля» (R-22-D).
 - **Не модифицировать `${CLAUDE_PLUGIN_DATA}/installation.yaml.source` после первого создания.**
 - **Не разворачивать `.book/` без Step 4b confirmation.** Гард `UNFOLD_CONFIRMED=1` в начале Step 6 — обязательный.
 - **Не записывать `.book/context/voice-profile.md` (без `.draft`)** ни при каких условиях на этапе start (D-35).
-- **Не записывать в `.book/agent-guidelines/writer/voice-samples.md` напрямую.** Только в `.book/inputs/staged-voice-samples/`. Перенос — через `/book:voice-build --from-staged` после явного диалога (D-41 правило 1).
+- **Не записывать в `.book/agent-guidelines/writer/voice-samples.md` напрямую.** Только в `.book/inputs/staged-voice-samples/`. Перенос — через `/bookbench:voice-build --from-staged` после явного диалога (D-41 правило 1).
 - **Не помечать `style_marker = B1-confirmed`** только потому, что в импорте есть тексты автора (это `B2-pending`).
 - **Не выводить `addressing_mode` из черновиков, voice-profile или voice-samples.** Только явный ответ автора в § 4a (D-37).
 - **Не записывать жанровые гайдлайны при `BOOK_GENRE = pending`.** Стартовые шаблоны без жанровой надстройки (D-36).

@@ -4,7 +4,7 @@ argument-hint: "<propose|apply|status> [<change-id>] [--no-commit] [--genre <nam
 allowed-tools: [Read, Write, Bash, Glob, Grep, Task, AskUserQuestion]
 ---
 
-# /book:evolve
+# /bookbench:evolve
 
 <purpose>
 Maintainer-side cross-book pattern miner. Strictly dev-only — produces diffs against the plugin sources and triggers a git commit when applied. The implementation is embedded in this command (EV-1 closure: no separate subagent on 0.1 — analyzer logic lives in the command body, leveraging Task delegation to a nested book-tuner-style analyzer for the pattern detection sub-step). Honours strict privacy guarantees enumerated in `evolver-design.md` § 5.
@@ -34,8 +34,8 @@ SOURCE="local-dev"
 case "$ARGUMENTS" in
   apply*|*--apply*)
     if [ "$SOURCE" != "local-dev" ]; then
-      echo "/book:evolve apply is available only in local-dev mode (current source: $SOURCE)."
-      echo "Run /book:evolve propose to inspect potential changes; apply requires a git checkout of the plugin."
+      echo "/bookbench:evolve apply is available only in local-dev mode (current source: $SOURCE)."
+      echo "Run /bookbench:evolve propose to inspect potential changes; apply requires a git checkout of the plugin."
       exit 0
     fi
     ;;
@@ -81,7 +81,7 @@ done
 case "$MODE" in
   propose|apply|status) ;;
   *)
-    echo "Usage: /book:evolve <propose|apply|status> [args]"
+    echo "Usage: /bookbench:evolve <propose|apply|status> [args]"
     exit 0
     ;;
 esac
@@ -324,7 +324,7 @@ If the user picks `Save for later` (default in stage 14), exit with the next-ste
 
 ```text
 evolve propose: <K> patterns staged at $PENDING.
-Run `/book:evolve apply $TS` (in local-dev only) to apply, or `/book:evolve status` to inspect.
+Run `/bookbench:evolve apply $TS` (in local-dev only) to apply, or `/bookbench:evolve status` to inspect.
 ```
 
 End of `propose`.

@@ -1,13 +1,13 @@
 ---
-description: Archives a registered book in the global registry — sets status from active to archived, fixes archived_at timestamp, hides it from default /book:list. Does not touch the .book/ folder on disk; reversible by editing registry.yaml or running /book:register again.
+description: Archives a registered book in the global registry — sets status from active to archived, fixes archived_at timestamp, hides it from default /bookbench:list. Does not touch the .book/ folder on disk; reversible by editing registry.yaml or running /bookbench:register again.
 argument-hint: "[<id-or-path>]"
 allowed-tools: [Read, Edit, Bash, AskUserQuestion]
 ---
 
-# /book:archive
+# /bookbench:archive
 
 <purpose>
-Soft-hide a finished or paused book from active listings without losing the registry entry. Symmetric with `/book:register` (which sets `status: active`).
+Soft-hide a finished or paused book from active listings without losing the registry entry. Symmetric with `/bookbench:register` (which sets `status: active`).
 </purpose>
 
 <!-- ЭТАП 14: реализовано — см. <execution> ниже -->
@@ -71,13 +71,13 @@ Find the matching record by either `id` or `path`. If not found:
 
 ```
 Error: no registry entry matches '<TARGET>'.
-Run /book:list to see available ids.
+Run /bookbench:list to see available ids.
 ```
 
 If multiple matches by path (should not happen for normalised paths but defensively check) — print:
 
 ```
-Error: multiple entries match path '<TARGET>'. Run /book:doctor to clean up.
+Error: multiple entries match path '<TARGET>'. Run /bookbench:doctor to clean up.
 ```
 
 ```bash
@@ -159,9 +159,9 @@ Archived: $MATCH_ID
   files on disk: untouched at <path>
 
 Recommended next:
-  /book:list                 — confirm it no longer shows in default listing.
-  /book:list --archived      — see all archived books.
-  /book:register <path>      — re-register if you want to resume work later.
+  /bookbench:list                 — confirm it no longer shows in default listing.
+  /bookbench:list --archived      — see all archived books.
+  /bookbench:register <path>      — re-register if you want to resume work later.
 ```
 
 ### Constitutional rules
@@ -169,7 +169,7 @@ Recommended next:
 - **MUST** check the entry exists and is currently active. No-op if already archived.
 - **MUST** ask the author to confirm (Brief-Then-Execute, Part VII methodology).
 - **MUST** preserve the original entry — only flip `status` and append `archived_at`.
-- **NEVER** delete the registry entry (that is `/book:forget`).
+- **NEVER** delete the registry entry (that is `/bookbench:forget`).
 - **NEVER** touch any file inside the book's `.book/` directory.
 
 </execution>

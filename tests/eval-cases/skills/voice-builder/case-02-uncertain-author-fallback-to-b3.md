@@ -40,8 +40,8 @@ You answered "I don't know" to several questions. Three options:
 2. continue B1 — I keep asking and we accept "I don't know" defaults at
    the end, with a low-confidence note in Reasoning.
 3. stop — I leave voice-profile.md empty; book-writer will block again
-   on the next /book:write-section, and you can come back via
-   /book:voice build in a fresh session.
+   on the next /bookbench:write-section, and you can come back via
+   /bookbench:voice build in a fresh session.
 ```
 
 The expected author choice for this eval is **option 1** (switch to B3).

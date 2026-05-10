@@ -5,7 +5,7 @@ argument-hint: "[apply <id>] [reject <id>] [--all] [--role <role>] [--since <dat
 allowed-tools: [Read, Write, Edit, Glob, Grep, Task, AskUserQuestion]
 ---
 
-# /book:tune:guidelines
+# /bookbench:tune:guidelines
 
 <purpose>
 Tune the per-book agent guidelines. Two-step flow: analyse to surface
@@ -45,7 +45,7 @@ echo "tune:guidelines: subaction='$SUBACTION' proposal_id='$PROPOSAL_ID' role='$
 ## Step 2 — Pre-flight
 
 ```bash
-[ -d .book ] || { echo "tune:guidelines: no .book/ folder. Run /book:start first."; exit 0; }
+[ -d .book ] || { echo "tune:guidelines: no .book/ folder. Run /bookbench:start first."; exit 0; }
 [ -d .book/agent-guidelines ] || {
   echo "tune:guidelines: .book/agent-guidelines/ missing — your book installation may be corrupt."
   exit 0
@@ -84,7 +84,7 @@ inputs collected from the book.
 Task(
   subagent_type="book-tuner",
   prompt="""
-  Run /book:tune:guidelines in analyse mode (UX-09 step 1).
+  Run /bookbench:tune:guidelines in analyse mode (UX-09 step 1).
 
   Inputs to read:
     - .book/TUNING-LOG.md

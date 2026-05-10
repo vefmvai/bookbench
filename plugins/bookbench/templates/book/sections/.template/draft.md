@@ -8,7 +8,7 @@ grandmother_test_passed: null
 word_count: 0
 ---
 
-<!-- автогенерируется при /book:write-section; не трогается фактчекером и редактором — они пишут factcheck.md и edited.md соответственно -->
+<!-- автогенерируется при /bookbench:write-section; не трогается фактчекером и редактором — они пишут factcheck.md и edited.md соответственно -->
 
 # Section draft
 

@@ -4,7 +4,7 @@ argument-hint: "[--format md|epub] [--include-marketing]"
 allowed-tools: [Read, Write, Bash, AskUserQuestion]
 ---
 
-# /book:ship
+# /bookbench:ship
 
 <purpose>
 Produce a single-file artefact for downstream publication. The framework's job ends with the markdown bundle — uploading to a publisher, e-book store, or printing service is outside scope.
@@ -34,7 +34,7 @@ Eight-step pattern. Mostly local file assembly; no subagent involvement.
 ```bash
 [ -d .book ] || { echo "No .book/ directory."; exit 0; }
 [ -f .book/ROADMAP.md ] || {
-  echo "No ROADMAP.md. Run /book:plan-book first."
+  echo "No ROADMAP.md. Run /bookbench:plan-book first."
   exit 0
 }
 
@@ -71,7 +71,7 @@ done
 if [ -n "$MISSING" ]; then
   echo "Warning: sections with no edited.md:$MISSING"
   echo "Pass --include-incomplete to ship anyway (stage 15+ feature)."
-  echo "Or finish them via /book:write-section <N>."
+  echo "Or finish them via /bookbench:write-section <N>."
   echo ""
   # AskUserQuestion: Continue / Cancel
 fi
@@ -87,10 +87,10 @@ Present an `AskUserQuestion`:
   - `Sections to bundle: <count>`
   - `Output: .book/final/book.<FORMAT>`
   - `Include marketing: <yes|no>`
-  - Note: «Read-only with respect to sections. Audit and `/book:audit-book` are not run automatically.»
+  - Note: «Read-only with respect to sections. Audit and `/bookbench:audit-book` are not run automatically.»
 - Options:
   - `Ship` — proceed.
-  - `Run /book:audit-book first` — exit and recommend running audit.
+  - `Run /bookbench:audit-book first` — exit and recommend running audit.
   - `Cancel` — exit.
 
 ### Step 4 — Resolve metadata
@@ -197,13 +197,13 @@ echo "  Book:       $OUT_MD"
 
 ```bash
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-printf '\n%s — `/book:ship` — bundled %d sections into %s (%d chars)\n' \
+printf '\n%s — `/bookbench:ship` — bundled %d sections into %s (%d chars)\n' \
   "$NOW" "$N_CH" "$OUT_MD" "$TOTAL_CHARS" >> .book/STATE.md
 
 echo ""
 echo "Recommended next:"
-echo "  /book:extract-learnings   — capture lessons from this book."
-echo "  /book:archive             — soft-hide the book in the registry."
+echo "  /bookbench:extract-learnings   — capture lessons from this book."
+echo "  /bookbench:archive             — soft-hide the book in the registry."
 ```
 
 ### Constitutional rules

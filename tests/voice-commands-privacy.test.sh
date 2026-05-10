@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Stage 08.1, Wave B, T4-C — privacy structural test for /book:voice * commands.
+# Stage 08.1, Wave B, T4-C — privacy structural test for /bookbench:voice * commands.
 # PS-08.1-07: every <execution> bash block in voice-build / voice-extract / voice-save-as
 # / voice-import / voice-list MUST refuse to write inside the plugin tree
 # (`${CLAUDE_PLUGIN_ROOT}` / `bookbench/`). voice-list must be read-only.

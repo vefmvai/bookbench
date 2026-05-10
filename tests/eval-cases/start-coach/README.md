@@ -1,6 +1,6 @@
-# Eval cases: `/book:start` coach mode
+# Eval cases: `/bookbench:start` coach mode
 
-> **Назначение.** Eval-кейсы для нового коуч-режима команды `/book:start` (этап 22). Покрывают главные сценарии 4 коуч-сборок по `matching-design.md` §§ 3.2–3.7.
+> **Назначение.** Eval-кейсы для нового коуч-режима команды `/bookbench:start` (этап 22). Покрывают главные сценарии 4 коуч-сборок по `matching-design.md` §§ 3.2–3.7.
 >
 > **Минимум 5 кейсов** по решению R-22-C=(б) (см. `decisions-22.md`).
 
@@ -11,7 +11,7 @@
 | 1 | `case-01-happy-path-popular-science-book.md` | Happy path: автор описал научпоп-книгу словами, B1 везде, нет исходников | `format=book, genre=popular-science, audience="<свободный текст>"`, style-marker=B3 |
 | 2 | `case-02-with-voice-samples.md` | Автор скинул 3 любимых пассажа в его стиле | style-marker=B2, voice-samples.md создан |
 | 3 | `case-03-with-existing-drafts.md` | Автор скинул 2 файла `глава-01.md`, `глава-02.md` | автоимпорт без флага, format=book (по структуре файлов) |
-| 4 | `case-04-exotic-format-screenplay.md` | Автор пишет киносценарий, ни один встроенный формат не подходит | ветка B2, вызов `/book:research-format screenplay`, кастомный пресет в `${CLAUDE_PLUGIN_DATA}/user-formats/` |
+| 4 | `case-04-exotic-format-screenplay.md` | Автор пишет киносценарий, ни один встроенный формат не подходит | ветка B2, вызов `/bookbench:research-format screenplay`, кастомный пресет в `${CLAUDE_PLUGIN_DATA}/user-formats/` |
 | 5 | `case-05-uncertain-format.md` | Описание неоднозначное между `article` и `long-read` | развилка 3.7 «не уверен» — один уточняющий вопрос, потом гипотеза |
 
 ## Структура каждого кейса

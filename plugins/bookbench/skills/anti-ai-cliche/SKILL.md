@@ -74,7 +74,7 @@ Per-section overrides go into `sections/<N>/spec.md` frontmatter under `anti_cli
 
 ## Hook integration
 
-The mechanical layer is the hook script `templates/hooks/anti-ai-cliche-lint.sh` (copied to `.book/.hooks/` at `/book:start`). It runs PostToolUse on `Write|Edit` for section artefacts. Reaction policy:
+The mechanical layer is the hook script `templates/hooks/anti-ai-cliche-lint.sh` (copied to `.book/.hooks/` at `/bookbench:start`). It runs PostToolUse on `Write|Edit` for section artefacts. Reaction policy:
 
 - `block` (exit 2) — Write is cancelled; the model rewrites.
 - `warn` (exit 0 with stderr) — Write proceeds; the model sees a warning and decides.

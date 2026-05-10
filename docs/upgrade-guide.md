@@ -39,14 +39,14 @@ BookBench разделяет обновление **кода плагина** и
 
 Это значит: после `/plugin update bookbench` твои существующие книги **продолжают работать на той версии плагина, на которой они стартовали**. Это сознательное решение (см. ниже).
 
-### `/book:update`
+### `/bookbench:update`
 
 Опциональная команда **внутри папки книги**. Делает 3-way merge новых тел субагентов и hook-скрипта из обновлённого `${CLAUDE_PLUGIN_ROOT}` в твою книгу.
 
 ```
 $ cd my-book
 $ claude
-> /book:update
+> /bookbench:update
 🤖 [book-coordinator] Сравниваю шаблоны плагина с локальными копиями.
    ├─ .book/.claude/agents/book-coordinator.md — без изменений
    ├─ .book/.claude/agents/book-strategist.md — изменён в плагине, нужен merge
@@ -92,7 +92,7 @@ $ claude
 
 (...)
 
-🤖 ✅ /book:update завершён.
+🤖 ✅ /bookbench:update завершён.
    Бэкап: .book/.backup/2026-05-08-1432/
    Запись в .book/UPDATE-LOG.md (UL-2026-05-08-1).
 ```
@@ -108,7 +108,7 @@ $ claude
 
 ## Что не трогается
 
-Ни `/plugin update`, ни `/book:update` не трогают:
+Ни `/plugin update`, ни `/bookbench:update` не трогают:
 
 ### `.book/agent-guidelines/<role>/`
 
@@ -140,29 +140,29 @@ $ claude
 
 ### `.book/config.yaml` и `.book/workflow.md`
 
-Конфигурация книги. Ни одно обновление их не перезаписывает; правит автор или `/book:tune apply`. См. также раздел [Миграции workflow](#миграции-workflow) ниже.
+Конфигурация книги. Ни одно обновление их не перезаписывает; правит автор или `/bookbench:tune apply`. См. также раздел [Миграции workflow](#миграции-workflow) ниже.
 
 ---
 
 ## Чек-лист апгрейда
 
-Перед запуском `/book:update`:
+Перед запуском `/bookbench:update`:
 
 1. **Сделай git commit** (если используешь git для книги). Бэкап `.book/.backup/` создаётся автоматически, но git-коммит — дополнительная страховка.
-2. **Закрой текущую главу**, если в работе — `/book:status` должен показывать «глава X завершена» или «главы Y не начаты», не «фаза 3 в процессе».
-3. **Запусти `/book:doctor`** — нет ли каких-то предупреждений.
+2. **Закрой текущую главу**, если в работе — `/bookbench:status` должен показывать «глава X завершена» или «главы Y не начаты», не «фаза 3 в процессе».
+3. **Запусти `/bookbench:doctor`** — нет ли каких-то предупреждений.
 
 Запуск:
 
 4. `/plugin update bookbench` — обновляешь код плагина (если ещё не обновил).
-5. В каждой книге, которую хочешь обновить: `cd <book>` → `/book:update`.
+5. В каждой книге, которую хочешь обновить: `cd <book>` → `/bookbench:update`.
 6. Просматривай diff'ы внимательно — особенно для файлов с `(локальная копия с N правками автора)`.
 
 После:
 
-7. `/book:doctor` — проверь, что всё на месте.
-8. Запусти простую команду (например, `/book:status`) — убедись, что субагенты отвечают.
-9. Если есть открытая глава — `/book:write-section:edit <N>` (только редактор) на проверочной главе — посмотри, не сломалось ли поведение.
+7. `/bookbench:doctor` — проверь, что всё на месте.
+8. Запусти простую команду (например, `/bookbench:status`) — убедись, что субагенты отвечают.
+9. Если есть открытая глава — `/bookbench:write-section:edit <N>` (только редактор) на проверочной главе — посмотри, не сломалось ли поведение.
 
 Если что-то не так — см. [Откат](#откат) ниже.
 
@@ -170,7 +170,7 @@ $ claude
 
 ## Откат
 
-### Если `/book:update` сломал что-то
+### Если `/bookbench:update` сломал что-то
 
 Бэкап создан автоматически перед обновлением:
 
@@ -197,7 +197,7 @@ $ chmod +x .book/.hooks/*.sh
 
 ```markdown
 ## UL-2026-05-08-2 (manual rollback)
-Откатил `/book:update` от UL-2026-05-08-1 — выявлен баг в book-writer.md.
+Откатил `/bookbench:update` от UL-2026-05-08-1 — выявлен баг в book-writer.md.
 Восстановлены файлы из .backup/2026-05-08-1432/.
 ```
 
@@ -214,7 +214,7 @@ $ chmod +x .book/.hooks/*.sh
 
 ### История бэкапов
 
-В `.book/.backup/` хранятся бэкапы всех `/book:update`. По умолчанию — последние 10. Старые автоматически чистятся (можно настроить через `config.yaml > backup.retention_count`).
+В `.book/.backup/` хранятся бэкапы всех `/bookbench:update`. По умолчанию — последние 10. Старые автоматически чистятся (можно настроить через `config.yaml > backup.retention_count`).
 
 Если бэкапа нет (например, ты удалил `.backup/` руками) — единственный путь восстановления через `git revert` (если использовал git).
 
@@ -226,7 +226,7 @@ $ chmod +x .book/.hooks/*.sh
 
 ### Почему
 
-После `/book:start` папка книги живёт **автономно**. Её workflow.md, agent-guidelines, локальные копии тел субагентов и hook-скрипт **застывают** в той версии плагина, в какой были на момент инициализации.
+После `/bookbench:start` папка книги живёт **автономно**. Её workflow.md, agent-guidelines, локальные копии тел субагентов и hook-скрипт **застывают** в той версии плагина, в какой были на момент инициализации.
 
 Причины:
 
@@ -250,9 +250,9 @@ metadata:
 
 ### Что делать, если очень нужны обновления
 
-`/book:update` — ручная процедура, делается **только по явному запросу**. Запускается одним вызовом per книга, с 3-way merge для каждого изменённого файла (см. выше).
+`/bookbench:update` — ручная процедура, делается **только по явному запросу**. Запускается одним вызовом per книга, с 3-way merge для каждого изменённого файла (см. выше).
 
-Если ты не запускаешь `/book:update` — книга может оставаться на стартовой версии хоть пять лет. Это нормально.
+Если ты не запускаешь `/bookbench:update` — книга может оставаться на стартовой версии хоть пять лет. Это нормально.
 
 ---
 
@@ -277,7 +277,7 @@ metadata:
 `/plugin update bookbench` **не меняет** твой `workflow.md`. Если хочешь подтянуть новые дефолты пресета:
 
 ```
-> /book:workflow:check
+> /bookbench:workflow:check
 🤖 [book-coordinator] Проверяю workflow.md...
    Текущая версия: 0.1.0 (preset popular-science)
    Доступная версия preset'а: 0.1.3
@@ -292,11 +292,11 @@ metadata:
 🤖 ✅ workflow.md обновлён.
 ```
 
-`/book:workflow:check` без подтверждения — статическая валидация workflow.md (полезно после ручных правок).
+`/bookbench:workflow:check` без подтверждения — статическая валидация workflow.md (полезно после ручных правок).
 
 ### Если plugin изменил блок, который ты используешь
 
-Это редкий случай (мажорная версия). Тогда `/book:workflow:check` покажет breaking change и предложит ручную миграцию.
+Это редкий случай (мажорная версия). Тогда `/bookbench:workflow:check` покажет breaking change и предложит ручную миграцию.
 
 В 0.1 → 0.2 такие случаи будут описаны в CHANGELOG.md в разделе `Breaking changes`. Пока в 0.x.x — гарантируется обратная совместимость workflow.
 
@@ -312,7 +312,7 @@ metadata:
 /plugin marketplace add vefmvai/bookbench
 /plugin install bookbench@bookbench
 /reload-plugins
-/book:doctor   # должно показать BookBench 0.3.0
+/bookbench:doctor   # должно показать BookBench 0.3.0
 ```
 
 См. `docs/release-030-notes.md` для детального списка изменений.
@@ -326,8 +326,8 @@ metadata:
    - `book.audience: ""` (заполните свободным текстом-портретом аудитории).
    - `workflow.completion_format: editor_pass_plus_author_approval` (дефолт; см. `release-030-notes.md` если нужно другое).
 4. В `.book/STATE.md` и `.book/PROJECT.md` замените упоминания `current_chapter` → `current_section`, `chapter_loop` → `section_loop`, `chapter_target_chars` → `section_target_chars`.
-5. Привычку «писать `/book:write-chapter`» замените на `/book:write-section`. Аналогично для `plan-chapter`, `audit-chapter`, `re-edit-chapter`, `discuss-chapter`.
-6. Прогоните `/book:doctor` — он подсветит оставшиеся несоответствия структуры.
+5. Привычку «писать `/bookbench:write-chapter`» замените на `/bookbench:write-section`. Аналогично для `plan-chapter`, `audit-chapter`, `re-edit-chapter`, `discuss-chapter`.
+6. Прогоните `/bookbench:doctor` — он подсветит оставшиеся несоответствия структуры.
 
 В диалогах с автором (выводе субагентов) слово «глава» / «раздел» / «часть» подставляется автоматически из `formats.<format>.section_word` — менять привычные термины в общении с агентом не требуется.
 
@@ -336,7 +336,7 @@ metadata:
 ## Что дальше
 
 - [`installation.md`](installation.md) — три режима установки (где живут версии)
-- [`dev-mode.md`](dev-mode.md) — `/book:update --from-local-dev` для тестирования
-- [`customization.md`](customization.md) — что в `config.yaml` и почему `/book:update` это не трогает
+- [`dev-mode.md`](dev-mode.md) — `/bookbench:update --from-local-dev` для тестирования
+- [`customization.md`](customization.md) — что в `config.yaml` и почему `/bookbench:update` это не трогает
 - [`architecture.md`](architecture.md) — стрелки no-touch (#13, #14, #17)
 - [`faq.md`](faq.md) — кластер 4 «Обновления» (4 вопроса)

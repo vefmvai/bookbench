@@ -24,4 +24,4 @@ cat .book/.claude/agent-memory/factchecker/MEMORY.md
 
 ## How to edit
 
-Do NOT edit by hand. The agent owns this file. Use `/book:guidelines factchecker` to influence its behaviour through guidelines instead.
+Do NOT edit by hand. The agent owns this file. Use `/bookbench:guidelines factchecker` to influence its behaviour through guidelines instead.

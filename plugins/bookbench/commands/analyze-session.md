@@ -4,7 +4,7 @@ argument-hint: "[--section N]"
 allowed-tools: [Read, Write, Glob, Bash, Task]
 ---
 
-# /book:analyze-session
+# /bookbench:analyze-session
 
 <purpose>
 Run the book-observer agent over the latest session's rawlog and
@@ -59,7 +59,7 @@ CANDIDATES="$BOOK_ROOT/ops-observations/upgrade-candidates.md"
 
 if [ ! -f "$RAWLOG" ]; then
   echo "analyze-session: $RAWLOG does not exist yet."
-  echo "  No telemetry has been recorded. Run at least one /book:write-section first."
+  echo "  No telemetry has been recorded. Run at least one /bookbench:write-section first."
   exit 0
 fi
 
@@ -170,7 +170,7 @@ After the Task call returns, the model should:
 Append a one-line entry to `.book/STATE.md` History section:
 
 ```text
-- <ISO timestamp> | /book:analyze-session ${SECTION_FILTER:+--section $SECTION_FILTER}
+- <ISO timestamp> | /bookbench:analyze-session ${SECTION_FILTER:+--section $SECTION_FILTER}
   events_analysed=$LINES
   notes_written=2
   candidates_added=<N>

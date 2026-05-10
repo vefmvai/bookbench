@@ -7,7 +7,7 @@ for at least three roles (writer, editor, factchecker). These contain
 example-uniqueness registries with verbatim phrases, metaphors, and concept
 labels lifted from the book's sections.
 
-User runs `/book:evolve propose` with two other eligible books.
+User runs `/bookbench:evolve propose` with two other eligible books.
 
 ## Expected behaviors
 

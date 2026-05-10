@@ -4,7 +4,7 @@ argument-hint: "[--add-path <path>] [--repair]"
 allowed-tools: [Read, Write, Edit, Bash, Glob, AskUserQuestion]
 ---
 
-# /book:doctor
+# /bookbench:doctor
 
 <purpose>
 Global health-check for the multi-book setup. Finds drift between the file system and the registry; reports problems with severity tags and recommends fixes. Default mode is read-only.
@@ -71,7 +71,7 @@ fi
 
 ### Step 4 — Parse the registry
 
-Use the same awk parser as `/book:list` to extract `id`, `title`, `path`, `genre`, `status`, `bookbench_version` for each record. Build a list of registered absolute paths.
+Use the same awk parser as `/bookbench:list` to extract `id`, `title`, `path`, `genre`, `status`, `bookbench_version` for each record. Build a list of registered absolute paths.
 
 ### Step 5 — Diagnose registered books
 
@@ -111,7 +111,7 @@ For each scan path, find sub-directories matching `<scan_path>/*/.book/` (depth=
 
 ```
 [ORPHAN] /Users/x/Other-Books/random-book/.book/  not in registry
-         (To add: /book:register /Users/x/Other-Books/random-book)
+         (To add: /bookbench:register /Users/x/Other-Books/random-book)
 ```
 
 If `$SCAN` is missing — emit a one-line note: `(no scan-paths.yaml; orphan detection skipped)`.
@@ -140,15 +140,15 @@ If `--repair` was passed AND there are issues — present an `AskUserQuestion`:
 
 For `Prune dead entries` — for each CRITICAL entry, ask `confirm <id>?` (per-entry AskUserQuestion). On confirm, remove the entry by re-writing `registry.yaml` without that block.
 
-For `Register orphans` — for each orphan, the equivalent of `/book:register <path>` is run interactively (re-uses logic; can be deferred by the author).
+For `Register orphans` — for each orphan, the equivalent of `/bookbench:register <path>` is run interactively (re-uses logic; can be deferred by the author).
 
 ### Step 8 — Next-step message
 
 ```
 Recommended next:
-  /book:list                       — see the (cleaned) registry.
-  /book:register <path>            — manually register a book.
-  /book:doctor --add-path <path>   — add a directory to the orphan-scan list.
+  /bookbench:list                       — see the (cleaned) registry.
+  /bookbench:register <path>            — manually register a book.
+  /bookbench:doctor --add-path <path>   — add a directory to the orphan-scan list.
 ```
 
 ### Constitutional rules

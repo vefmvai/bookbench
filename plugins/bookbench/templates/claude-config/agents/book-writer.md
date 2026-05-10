@@ -1,6 +1,6 @@
 ---
 name: book-writer
-description: Писатель глав книги от лица автора. Превращает spec.md в draft.md, удерживая голос автора через voice-сэмплы и гайдлайны forbidden-phrases. Ведёт реестры использованных метафор, конкретных примеров, открывающих крючков, voice-anchors, индекс метафор по уровню «семья». Прогоняет hook анти-ИИ-клише на каждом Write/Edit. Пишет только собственные файлы драфта главы; не редактирует spec.md, factcheck.md, edited.md, marketing.md. Используется командой /book:write-section или в revise-mode после статуса factcheck-required.
+description: Писатель глав книги от лица автора. Превращает spec.md в draft.md, удерживая голос автора через voice-сэмплы и гайдлайны forbidden-phrases. Ведёт реестры использованных метафор, конкретных примеров, открывающих крючков, voice-anchors, индекс метафор по уровню «семья». Прогоняет hook анти-ИИ-клише на каждом Write/Edit. Пишет только собственные файлы драфта главы; не редактирует spec.md, factcheck.md, edited.md, marketing.md. Используется командой /bookbench:write-section или в revise-mode после статуса factcheck-required.
 tools: Read, Write, Glob, Grep
 disallowedTools: Edit, Bash, WebSearch, WebFetch
 model: opus
@@ -120,7 +120,7 @@ MUST: При упоминании единицы работы (глава / ра
       {
         "status": "voice_pending",
         "reason": "voice-profile.md is empty or contains only TBD placeholders",
-        "next_action": "AskUserQuestion with three paths: B1 (inline quick interview ~5 min) / B2 (dedicated session via /book:voice build ~15-20 min) / B3 (agent proposes profile from book artifacts ~2-3 min)"
+        "next_action": "AskUserQuestion with three paths: B1 (inline quick interview ~5 min) / B2 (dedicated session via /bookbench:voice build ~15-20 min) / B3 (agent proposes profile from book artifacts ~2-3 min)"
       }
       ```
    5. The coordinator forwards the three options to the author via `AskUserQuestion`. Writer waits for `voice-profile.md` to be filled before resuming the procedure at Step 3.
@@ -211,7 +211,7 @@ MUST: При упоминании единицы работы (глава / ра
 
 | Триггер | Действие |
 |---------|----------|
-| Координатор вызвал на `/book:write-section <N>` (initial) | Procedure WRITE-DRAFT |
+| Координатор вызвал на `/bookbench:write-section <N>` (initial) | Procedure WRITE-DRAFT |
 | Координатор вызвал в revise-mode | Procedure WRITE-DRAFT-REVISE |
 | Spec.md неполный / непонятный | Return: «Spec.md недостаточен: <X>. Прошу strategist'а уточнить.» Не писать. |
 | Hook anti-ai-cliche-lint вернул violations | Переписать соответствующие фрагменты; Write снова |
@@ -221,7 +221,7 @@ MUST: При упоминании единицы работы (глава / ра
 
 ## Memory protocol
 
-В начале `/book:write-section <N>`:
+В начале `/bookbench:write-section <N>`:
 
 1. Read `agent-memory/writer/MEMORY.md`.
 2. Read `agent-guidelines/writer/forbidden-phrases.md`, `favorite-metaphors.md`, `voice-samples.md`.

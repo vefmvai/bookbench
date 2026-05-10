@@ -2,7 +2,7 @@
 
 ## Input
 
-User runs `/book:research-genre detective`. The genre is not in the built-in
+User runs `/bookbench:research-genre detective`. The genre is not in the built-in
 presets. WebSearch is available.
 
 ## Expected behaviors

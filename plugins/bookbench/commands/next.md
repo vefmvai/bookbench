@@ -4,7 +4,7 @@ argument-hint: "[--execute] [--explain] [--from-block <name>]"
 allowed-tools: [Read, Bash, Glob, Task, AskUserQuestion]
 ---
 
-# /book:next
+# /bookbench:next
 
 <purpose>
 Single navigation entrypoint of BookBench: «what should I do right now?». Reads the workflow DAG and current state, applies a Decision Tree to pick the next pending block, returns a recommendation (default) or runs the matching command (`--execute`).
@@ -33,11 +33,11 @@ This is the runtime navigation core. Implements the Decision Tree from `next-des
 ### Step 1 — Pre-flight
 
 ```bash
-[ -d .book ] || { echo "No .book/ directory. Run /book:start first."; exit 0; }
-[ -f .book/STATE.md ] || { echo "No STATE.md. Run /book:start to initialise."; exit 0; }
+[ -d .book ] || { echo "No .book/ directory. Run /bookbench:start first."; exit 0; }
+[ -f .book/STATE.md ] || { echo "No STATE.md. Run /bookbench:start to initialise."; exit 0; }
 [ -f .book/workflow.md ] || {
-  echo "No workflow.md. Defaults will apply, but /book:next is more accurate with a workflow."
-  echo "Run /book:research-genre <genre> or accept the built-in popular-science preset."
+  echo "No workflow.md. Defaults will apply, but /bookbench:next is more accurate with a workflow."
+  echo "Run /bookbench:research-genre <genre> or accept the built-in popular-science preset."
 }
 
 # Parse flags
@@ -76,32 +76,32 @@ Apply the 5 navigation branches from `next-design.md` § 2. Pseudocode:
 
 ```
 if INGEST-DECISIONS.md has unresolved V-items:
-    RECOMMENDATION = "/book:resolve V-XX"
-    REASON = "$N unresolved competing variants from /book:import."
+    RECOMMENDATION = "/bookbench:resolve V-XX"
+    REASON = "$N unresolved competing variants from /bookbench:import."
     return
 
 if last_touched > 14 days ago:
-    RECOMMENDATION = "/book:resume"
+    RECOMMENDATION = "/bookbench:resume"
     REASON = "Last session was N days ago. Resume first to refresh context."
     return
 
 case CURRENT_SECTION:
     "unknown" | "":
         if no section dirs and no ROADMAP.md:
-            RECOMMENDATION = "/book:plan-book"
+            RECOMMENDATION = "/bookbench:plan-book"
             REASON = "Book just initialised. Plan the sections list first."
         else:
-            RECOMMENDATION = "/book:status"
+            RECOMMENDATION = "/bookbench:status"
             REASON = "State unclear. Check status to see where we are."
     "book_level":
         if all book_level blocks done:
-            RECOMMENDATION = "/book:plan-section 1"
+            RECOMMENDATION = "/bookbench:plan-section 1"
             REASON = "Book-level done. Move into section loop."
         elif pending gate awaiting_author:
             RECOMMENDATION = "respond at the gate"
             REASON = "Author gate <gate-name> is pending. Approve / revise."
         elif failed block:
-            RECOMMENDATION = "/book:debug" or "investigate STATE.md"
+            RECOMMENDATION = "/bookbench:debug" or "investigate STATE.md"
             REASON = "Block <X> failed. Investigate before proceeding."
         else:
             FIRST_PENDING = first pending book_level block
@@ -114,19 +114,19 @@ case CURRENT_SECTION:
     "section_loop":
         determine current_section (first section without summary.md)
         if no sections started:
-            RECOMMENDATION = "/book:plan-section 1"
+            RECOMMENDATION = "/bookbench:plan-section 1"
         elif section has spec.md but no draft.md:
-            RECOMMENDATION = "/book:write-section <N>"
+            RECOMMENDATION = "/bookbench:write-section <N>"
         elif section has draft.md but no edited.md:
-            RECOMMENDATION = "/book:write-section <N>  (resumes from factcheck-post)"
+            RECOMMENDATION = "/bookbench:write-section <N>  (resumes from factcheck-post)"
         elif section has edited.md but no summary.md:
-            RECOMMENDATION = "/book:write-section <N>  (finalises)"
+            RECOMMENDATION = "/bookbench:write-section <N>  (finalises)"
         elif section has summary.md (section complete):
             if last section and ROADMAP indicates more sections:
-                RECOMMENDATION = "/book:plan-section <N+1>"
+                RECOMMENDATION = "/bookbench:plan-section <N+1>"
             elif all sections done:
                 CURRENT_SECTION = "post_book"   # promote
-                RECOMMENDATION = "/book:audit-book"
+                RECOMMENDATION = "/bookbench:audit-book"
     "post_book":
         first pending post_book block (audit-book, ship)
         RECOMMENDATION = block_to_command(...)
@@ -153,7 +153,7 @@ With `--explain`, optionally invoke `book-coordinator` via `Task` to expand the 
 ```
 Task(
   subagent_type: book-coordinator,
-  description: "Explain the /book:next recommendation",
+  description: "Explain the /bookbench:next recommendation",
   prompt: """
     The rule-based engine recommends: <RECOMMENDATION>
     Reason: <REASON>
@@ -184,7 +184,7 @@ For stage 15+, when slash-command nesting is verified in Claude Code 2.x, this s
 
 ```bash
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-printf '\n%s — `/book:next` — recommended: %s (reason: %s)\n' \
+printf '\n%s — `/bookbench:next` — recommended: %s (reason: %s)\n' \
   "$NOW" "$RECOMMENDATION" "$REASON" >> .book/STATE.md
 ```
 
@@ -198,8 +198,8 @@ Recommended next: <RECOMMENDATION>
 Why: <REASON>
 
 To run it now:           <RECOMMENDATION>
-To see full reasoning:   /book:next --explain
-To see overall status:   /book:status
+To see full reasoning:   /bookbench:next --explain
+To see overall status:   /bookbench:status
 ```
 
 For `--execute` mode (stage 15+ feature):
@@ -214,7 +214,7 @@ Executing: <RECOMMENDATION>...
 
 - **MUST** be deterministic in the rule-based core — same state must yield same recommendation.
 - **MUST** never override the rule-based decision via the LLM-augmentation step (that step only fills the explanation).
-- **MUST** detect long breaks (>14 days) and recommend `/book:resume` first.
+- **MUST** detect long breaks (>14 days) and recommend `/bookbench:resume` first.
 - **NEVER** edit `workflow.md`, `section-state.yaml`, or `sections/` content.
 - **NEVER** invoke writer / factchecker / editor — only at most `book-coordinator` for explanation expansion.
 

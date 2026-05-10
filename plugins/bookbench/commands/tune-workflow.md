@@ -5,7 +5,7 @@ argument-hint: "[apply <id>] [reject <id>] [--lookback <N>] [--severity-threshol
 allowed-tools: [Read, Write, Edit, Glob, Grep, Task, AskUserQuestion]
 ---
 
-# /book:tune:workflow
+# /bookbench:tune:workflow
 
 <purpose>
 Tune the per-book workflow.md. Pattern detection looks at structural signals
@@ -44,7 +44,7 @@ echo "tune:workflow: subaction='$SUBACTION' proposal_id='$PROPOSAL_ID' lookback=
 ## Step 2 — Pre-flight
 
 ```bash
-[ -d .book ] || { echo "tune:workflow: no .book/ folder. Run /book:start first."; exit 0; }
+[ -d .book ] || { echo "tune:workflow: no .book/ folder. Run /bookbench:start first."; exit 0; }
 [ -f .book/workflow.md ] || {
   echo "tune:workflow: .book/workflow.md missing — workflow management requires it."
   exit 0
@@ -69,7 +69,7 @@ Empty `SUBACTION` → analysis (Step 4W..7W). Else jump to the matching branch.
 Task(
   subagent_type="book-tuner",
   prompt="""
-  Run /book:tune:workflow in analyse mode (UX-09 step 1, mode=workflow).
+  Run /bookbench:tune:workflow in analyse mode (UX-09 step 1, mode=workflow).
 
   Inputs to read:
     - .book/workflow.md
@@ -173,7 +173,7 @@ Recorded in TUNING-LOG.md with mode: workflow, approved_by: author.
 
 ## Step 7W-Reject — Reject a workflow proposal
 
-Same mechanics as `/book:tune:guidelines` Step 7G-Reject, but with
+Same mechanics as `/bookbench:tune:guidelines` Step 7G-Reject, but with
 `mode: workflow` in the REJECTIONS-LOG entry. Cooldown duration defaults to
 60 days for workflow (vs 30 for guidelines) — workflow changes are
 higher-stakes and the author should not be re-asked too often.
@@ -186,8 +186,8 @@ higher-stakes and the author should not be re-asked too often.
   contains the four-phase procedure; the workflow-mode prompt parameterises
   the inputs and the priority rules.
 - The "round-trip parse" of `workflow.md` will be replaced by a richer
-  `/book:workflow:check` invocation when that command lands in wave C
+  `/bookbench:workflow:check` invocation when that command lands in wave C
   (T6e). Until then, this inline parse is sufficient.
 - Workflow tuning may be invoked manually by the author via
-  `/book:tune:workflow` even when no automated signals exist — the author
+  `/bookbench:tune:workflow` even when no automated signals exist — the author
   uses it as a pre-flight planning aid before changing section cadence.

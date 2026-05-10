@@ -4,7 +4,7 @@ argument-hint: "<section-number>"
 allowed-tools: [Task, Read, Write, Edit, AskUserQuestion]
 ---
 
-# /book:write-section:factcheck
+# /bookbench:write-section:factcheck
 
 <purpose>
 Atomic re-run of the factchecker phase. See `phases-spec.md` § 3 (etap 11).
@@ -24,18 +24,18 @@ Atomic re-run of the factchecker phase. See `phases-spec.md` § 3 (etap 11).
 
 <execution>
 
-Thin wrapper around `/book:write-section` Step 7 (factchecker loop with DEC-03 limit).
+Thin wrapper around `/bookbench:write-section` Step 7 (factchecker loop with DEC-03 limit).
 
 ### Step 1 — Validate
 
 ```bash
 ARG="$ARGUMENTS"
 N=$(printf '%s' "$ARG" | sed -E 's/[^0-9]//g')
-[ -z "$N" ] && { echo "Usage: /book:write-section:factcheck <section-number>"; exit 0; }
+[ -z "$N" ] && { echo "Usage: /bookbench:write-section:factcheck <section-number>"; exit 0; }
 PADDED=$(printf '%03d' "$N")
 CHDIR=".book/sections/section-${PADDED}"
 [ -d "$SECDIR" ] || { echo "$CHDIR does not exist."; exit 0; }
-[ -s "$SECDIR/draft.md" ] || { echo "$SECDIR/draft.md is missing. Run /book:write-section:draft $N first."; exit 0; }
+[ -s "$SECDIR/draft.md" ] || { echo "$SECDIR/draft.md is missing. Run /bookbench:write-section:draft $N first."; exit 0; }
 ```
 
 ### Step 2 — Backup existing factcheck
@@ -51,7 +51,7 @@ rm -f "$SECDIR/section-state.yaml.bak"
 
 ### Step 3 — Run loop
 
-Run the factcheck-loop exactly as `/book:write-section` Step 7 (DEC-03 max 3 iterations, with writer revise-mode in between, ESCALATE-flow on exhaustion). Re-use the same `Task` recipes and the same `<files_to_read>` lists.
+Run the factcheck-loop exactly as `/bookbench:write-section` Step 7 (DEC-03 max 3 iterations, with writer revise-mode in between, ESCALATE-flow on exhaustion). Re-use the same `Task` recipes and the same `<files_to_read>` lists.
 
 ### Step 4 — Verify and report
 
@@ -59,7 +59,7 @@ Run the factcheck-loop exactly as `/book:write-section` Step 7 (DEC-03 max 3 ite
 STATUS=$(awk '/^status:/{print $2; exit}' "$SECDIR/factcheck.md" || echo unknown)
 ITER=$(awk '/^factcheck_iteration_count:/{print $2; exit}' "$SECDIR/section-state.yaml" || echo 0)
 echo "Factcheck loop completed for section $N: status=$STATUS, iterations=$ITER"
-echo "Recommended next: /book:write-section:edit $N (if status=pass) or inspect REJECTIONS-LOG.md"
+echo "Recommended next: /bookbench:write-section:edit $N (if status=pass) or inspect REJECTIONS-LOG.md"
 ```
 
 ### Step 5 — STATE update
@@ -68,7 +68,7 @@ echo "Recommended next: /book:write-section:edit $N (if status=pass) or inspect 
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 sed -i.bak -E "s/^- \`last_action\`:.*/- \`last_action\`: write-section:factcheck ${N} ($STATUS)/" .book/STATE.md
 rm -f .book/STATE.md.bak
-printf '\n%s — `/book:write-section:factcheck %s` — status=%s iter=%s\n' "$NOW" "$N" "$STATUS" "$ITER" >> .book/STATE.md
+printf '\n%s — `/bookbench:write-section:factcheck %s` — status=%s iter=%s\n' "$NOW" "$N" "$STATUS" "$ITER" >> .book/STATE.md
 ```
 
 ### Constitutional rules

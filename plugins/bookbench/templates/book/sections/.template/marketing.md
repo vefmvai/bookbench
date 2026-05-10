@@ -10,7 +10,7 @@ hook_phrase: null                     # ≤120 chars
 visual_motifs_used: []
 ---
 
-<!-- автогенерируется при /book:write-section в Phase 6 (если workflow.section_loop.enable_marketer: true); не загружается субагентами в следующие главы — только маркетолог читает свою прошлую marketing.md для проверки повторов -->
+<!-- автогенерируется при /bookbench:write-section в Phase 6 (если workflow.section_loop.enable_marketer: true); не загружается субагентами в следующие главы — только маркетолог читает свою прошлую marketing.md для проверки повторов -->
 
 # Section marketing pack
 

@@ -99,14 +99,14 @@ A naive `model: inherit` policy makes every Task adopt the model the user picked
 
 The profile system fixes this by spending Opus only where it is structurally required (the three creative-core roles) and pushing everything else down the model ladder. The savings compound over a book: an editor pass on Sonnet costs roughly a fifth of the same pass on Opus; on Haiku, less still. With the `budget` profile on Pro, an entire section cycle typically fits inside the Opus budget that a single naive Opus inheritance would consume.
 
-If you want hard numbers for your own setup, the telemetry hooks shipped with the plugin write per-role model usage to `.book/ops-observations/rawlog.jsonl`. Run `/book:analyze-session` after a few sections to see where your Opus minutes actually go.
+If you want hard numbers for your own setup, the telemetry hooks shipped with the plugin write per-role model usage to `.book/ops-observations/rawlog.jsonl`. Run `/bookbench:analyze-session` after a few sections to see where your Opus minutes actually go.
 
 ## Migrating an old book
 
 If your book was initialised before this plugin version, your `.book/config.yaml > agents.models` map probably still has `inherit` for every role. Two ways to upgrade:
 
 1. **Manual.** Open `.book/config.yaml`, set `agents.profile: balanced`, and clear the legacy `agents.models` block (or replace each `inherit` with the value from the matrix above).
-2. **Via `/book:update`.** Running `/book:update` proposes a 3-way merge that adds the `profile` and `model_overrides` keys without touching your guidelines.
+2. **Via `/bookbench:update`.** Running `/bookbench:update` proposes a 3-way merge that adds the `profile` and `model_overrides` keys without touching your guidelines.
 
 Either way, your guidelines, memory registries, and section content remain untouched — only the model selection metadata changes.
 
@@ -114,7 +114,7 @@ Either way, your guidelines, memory registries, and section content remain untou
 
 - `docs/architecture.md` — the two-tier plugin / book architecture
 - `docs/customization.md` — guidelines and tuning
-- `docs/upgrade-guide.md` — full `/book:update` flow
+- `docs/upgrade-guide.md` — full `/bookbench:update` flow
 
 ---
 *Last reviewed against the model alias system shipped in plugin version 0.1.*

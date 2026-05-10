@@ -1,10 +1,10 @@
 ---
-description: Прогоняет фазу 1 микро-цикла раздела N (агент book-strategist) и шлюз одобрения ТЗ (spec-gate). Создаёт файл sections/<id>/spec.md и просит автора утвердить ТЗ. Само написание драфта не запускается — это работа команды /book:write-section.
+description: Прогоняет фазу 1 микро-цикла раздела N (агент book-strategist) и шлюз одобрения ТЗ (spec-gate). Создаёт файл sections/<id>/spec.md и просит автора утвердить ТЗ. Само написание драфта не запускается — это работа команды /bookbench:write-section.
 argument-hint: "<section-number>"
 allowed-tools: [Task, Read, Write, Edit, AskUserQuestion]
 ---
 
-# /book:plan-section
+# /bookbench:plan-section
 
 <purpose>
 Generate the section specification (`spec.md`) for section N — a structural ToR — without proceeding into the rest of the micro-cycle.
@@ -24,13 +24,13 @@ Generate the section specification (`spec.md`) for section N — a structural To
 
 <execution>
 
-This command implements Phase 1 (strategist) + Phase 1g (spec gate) of the section micro-cycle. PS-13-02 says when `spec.md` is missing for `/book:write-section`, refuse with a hint (rather than auto-call); here we are the source of `spec.md`.
+This command implements Phase 1 (strategist) + Phase 1g (spec gate) of the section micro-cycle. PS-13-02 says when `spec.md` is missing for `/bookbench:write-section`, refuse with a hint (rather than auto-call); here we are the source of `spec.md`.
 
 ### Step 1 — Validate argument
 
 ```bash
 ARG="$ARGUMENTS"
-[ -z "$ARG" ] && { echo "Usage: /book:plan-section <section-number>"; exit 0; }
+[ -z "$ARG" ] && { echo "Usage: /bookbench:plan-section <section-number>"; exit 0; }
 N=$(printf '%s' "$ARG" | sed -E 's/[^0-9]//g')
 [ -z "$N" ] && { echo "Section number must be an integer ≥ 1."; exit 0; }
 [ "$N" -lt 1 ] 2>/dev/null && { echo "Section number must be ≥ 1."; exit 0; }
@@ -42,21 +42,21 @@ echo "N=$N PADDED=$PADDED SECDIR=$SECDIR"
 ### Step 2 — Pre-flight book state
 
 ```bash
-[ -d .book ] || { echo "No .book/. Run /book:start."; exit 0; }
-[ -f .book/ROADMAP.md ] || { echo ".book/ROADMAP.md is missing. Run /book:plan-book first."; exit 0; }
+[ -d .book ] || { echo "No .book/. Run /bookbench:start."; exit 0; }
+[ -f .book/ROADMAP.md ] || { echo ".book/ROADMAP.md is missing. Run /bookbench:plan-book first."; exit 0; }
 
 # Genre pending guard (D-36, etap 24).
 GENRE_LINE=$(grep -E '^[[:space:]]+genre:[[:space:]]' .book/config.yaml | head -1 | sed -E 's/^[[:space:]]+genre:[[:space:]]+//; s/[[:space:]]*#.*$//; s/^"//; s/"$//' | tr -d ' ')
 if [ "$GENRE_LINE" = "pending" ] || [ "$GENRE_LINE" = "null" ] || [ -z "$GENRE_LINE" ]; then
   echo "ERROR: жанр в .book/config.yaml — pending или не задан."
-  echo "Запусти /book:research-genre <slug>, чтобы сгенерировать пресет, или назначь готовый жанр через /book:config genre <slug>, прежде чем продолжать."
+  echo "Запусти /bookbench:research-genre <slug>, чтобы сгенерировать пресет, или назначь готовый жанр через /bookbench:config genre <slug>, прежде чем продолжать."
   exit 2
 fi
 
 PLANNED=$(grep -cE '^## (Section|Раздел|Глава|Chapter)' .book/ROADMAP.md || echo 0)
 [ "$PLANNED" -lt "$N" ] && {
   echo "ROADMAP has only $PLANNED planned sections; you asked for $N."
-  echo "Either /book:plan-book to extend, or pass a smaller section number."
+  echo "Either /bookbench:plan-book to extend, or pass a smaller section number."
   exit 0
 }
 ```
@@ -142,7 +142,7 @@ Single Task invocation:
 - `prompt`: structured instruction:
 
   ```
-  You are book-strategist for /book:plan-section ${N}.
+  You are book-strategist for /bookbench:plan-section ${N}.
 
   Mode: ${MODE}    # one of: fresh | revise (when spec.md exists)
   Author note (if revise): "${AUTHOR_NOTE}"
@@ -236,7 +236,7 @@ rm -f "$SECDIR/section-state.yaml.bak"
 sed -i.bak -E "s/^- \`current_section\`:.*/- \`current_section\`: section_loop/" .book/STATE.md
 sed -i.bak -E "s/^- \`last_action\`:.*/- \`last_action\`: plan-section ${N} accepted/" .book/STATE.md
 rm -f .book/STATE.md.bak
-printf '\n%s — `/book:plan-section %s` — spec accepted (section-%s)\n' "$NOW" "$N" "$PADDED" >> .book/STATE.md
+printf '\n%s — `/bookbench:plan-section %s` — spec accepted (section-%s)\n' "$NOW" "$N" "$PADDED" >> .book/STATE.md
 ```
 
 ### Step 10 — Next-step message
@@ -245,8 +245,8 @@ printf '\n%s — `/book:plan-section %s` — spec accepted (section-%s)\n' "$NOW
 Spec for section ${N} accepted: ${SECDIR}/spec.md
 
 Recommended next:
-  /book:write-section ${N}    — run the full 5+1-phase micro-cycle.
-  /book:plan-section ${N+1}   — pre-plan the next section (optional).
+  /bookbench:write-section ${N}    — run the full 5+1-phase micro-cycle.
+  /bookbench:plan-section ${N+1}   — pre-plan the next section (optional).
 ```
 
 ### Constitutional rules for this command
@@ -254,7 +254,7 @@ Recommended next:
 - **MUST** validate the section number is a positive integer.
 - **MUST** call `book-strategist` exactly once (plus at most one revise call).
 - **MUST** pass an explicit `<files_to_read>` block bounded by per-role budget.
-- **MUST** never proceed to writing — that is `/book:write-section`.
+- **MUST** never proceed to writing — that is `/bookbench:write-section`.
 - **NEVER** call `book-writer`, `book-factchecker`, `book-editor`, `book-marketer` from this command.
 
 </execution>

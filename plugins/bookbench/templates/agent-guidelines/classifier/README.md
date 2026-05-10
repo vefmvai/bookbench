@@ -1,6 +1,6 @@
 # Guidelines for book-doc-classifier
 
-> The classifier reads this file before every /book:import classification pass.
+> The classifier reads this file before every /bookbench:import classification pass.
 
 ## What goes here
 

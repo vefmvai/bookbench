@@ -1,8 +1,8 @@
 # .book/config.yaml — конфигурация этой книги
-# Все параметры можно изменить через /book:config (интерактивно) или вручную.
+# Все параметры можно изменить через /bookbench:config (интерактивно) или вручную.
 # Иерархия наследования:
 #   ${CLAUDE_PLUGIN_ROOT}/defaults.yaml > этот файл > переопределения в spec.md раздела
-# После /book:start значения ниже заполняются из defaults.yaml выбранного жанра.
+# После /bookbench:start значения ниже заполняются из defaults.yaml выбранного жанра.
 
 # ────────────────────────────────────────────────────────────
 # book — основные характеристики книги
@@ -10,33 +10,33 @@
 #   genre    — что пишется (тип работы со стабильными конвенциями)
 #   format   — физическая форма (статья / книга / монография / диссертация)
 #   audience — кто читает (свободный текст-портрет, не enum)
-#   style    — голос автора (собирается при первом разделе, не на /book:start; см. TOV-08)
+#   style    — голос автора (собирается при первом разделе, не на /bookbench:start; см. TOV-08)
 # Каждое измерение — первоклассная сущность фреймворка.
 # ────────────────────────────────────────────────────────────
 book:
   title: "TBD"               # читаемое название; используется в маркетинговых артефактах
   genre: popular-science     # выбирает дефолты из defaults.yaml; popular-science | narrative-non-fiction |
                              # monograph | fiction | <user-preset> | pending
-                             # pending = жанр будет выбран позже через /book:research-genre.
+                             # pending = жанр будет выбран позже через /bookbench:research-genre.
                              # При pending команды plan-book / plan-section / write-section блокируются
-                             # с подсказкой запустить /book:research-genre <slug> или /book:config genre <slug>.
+                             # с подсказкой запустить /bookbench:research-genre <slug> или /bookbench:config genre <slug>.
                              # См. lib/start-coach-prompt.md § 3 ветка B3 (D-36).
   format: book               # одно из: article | long-read | book | monograph | dissertation
-                             # Расширяется через /book:research-format (сохраняет пресет в ${CLAUDE_PLUGIN_DATA}/user-formats/).
+                             # Расширяется через /bookbench:research-format (сохраняет пресет в ${CLAUDE_PLUGIN_DATA}/user-formats/).
                              # Определяет слово для единицы работы (глава / раздел / часть) и типичные объёмы.
                              # См. decisions-20.md (D-30) и formats-design.md для полных параметров.
   audience: ""               # свободный текст-портрет целевого читателя (от одного предложения до нескольких абзацев)
-                             # Заполняется в коуч-режиме /book:start или вручную. По умолчанию пусто.
+                             # Заполняется в коуч-режиме /bookbench:start или вручную. По умолчанию пусто.
                              # Для длинных портретов — хранить полный текст в .book/context/audience.md,
                              # а здесь оставить краткое резюме. Влияет на примеры, метафоры, уровень сложности.
                              # См. decisions-20.md (Измерение 4: Аудитория).
   addressing_mode: ""        # регистр обращения к читателю: "ты" | "вы" | "безличное" | "смешанное"
-                             # Заполняется в коуч-режиме /book:start (§ 4a). По умолчанию пусто.
+                             # Заполняется в коуч-режиме /bookbench:start (§ 4a). По умолчанию пусто.
                              # Влияет на каждое предложение book-writer и book-editor через
                              # .book/agent-guidelines/{writer,editor}/addressing-rules.md.
                              # См. decisions-24.md (D-37) и lib/start-coach-prompt.md § 4a.
   language: ru               # влияет на языковые антиклише, профиль голоса, маркетинг
-  registry_id: "TBD"         # заполняется автоматически через /book:start
+  registry_id: "TBD"         # заполняется автоматически через /bookbench:start
 
 # ────────────────────────────────────────────────────────────
 # writing — количественные параметры (Q1..Q19 из этапа 11)
@@ -120,7 +120,7 @@ agents:
 
   # models — явные пины модели по роли (информационно; профиль + model_overrides выше —
   # авторитетный источник). Отражает профиль `balanced`, поставляемый с шаблоном;
-  # пересчитывается /book:update при смене профиля.
+  # пересчитывается /bookbench:update при смене профиля.
   models:
     coordinator: sonnet
     strategist: opus
@@ -142,8 +142,8 @@ agents:
 # completion_format — когда секция считается «готовой».
 # Дефолт editor_pass_plus_author_approval (этап 22, T8): секция готова когда
 # 1) book-editor отдал edited.md и 2) автор явно подтвердил «готово».
-# Закрывает I-06: вопрос «когда глава готова» больше не задаётся на /book:start.
-# Изменить можно через /book:config workflow.completion_format <value>.
+# Закрывает I-06: вопрос «когда глава готова» больше не задаётся на /bookbench:start.
+# Изменить можно через /bookbench:config workflow.completion_format <value>.
 # Допустимые значения:
 #   editor_pass_plus_author_approval — дефолт; редактор + явное подтверждение автора
 #   editor_only                       — достаточно прохода редактора

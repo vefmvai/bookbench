@@ -1,6 +1,6 @@
-# Voices library helpers (referenced by `/book:voice *` commands at stage 08.1)
+# Voices library helpers (referenced by `/bookbench:voice *` commands at stage 08.1)
 
-> Shared helper procedures used by `/book:voice build`, `/book:voice extract`, `/book:voice save-as`, `/book:voice import`, `/book:voice list`. Stage 08.1 implementation. PS-08.1-03 closes the path resolution policy. PS-08.1-07 closes the privacy enforcement policy.
+> Shared helper procedures used by `/bookbench:voice build`, `/bookbench:voice extract`, `/bookbench:voice save-as`, `/bookbench:voice import`, `/bookbench:voice list`. Stage 08.1 implementation. PS-08.1-03 closes the path resolution policy. PS-08.1-07 closes the privacy enforcement policy.
 >
 > The bash code blocks below are recipes that the command (Claude Code executes commands as markdown prompts) runs through the Bash tool. They are deterministic and idempotent.
 
@@ -51,7 +51,7 @@ mkdir -p "$VOICES_DIR"
 echo "VOICES_DIR=$VOICES_DIR"
 ```
 
-The directory is created on demand. The resulting path is used by `voice save-as`, `voice import`, `voice list`, and the optional suggestion in `/book:start`.
+The directory is created on demand. The resulting path is used by `voice save-as`, `voice import`, `voice list`, and the optional suggestion in `/bookbench:start`.
 
 ## H2. pack / unpack a voice file
 
@@ -169,7 +169,7 @@ validate_pack() {
 
 ## H4. abort_if_writes_to_plugin_tree
 
-Privacy enforcement (PS-08.1-07). Every `/book:voice *` command must verify before any Write/cp/mv that the target path is **not** inside the plugin source tree. The plugin code tree is `${CLAUDE_PLUGIN_ROOT}` resolved via `lib/plugin-data-helpers.md` H2.
+Privacy enforcement (PS-08.1-07). Every `/bookbench:voice *` command must verify before any Write/cp/mv that the target path is **not** inside the plugin source tree. The plugin code tree is `${CLAUDE_PLUGIN_ROOT}` resolved via `lib/plugin-data-helpers.md` H2.
 
 ```bash
 abort_if_writes_to_plugin_tree() {
@@ -194,11 +194,11 @@ Use this guard at the top of every Write/cp/mv block in `voice-build`, `voice-ex
 
 ## When commands use these helpers
 
-- `/book:voice build` — H4 only (writes to `.book/`, never to library or plugin).
-- `/book:voice extract` — H2 pack + H4 (writes to stdout or to `--to-file` outside plugin).
-- `/book:voice save-as` — H1 + H2 pack + H4 (writes to library only).
-- `/book:voice import` — H1 + H3 validate + H2 unpack + H4 (writes to `.book/` only).
-- `/book:voice list` — H1 only (read-only on library).
+- `/bookbench:voice build` — H4 only (writes to `.book/`, never to library or plugin).
+- `/bookbench:voice extract` — H2 pack + H4 (writes to stdout or to `--to-file` outside plugin).
+- `/bookbench:voice save-as` — H1 + H2 pack + H4 (writes to library only).
+- `/bookbench:voice import` — H1 + H3 validate + H2 unpack + H4 (writes to `.book/` only).
+- `/bookbench:voice list` — H1 only (read-only on library).
 
 ## Border with stage 14
 

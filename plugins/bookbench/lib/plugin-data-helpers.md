@@ -1,6 +1,6 @@
 # Plugin data helpers (referenced by commands at stage 13)
 
-> Shared helper procedures used by `/book:start`, `/book:status`, `/book:help`, `/book:plan-book` etc. Stage 13 implementation. PS-13-01 closes the resolution policy.
+> Shared helper procedures used by `/bookbench:start`, `/bookbench:status`, `/bookbench:help`, `/bookbench:plan-book` etc. Stage 13 implementation. PS-13-01 closes the resolution policy.
 >
 > The bash code blocks below are recipes that the coordinator (or the command itself, since commands are markdown prompts executed by Claude Code) runs through the Bash tool. They are deterministic and idempotent.
 
@@ -213,11 +213,11 @@ plugin_version_from_manifest() {
 
 ## When commands use these helpers
 
-- `/book:start` — H1 + H2 + H6 + H3 + H4 (full chain).
-- `/book:status` — H1 + H6 (compares plugin version with `.book/config.yaml.compatibility.last_synced_with`).
-- `/book:help` — H1 + H5 (filters dev-only commands like `/book:evolve`).
-- `/book:plan-book`, `/book:plan-section`, `/book:write-section`, `/book:audit-section` — usually do not touch `${CLAUDE_PLUGIN_DATA}` (they work inside `.book/`); they may call H2 to read `defaults.yaml` or genre skill if needed.
+- `/bookbench:start` — H1 + H2 + H6 + H3 + H4 (full chain).
+- `/bookbench:status` — H1 + H6 (compares plugin version with `.book/config.yaml.compatibility.last_synced_with`).
+- `/bookbench:help` — H1 + H5 (filters dev-only commands like `/bookbench:evolve`).
+- `/bookbench:plan-book`, `/bookbench:plan-section`, `/bookbench:write-section`, `/bookbench:audit-section` — usually do not touch `${CLAUDE_PLUGIN_DATA}` (they work inside `.book/`); they may call H2 to read `defaults.yaml` or genre skill if needed.
 
 ## Border with stage 14
 
-Stage 14 implements the full `/book:list`, `/book:doctor`, `/book:register`, `/book:archive`, `/book:forget` commands which require richer YAML manipulation (filter by status, walk scan-paths.yaml, archive without deletion). For stage 13 the helpers above are sufficient for MVP.
+Stage 14 implements the full `/bookbench:list`, `/bookbench:doctor`, `/bookbench:register`, `/bookbench:archive`, `/bookbench:forget` commands which require richer YAML manipulation (filter by status, walk scan-paths.yaml, archive without deletion). For stage 13 the helpers above are sufficient for MVP.

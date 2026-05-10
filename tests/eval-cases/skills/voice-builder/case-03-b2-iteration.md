@@ -7,7 +7,7 @@
 ## Setup
 
 - Trigger: author opens a fresh Claude Code tab and runs
-  `/book:voice build --mode=serious`. Path **B2** with a trial paragraph
+  `/bookbench:voice build --mode=serious`. Path **B2** with a trial paragraph
   and at least one feedback iteration.
 - Book artefacts (mock): genre = popular-science about migration of birds;
   audience = curious general readers; plan thread = field-observation
@@ -59,8 +59,8 @@ the skill **stops** and tells the author:
 
 > "Two iterations did not converge. Two iterations not converging
 > usually means the interview missed a reference rather than the model
-> failed. Try `/book:voice rebuild` after writing one short experimental
-> section, or import a voice sample via `/book:import voice-sample`."
+> failed. Try `/bookbench:voice rebuild` after writing one short experimental
+> section, or import a voice sample via `/bookbench:import voice-sample`."
 
 The cap is honoured: the skill never generates a third trial paragraph
 inside this skill invocation.

@@ -1,6 +1,6 @@
 # Section N — process notes (template)
 
-> Template populated by `book-observer` on `/book:analyze-session
+> Template populated by `book-observer` on `/bookbench:analyze-session
 > --section N`. Replace `N` with the actual section number.
 >
 > **Privacy:** abstract author replies, NEVER quote them verbatim. NEVER

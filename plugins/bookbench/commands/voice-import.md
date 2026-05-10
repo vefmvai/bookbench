@@ -4,7 +4,7 @@ argument-hint: "<name>"
 allowed-tools: [Read, Write, Bash, Glob, Grep, AskUserQuestion]
 ---
 
-# /book:voice import
+# /bookbench:voice import
 
 <purpose>
 Copy a saved voice pack from the personal library into the current book — fills .book/context/voice-profile.md and (if the pack carries samples) .book/agent-guidelines/writer/voice-samples.md. Confirms before overwriting non-empty existing files.
@@ -38,7 +38,7 @@ while [ $# -gt 0 ]; do
 done
 
 if [ -z "$NAME" ]; then
-  echo "voice import: <name> is required. Usage: /book:voice import <name>" 1>&2
+  echo "voice import: <name> is required. Usage: /bookbench:voice import <name>" 1>&2
   exit 1
 fi
 
@@ -89,7 +89,7 @@ SOURCE_PACK="$VOICES_DIR/$NAME.md"
 
 if [ ! -f "$SOURCE_PACK" ]; then
   echo "voice import: voice '$NAME' not found at $SOURCE_PACK" 1>&2
-  echo "  Run /book:voice list to see available voices." 1>&2
+  echo "  Run /bookbench:voice list to see available voices." 1>&2
   exit 1
 fi
 
@@ -236,7 +236,7 @@ fi
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 {
   echo ""
-  echo "- ${NOW} — /book:voice import $NAME — voice imported from library."
+  echo "- ${NOW} — /bookbench:voice import $NAME — voice imported from library."
 } >> "$STATE_FILE"
 
 cat <<NEXT
@@ -246,7 +246,7 @@ Files written:
   $PROFILE_PATH
   $SAMPLES_PATH (only if the pack carried samples)
 
-Voice from '$NAME' is now active. Continue with /book:write-section <N>.
+Voice from '$NAME' is now active. Continue with /bookbench:write-section <N>.
 NEXT
 ```
 

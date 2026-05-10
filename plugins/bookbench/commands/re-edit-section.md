@@ -4,7 +4,7 @@ argument-hint: "<section-number> [--from-audit] [--with-marketing]"
 allowed-tools: [Task, Read, Write, Edit, Bash, AskUserQuestion]
 ---
 
-# /book:re-edit-section
+# /bookbench:re-edit-section
 
 <purpose>
 Generate `sections/<id>/v2/` (or v3, ...) with a new draft, factcheck and edit pass driven by either an audit report or explicit author feedback. The old version stays in place — the coordinator surfaces both versions to the author at the gate.
@@ -47,8 +47,8 @@ for arg in $ARGUMENTS; do
 done
 
 if [ -z "$SECTION_N" ]; then
-  echo "Error: /book:re-edit-section requires a section number."
-  echo "Usage: /book:re-edit-section <N> [--from-audit] [--with-marketing]"
+  echo "Error: /bookbench:re-edit-section requires a section number."
+  echo "Usage: /bookbench:re-edit-section <N> [--from-audit] [--with-marketing]"
   exit 0
 fi
 
@@ -56,7 +56,7 @@ SECTION_DIR=$(printf '.book/sections/section-%03d' "$SECTION_N")
 [ -d "$SECTION_DIR" ] || { echo "Error: section $SECTION_N not found ($SECTION_DIR)."; exit 0; }
 [ -f "$SECTION_DIR/edited.md" ] || {
   echo "Error: $SECTION_DIR/edited.md does not exist."
-  echo "The section has not finished its first edit pass. Run /book:write-section $SECTION_N first."
+  echo "The section has not finished its first edit pass. Run /bookbench:write-section $SECTION_N first."
   exit 0
 }
 ```
@@ -80,7 +80,7 @@ ISSUES_FILE=""
 if [ "$FROM_AUDIT" -eq 1 ]; then
   if [ ! -f "$SECTION_DIR/audit-report.md" ]; then
     echo "Error: --from-audit was passed but $SECTION_DIR/audit-report.md is missing."
-    echo "Run /book:audit-section $SECTION_N first."
+    echo "Run /bookbench:audit-section $SECTION_N first."
     exit 0
   fi
   ISSUES_FILE="$SECTION_DIR/audit-report.md"
@@ -192,7 +192,7 @@ OLD_SHA=$(shasum -a 256 "$SECTION_DIR/edited.md" | awk '{print $1}')
 
 ```bash
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-printf '\n%s — `/book:re-edit-section %d` — produced v%d in %s\n' \
+printf '\n%s — `/bookbench:re-edit-section %d` — produced v%d in %s\n' \
   "$NOW" "$SECTION_N" "$NEXT_VER" "$NEW_VER_DIR" >> .book/STATE.md
 
 # Update section-state.yaml: add re_edit_versions list entry
@@ -205,8 +205,8 @@ fi
 echo "Re-edit done: v$NEXT_VER produced in $NEW_VER_DIR."
 echo ""
 echo "Recommended next:"
-echo "  /book:audit-section $SECTION_N            — re-audit the new version."
-echo "  /book:re-edit-section $SECTION_N --from-audit  — yet another iteration if needed."
+echo "  /bookbench:audit-section $SECTION_N            — re-audit the new version."
+echo "  /bookbench:re-edit-section $SECTION_N --from-audit  — yet another iteration if needed."
 ```
 
 ### Constitutional rules

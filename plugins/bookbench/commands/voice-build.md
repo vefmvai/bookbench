@@ -4,7 +4,7 @@ argument-hint: "[--mode=quick|serious] [--rebuild] [--from-staged]"
 allowed-tools: [Task, Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion]
 ---
 
-# /book:voice build
+# /bookbench:voice build
 
 <purpose>
 Run the voice-builder skill in a dedicated session, fill .book/context/voice-profile.md with reasoning, optionally fill .book/agent-guidelines/writer/voice-samples.md, and clear the voice_pending flag in .book/STATE.md.
@@ -65,7 +65,7 @@ echo "$STAGED_FILES"
 --from-staged mode: используй файлы из .book/inputs/staged-voice-samples/ как стартовый
 материал для диалога. Не извлекай 6 параметров автоматически — обсуди с автором каждый
 параметр, опираясь на образцы. Предупреждение для автора: «Эти образцы — то, что ты
-скинул на /book:start. Используем их как ориентир, но финальный voice-profile —
+скинул на /bookbench:start. Используем их как ориентир, но финальный voice-profile —
 результат нашего разговора, а не автоматического извлечения.»
 ```
 
@@ -98,7 +98,7 @@ echo "PLUGIN_ROOT=$PLUGIN_ROOT BOOK_ROOT=$BOOK_ROOT"
 
 ### Step 3 — Resolve voices library path (informational only)
 
-Voice build does not write to the library. The path is resolved here only for the next-step message — to remind the author about `/book:voice save-as` after a successful build.
+Voice build does not write to the library. The path is resolved here only for the next-step message — to remind the author about `/bookbench:voice save-as` after a successful build.
 
 Read `${CLAUDE_PLUGIN_ROOT}/lib/voices-helpers.md` H1 once and apply the recipe to compute `VOICES_DIR`.
 
@@ -118,7 +118,7 @@ fi
 
 if [ "$PROFILE_FILLED" = "1" ] && [ "$REBUILD" = "0" ]; then
   echo "voice build: voice-profile.md is already filled."
-  echo "  Use --rebuild to overwrite, or run /book:tune to refine the existing profile."
+  echo "  Use --rebuild to overwrite, or run /bookbench:tune to refine the existing profile."
   exit 0
 fi
 
@@ -232,7 +232,7 @@ fi
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 {
   echo ""
-  echo "- ${NOW} — /book:voice build (mode=${MODE}, rebuild=${REBUILD}) — voice-profile.md filled."
+  echo "- ${NOW} — /bookbench:voice build (mode=${MODE}, rebuild=${REBUILD}) — voice-profile.md filled."
 } >> "$STATE_FILE"
 
 echo "voice build: verify ok"
@@ -248,13 +248,13 @@ Files written:
   - .book/voice-profile.yaml         (six values for the anti-cliche module)
   - .book/agent-guidelines/writer/voice-samples.md  (only if you provided samples)
 
-Голос настроен. Возвращайтесь в исходную сессию и продолжите `/book:write-section <N>`
+Голос настроен. Возвращайтесь в исходную сессию и продолжите `/bookbench:write-section <N>`
 — writer-gate (TOV-08) больше не сработает, voice-pending flag снят.
 
 Optional next steps:
-  /book:voice save-as <name>   — save this profile to your personal library at
+  /bookbench:voice save-as <name>   — save this profile to your personal library at
                                  ~/.bookbench/voices/<name>.md for reuse in future books.
-  /book:tune                   — refine the profile after writing 1-2 sections
+  /bookbench:tune                   — refine the profile after writing 1-2 sections
                                  if voice-drift signals appear in REJECTIONS.
 ```
 
@@ -263,7 +263,7 @@ Optional next steps:
 - **MUST** never write inside the plugin code tree (`${CLAUDE_PLUGIN_ROOT}`). Privacy guard from voices-helpers H4 is applied before every Write site.
 - **MUST** verify the output `voice-profile.md` contains a `## Reasoning` section before clearing voice_pending (TOV-12).
 - **MUST** clear `## voice_pending` section from `.book/STATE.md` only after successful verification.
-- **NEVER** overwrite an existing voice-profile.md without `--rebuild` — exit cleanly with a hint to use the flag or `/book:tune`.
-- **NEVER** write to the personal voices library `~/.bookbench/voices/` — that is the job of `/book:voice save-as`.
+- **NEVER** overwrite an existing voice-profile.md without `--rebuild` — exit cleanly with a hint to use the flag or `/bookbench:tune`.
+- **NEVER** write to the personal voices library `~/.bookbench/voices/` — that is the job of `/bookbench:voice save-as`.
 
 </execution>

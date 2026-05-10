@@ -4,10 +4,10 @@ argument-hint: "[--from-imports]"
 allowed-tools: [Task, Read, Write, Edit, AskUserQuestion]
 ---
 
-# /book:plan-book
+# /bookbench:plan-book
 
 <purpose>
-Plan the whole book — number and order of sections, parts, red-thread keywords. Stops at the section-spec level (`/book:plan-section` does that).
+Plan the whole book — number and order of sections, parts, red-thread keywords. Stops at the section-spec level (`/bookbench:plan-section` does that).
 </purpose>
 
 <!-- ЭТАП 13: реализовано — см. <execution> ниже -->
@@ -31,15 +31,15 @@ This is the first command at stage 13 that delegates to a subagent. The 8-step o
 
 ```bash
 [ -d .book ] || {
-  echo "No .book/ directory. Run /book:start first."
+  echo "No .book/ directory. Run /bookbench:start first."
   exit 0
 }
 [ -f .book/PROJECT.md ] || {
-  echo ".book/PROJECT.md is missing. The book is not initialised correctly. Run /book:start."
+  echo ".book/PROJECT.md is missing. The book is not initialised correctly. Run /bookbench:start."
   exit 0
 }
 [ -f .book/config.yaml ] || {
-  echo ".book/config.yaml is missing. Run /book:start."
+  echo ".book/config.yaml is missing. Run /bookbench:start."
   exit 0
 }
 
@@ -49,7 +49,7 @@ This is the first command at stage 13 that delegates to a subagent. The 8-step o
 GENRE_LINE=$(grep -E '^[[:space:]]+genre:[[:space:]]' .book/config.yaml | head -1 | sed -E 's/^[[:space:]]+genre:[[:space:]]+//; s/[[:space:]]*#.*$//; s/^"//; s/"$//' | tr -d ' ')
 if [ "$GENRE_LINE" = "pending" ] || [ "$GENRE_LINE" = "null" ] || [ -z "$GENRE_LINE" ]; then
   echo "ERROR: жанр в .book/config.yaml — pending или не задан."
-  echo "Запусти /book:research-genre <slug>, чтобы сгенерировать пресет, или назначь готовый жанр через /book:config genre <slug>, прежде чем продолжать."
+  echo "Запусти /bookbench:research-genre <slug>, чтобы сгенерировать пресет, или назначь готовый жанр через /bookbench:config genre <slug>, прежде чем продолжать."
   exit 2
 fi
 
@@ -109,7 +109,7 @@ Invoke the Task tool exactly once:
 - `prompt`: a structured instruction (~ 25–40 lines) consisting of:
 
   ```
-  You are book-strategist in BOOK-MODE for /book:plan-book.
+  You are book-strategist in BOOK-MODE for /bookbench:plan-book.
 
   Mode parameter: ${MODE}        # one of: fresh | refine | from-imports
   ${MODE == "refine" ? "Read the existing .book/ROADMAP.md and propose changes/additions, do not discard existing structure unless contradicted by PROJECT.md." : ""}
@@ -174,7 +174,7 @@ sed -i.bak -E "s/^- \`current_section\`:.*/- \`current_section\`: book_level/" .
 sed -i.bak -E "s/^- \`last_action\`:.*/- \`last_action\`: plan-book completed (${PLANNED} sections)/" .book/STATE.md
 rm -f .book/STATE.md.bak
 # Append History line
-printf '\n%s — `/book:plan-book` — wrote ROADMAP.md (%d sections) and red-thread-keywords.md\n' "$NOW" "$PLANNED" >> .book/STATE.md
+printf '\n%s — `/bookbench:plan-book` — wrote ROADMAP.md (%d sections) and red-thread-keywords.md\n' "$NOW" "$PLANNED" >> .book/STATE.md
 ```
 
 ### Step 9 — Next-step message
@@ -184,8 +184,8 @@ Book plan accepted: ${PLANNED} sections in .book/ROADMAP.md
 Red-thread keywords: ${KEYWORD_LIST}
 
 Recommended next:
-  /book:plan-section 1     — draft the spec for section 1.
-  /book:status             — see current progress.
+  /bookbench:plan-section 1     — draft the spec for section 1.
+  /bookbench:status             — see current progress.
 ```
 
 ### Constitutional rules for this command

@@ -7,7 +7,7 @@
 ## Setup
 
 - Папка: `/tmp/test-book-spiral-pending/`.
-- Запуск: `/book:start`.
+- Запуск: `/bookbench:start`.
 
 ## Author messages
 
@@ -29,7 +29,7 @@
 
 1. § 3 ветка B2/B3 предложила три пути. Автор выбрал (б) — pending.
 
-2. Step 4b сводка: «Genre: pending (отложен — потребует /book:research-genre)». Автор: «Да, создавай .book/».
+2. Step 4b сводка: «Genre: pending (отложен — потребует /bookbench:research-genre)». Автор: «Да, создавай .book/».
 
 3. Step 6:
    - `.book/` развёрнут.
@@ -45,29 +45,29 @@
 
 4. Step 7: `.book/config.yaml > book.genre: pending`, `book.genre_pending_reason: "..."`.
 
-5. Step 8: `.book/STATE.md` содержит строку `genre: pending — required before /book:plan-book`.
+5. Step 8: `.book/STATE.md` содержит строку `genre: pending — required before /bookbench:plan-book`.
 
-6. Step 11: финальное сообщение содержит блок `${PENDING_BLOCK}` — «Жанр в статусе pending. Запусти `/book:research-genre <slug>` перед `/book:plan-book`.»
+6. Step 11: финальное сообщение содержит блок `${PENDING_BLOCK}` — «Жанр в статусе pending. Запусти `/bookbench:research-genre <slug>` перед `/bookbench:plan-book`.»
 
-7. **Затем автор пробует `/book:plan-book` без research-genre:**
+7. **Затем автор пробует `/bookbench:plan-book` без research-genre:**
    - Команда читает `.book/config.yaml > book.genre`.
    - Видит `pending` → блокируется с exit 2.
-   - Сообщение: «ERROR: жанр в .book/config.yaml — pending или не задан. Запусти `/book:research-genre <slug>` …».
+   - Сообщение: «ERROR: жанр в .book/config.yaml — pending или не задан. Запусти `/bookbench:research-genre <slug>` …».
 
 ## Pass criteria
 
 - ✅ `.book/agent-guidelines/writer/forbidden-phrases.md` пустой (без жанрового списка).
 - ✅ `.book/context/genre-pending.md` существует со `status: pending`.
 - ✅ `.book/config.yaml > book.genre` равно `pending`.
-- ✅ `.book/STATE.md` содержит строку `genre: pending — required before /book:plan-book`.
-- ✅ `/book:plan-book` exit 2 с сообщением про research-genre.
-- ✅ `/book:plan-section` и `/book:write-section` тоже exit 2.
+- ✅ `.book/STATE.md` содержит строку `genre: pending — required before /bookbench:plan-book`.
+- ✅ `/bookbench:plan-book` exit 2 с сообщением про research-genre.
+- ✅ `/bookbench:plan-section` и `/bookbench:write-section` тоже exit 2.
 
 ## Fail criteria
 
 - ❌ В `.book/agent-guidelines/writer/forbidden-phrases.md` появились запрещённые фразы научпопа (значит, агент скопировал жанровые гайдлайны).
 - ❌ `book.genre = "popular-science"` или другой ненулевой slug.
-- ❌ `/book:plan-book` запустился и попытался планировать книгу.
+- ❌ `/bookbench:plan-book` запустился и попытался планировать книгу.
 
 ---
 

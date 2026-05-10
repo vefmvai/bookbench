@@ -8,7 +8,7 @@
 
 - Папка: `/tmp/test-book-spiral-voice/`.
 - Файл `spiral-draft.md` приложен — большой текст ~3000 слов в авторском стиле (имитирует черновик статьи «Спираль» из live-теста).
-- Запуск: `/book:start`.
+- Запуск: `/bookbench:start`.
 
 ## Author messages
 
@@ -41,17 +41,17 @@
      ---
      ```
 6. **НИГДЕ** не создаётся `.book/context/voice-profile.md` (без `.draft`!) — это запрет D-34.
-7. Step 11 финальное сообщение содержит `${VOICE_BLOCK}`: «Образцы голоса в `.book/inputs/staged-voice-samples/`. Перед первой главой — `/book:voice-build --from-staged`.»
-8. Затем автор запускает `/book:write-section 1` (после `/book:plan-book + /book:plan-section 1`):
+7. Step 11 финальное сообщение содержит `${VOICE_BLOCK}`: «Образцы голоса в `.book/inputs/staged-voice-samples/`. Перед первой главой — `/bookbench:voice-build --from-staged`.»
+8. Затем автор запускает `/bookbench:write-section 1` (после `/bookbench:plan-book + /bookbench:plan-section 1`):
    - book-writer Voice gate срабатывает: `voice-profile.md` отсутствует, есть только staged-voice-samples.
-   - Возвращает `voice_pending` со ссылкой на `/book:voice-build --from-staged`.
+   - Возвращает `voice_pending` со ссылкой на `/bookbench:voice-build --from-staged`.
 
 ## Pass criteria
 
 - ✅ `.book/context/voice-profile.md` (без суффикса `.draft`) НЕ существует ни на каком этапе.
 - ✅ `.book/agent-guidelines/writer/voice-samples.md` пуст или отсутствует (стартовый шаблон без переноса staged).
 - ✅ `.book/inputs/staged-voice-samples/spiral-draft.md` существует со `status: staged`, `requires_confirmation: true`.
-- ✅ Финальное сообщение Step 11 предупреждает про `/book:voice-build --from-staged`.
+- ✅ Финальное сообщение Step 11 предупреждает про `/bookbench:voice-build --from-staged`.
 - ✅ book-writer на write-section 1 возвращает `voice_pending`.
 
 ## Fail criteria

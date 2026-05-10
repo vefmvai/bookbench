@@ -1,7 +1,7 @@
 # `.book/ops-observations/` — operational telemetry for the book
 
 > Local data folder for the `book-observer` agent. Populated by the
-> `ops-telemetry-hook.sh` hook (raw signals) and by `/book:analyze-session`
+> `ops-telemetry-hook.sh` hook (raw signals) and by `/bookbench:analyze-session`
 > (digested notes). Used to feed BookBench upgrades for version 0.2+.
 
 ## Why this folder exists
@@ -25,7 +25,7 @@ storage layer for that evidence.
 | File | Producer | Consumer | Sensitivity |
 |---|---|---|---|
 | `rawlog.jsonl` | `ops-telemetry-hook.sh` (auto, on every Claude Code event) | `book-observer` | Local-only, gitignored |
-| `section-N-process-notes.md` | `book-observer` (on `/book:analyze-session`) | author + future `bookbench-evolver` | Local-only, gitignored |
+| `section-N-process-notes.md` | `book-observer` (on `/bookbench:analyze-session`) | author + future `bookbench-evolver` | Local-only, gitignored |
 | `section-N-content-notes.md` | `book-observer` | author + writer/editor (next section) | Local-only, gitignored |
 | `upgrade-candidates.md` | `book-observer` (append-only) | author + maintainers of BookBench plugin | Anonymised, may be shared |
 | `transcripts/` (optional) | author may symlink session transcripts here | `book-observer` | Local-only |
@@ -59,10 +59,10 @@ line; it never blocks Claude Code.
 ## How to use
 
 1. **Automatic.** Once the hook is installed (auto-installed by
-   `/book:start`), every Claude Code action in this book directory is
+   `/bookbench:start`), every Claude Code action in this book directory is
    recorded in `rawlog.jsonl`. You don't need to do anything.
 
-2. **On-demand digest.** Run `/book:analyze-session [--section N]` to
+2. **On-demand digest.** Run `/bookbench:analyze-session [--section N]` to
    activate the observer agent. It reads `rawlog.jsonl`, classifies
    author replies as `content` (about meanings, facts, voice, structure)
    vs `process` (about workflow, model speed, repeated passes), and

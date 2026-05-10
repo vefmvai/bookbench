@@ -4,7 +4,7 @@ argument-hint: "[--all] [--archived] [--genre <name>] [--status active|completed
 allowed-tools: [Read, Bash, Glob]
 ---
 
-# /book:list
+# /bookbench:list
 
 <purpose>
 Multi-book overview for authors who run several projects in parallel. Read-only summary listing of every book registered with the BookBench plugin.
@@ -44,8 +44,8 @@ if [ ! -f "$REGISTRY" ]; then
   echo "Registry is empty (no books registered yet)."
   echo ""
   echo "Recommended next:"
-  echo "  /book:start            — initialise your first book."
-  echo "  /book:register <path>  — register an existing .book/ folder."
+  echo "  /bookbench:start            — initialise your first book."
+  echo "  /bookbench:register <path>  — register an existing .book/ folder."
   exit 0
 fi
 ```
@@ -83,7 +83,7 @@ If the registry is malformed (no `books:` key, no records) — emit a friendly f
 
 ```
 The registry exists but contains no parsable entries.
-Run `/book:doctor` for diagnostics or `/book:register <path>` to add a book.
+Run `/bookbench:doctor` for diagnostics or `/bookbench:register <path>` to add a book.
 ```
 
 ### Step 4 — Apply filters
@@ -122,10 +122,10 @@ If a row has missing data, render `—` (em-dash placeholder).
 
 ```
 Recommended next:
-  /book:status     — see what is happening in the current book (cwd-based detection).
-  /book:doctor     — diagnose registry / disk drift.
-  /book:register   — add a found-on-disk .book/ folder to the registry.
-  /book:archive    — soft-hide a finished book.
+  /bookbench:status     — see what is happening in the current book (cwd-based detection).
+  /bookbench:doctor     — diagnose registry / disk drift.
+  /bookbench:register   — add a found-on-disk .book/ folder to the registry.
+  /bookbench:archive    — soft-hide a finished book.
 ```
 
 ### Constitutional rules for this command

@@ -10,7 +10,7 @@ to sound more conversational."
 - Coordinator recognizes draft.md as the writer's artefact (not coordinator's
   Edit target — see "Файловые границы" section in body).
 - Refuses the direct edit with a clear, neutral message.
-- Suggests the correct route: either `/book:re-edit-section 3` (if author
+- Suggests the correct route: either `/bookbench:re-edit-section 3` (if author
   wants editor pass) or manual edit by author + REJECTIONS-LOG capture
   (if it is a one-off taste preference).
 - Does NOT use Edit on draft.md, even though `tools: Edit` is allowed.

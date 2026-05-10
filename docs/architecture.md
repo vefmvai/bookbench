@@ -27,21 +27,21 @@
         └───────────────────┘
                                   ┌── settings.yaml ──┐    ┌── .gitignore ┐
         ┌── commands/ ──────┐    │ default_genre,    │    │ inputs/, ... │
-        │ /book:start       │    │ default_language  │    └──────────────┘
-        │ /book:write-      │    └───────────────────┘
+        │ /bookbench:start       │    │ default_language  │    └──────────────┘
+        │ /bookbench:write-      │    └───────────────────┘
         │   section         │                              ┌── .book/ ────────────┐
-        │ /book:guidelines  │    ┌── registry.yaml ──┐    │ PROJECT.md, ROADMAP  │
-        │ /book:config      │    │ - my-book-2026... │    │ STATE.md, config.yaml│
-        │ /book:tune        │ ── │ - dotu-2026...    │ ── │ INGEST-DECISIONS.md  │
-        │ /book:list,       │    │ - ...             │    │ TUNING-LOG.md      ★ │
-        │ /book:doctor,     │    │ (auto-add при     │    │ REJECTIONS-LOG.md  ★ │
-        │ /book:register,   │    │  /book:start)     │    │ UPDATE-LOG.md      ★ │
-        │ /book:archive,    │    └───────────────────┘    │                      │
-        │ /book:forget      │                              │ ┌── context/ ──────┐ │
-        │ /book:evolve [dev]│    ┌── scan-paths.yaml ┐    │ │ parameters       │ │
+        │ /bookbench:guidelines  │    ┌── registry.yaml ──┐    │ PROJECT.md, ROADMAP  │
+        │ /bookbench:config      │    │ - my-book-2026... │    │ STATE.md, config.yaml│
+        │ /bookbench:tune        │ ── │ - dotu-2026...    │ ── │ INGEST-DECISIONS.md  │
+        │ /bookbench:list,       │    │ - ...             │    │ TUNING-LOG.md      ★ │
+        │ /bookbench:doctor,     │    │ (auto-add при     │    │ REJECTIONS-LOG.md  ★ │
+        │ /bookbench:register,   │    │  /bookbench:start)     │    │ UPDATE-LOG.md      ★ │
+        │ /bookbench:archive,    │    └───────────────────┘    │                      │
+        │ /bookbench:forget      │                              │ ┌── context/ ──────┐ │
+        │ /bookbench:evolve [dev]│    ┌── scan-paths.yaml ┐    │ │ parameters       │ │
         │ ... (20+ команд)  │    │ ~/, ~/Documents/  │    │ │ voice-profile    │ │
         └───────────────────┘    │ ~/Projects/       │    │ │ glossary, ...    │ │
-                                  │ (для /book:doctor)│    │ └──────────────────┘ │
+                                  │ (для /bookbench:doctor)│    │ └──────────────────┘ │
         ┌── agent-templates/ ┐    └───────────────────┘    │                      │
         │ book-coordinator   │                              │ ┌── agent-          │
         │ book-strategist    │   ┌── evolver/ ──────┐    │ │   guidelines/  ★ │ │
@@ -119,20 +119,20 @@
         │                     │  все .book/ остаются всегда (detach-режим)
         └─────────────────────┘
 
-        ┌── /book:update ────┐  показывает 3-way merge:
+        ┌── /bookbench:update ────┐  показывает 3-way merge:
         │ внутри книги       │  ── selective ──▶  .book/.claude/agents/  (9 L)
         │ сравнивает шаблоны │   с подтвержд.    .book/.hooks/anti-ai-cliche
         │ с локальными       │                   .book/agent-guidelines/  — НЕ трогает
         │ копиями            │                   .book/context/, sections/  — НЕ трогает
         └────────────────────┘                   логи (TUNING/REJECTIONS/UPDATE) — НЕ трогает
 
-        ┌── /book:start ─────┐  
+        ┌── /bookbench:start ─────┐  
         │                    │  ── add to ──▶  ${CLAUDE_PLUGIN_DATA}/registry.yaml
         │                    │  ── copy ──▶    9 тел в .book/.claude/agents/
         │                    │  ── copy ──▶    скелет .book/, гайдлайны (с дефолтами жанра)
         └────────────────────┘
 
-        ┌── /book:evolve ────┐  читает TUNING-LOG.md из всех зарегистр. книг
+        ┌── /bookbench:evolve ────┐  читает TUNING-LOG.md из всех зарегистр. книг
         │ [только в local-   │  ── propose ──▶  ${CLAUDE_PLUGIN_DATA}/evolver/
         │  dev режиме]       │                  pending-changes/  (diff-файл)
         │                    │  ── apply ───▶   ${CLAUDE_PLUGIN_ROOT}/  + git commit
@@ -148,29 +148,29 @@
 
 | # | Откуда → Куда | Тип взаимодействия | Когда происходит |
 |---|---------------|---------------------|-------------------|
-| 1 | `manifest.json` → `CLAUDE.md` | copy-on-init | `/book:start` (с merge) |
+| 1 | `manifest.json` → `CLAUDE.md` | copy-on-init | `/bookbench:start` (с merge) |
 | 2 | `commands/` → пользователь | reads-only registration | при загрузке Claude Code |
-| 3 | `agent-templates/` (9 шаблонов) → `.book/.claude/agents/` (9 копий) | copy-on-init | `/book:start` |
+| 3 | `agent-templates/` (9 шаблонов) → `.book/.claude/agents/` (9 копий) | copy-on-init | `/bookbench:start` |
 | 4 | `skills/**/SKILL.md` → контекст любого агента | injection через `skills:` | при старте Task |
-| 5 | `defaults.yaml` (секция жанра) → `.book/config.yaml` + `.book/agent-guidelines/<role>/` | copy-on-init с подстановкой | `/book:start` (после выбора жанра) |
-| 6 | `templates/` → `.book/` | copy-on-init | `/book:start` |
-| 7 | `templates/agent-guidelines/` → `.book/agent-guidelines/` | copy-on-init с дефолтами жанра | `/book:start` |
-| 8 | `templates/hooks/` → `.book/.hooks/` | copy-on-init | `/book:start` (chmod +x) |
+| 5 | `defaults.yaml` (секция жанра) → `.book/config.yaml` + `.book/agent-guidelines/<role>/` | copy-on-init с подстановкой | `/bookbench:start` (после выбора жанра) |
+| 6 | `templates/` → `.book/` | copy-on-init | `/bookbench:start` |
+| 7 | `templates/agent-guidelines/` → `.book/agent-guidelines/` | copy-on-init с дефолтами жанра | `/bookbench:start` |
+| 8 | `templates/hooks/` → `.book/.hooks/` | copy-on-init | `/bookbench:start` (chmod +x) |
 | 9 | `docs/, tests/` → `.book/, .book/.claude/` | no-touch (×) | никогда |
-| 10 | `installation.yaml` → видимость `/book:evolve` | runtime check | при загрузке `/book:help` |
-| 11 | `/book:start` → `${CLAUDE_PLUGIN_DATA}/registry.yaml` | append-record | автоматически в конце `/book:start` |
+| 10 | `installation.yaml` → видимость `/bookbench:evolve` | runtime check | при загрузке `/bookbench:help` |
+| 11 | `/bookbench:start` → `${CLAUDE_PLUGIN_DATA}/registry.yaml` | append-record | автоматически в конце `/bookbench:start` |
 | 12 | `/plugin update` → `${CLAUDE_PLUGIN_ROOT}/` | replace | заменяет код плагина |
 | 13 | `/plugin update` → `${CLAUDE_PLUGIN_DATA}/` | **no-touch** (×) | гарантия Anthropic |
 | 14 | `/plugin update` → папки книг | **no-touch** (×) | контракт совместимости |
 | 15 | `/plugin uninstall` → `${CLAUDE_PLUGIN_DATA}/` | conditional | спрашивает пользователя; `--keep-data` сохраняет |
-| 16 | `/book:update` → `.book/.claude/agents/`, `.book/.hooks/` | 3-way merge с подтверждением | внутри папки книги |
-| 17 | `/book:update` → `.book/agent-guidelines/`, `.book/context/`, `.book/sections/`, логи | **no-touch** (×) | никогда не трогает индивидуальность книги |
-| 18 | `/book:update` → `.book/.backup/<timestamp>/` | snapshot before update | автоматически перед обновлением |
-| 19 | `/book:update` → `.book/UPDATE-LOG.md` | append-only | после успешного обновления |
-| 20 | `/book:tune` → `book-tuner` (Task) → `.book/agent-guidelines/<role>/` | suggested diff | внутри сессии работы над книгой |
-| 21 | `/book:evolve propose` → `${CLAUDE_PLUGIN_DATA}/evolver/pending-changes/` | dry-run output | в local-dev |
-| 22 | `/book:evolve apply` → `${CLAUDE_PLUGIN_ROOT}/...` + git commit | actual write | только в local-dev, с подтверждением |
-| 23 | `/book:doctor` → `${CLAUDE_PLUGIN_DATA}/scan-paths.yaml` → файловая система | scan | по запросу пользователя |
+| 16 | `/bookbench:update` → `.book/.claude/agents/`, `.book/.hooks/` | 3-way merge с подтверждением | внутри папки книги |
+| 17 | `/bookbench:update` → `.book/agent-guidelines/`, `.book/context/`, `.book/sections/`, логи | **no-touch** (×) | никогда не трогает индивидуальность книги |
+| 18 | `/bookbench:update` → `.book/.backup/<timestamp>/` | snapshot before update | автоматически перед обновлением |
+| 19 | `/bookbench:update` → `.book/UPDATE-LOG.md` | append-only | после успешного обновления |
+| 20 | `/bookbench:tune` → `book-tuner` (Task) → `.book/agent-guidelines/<role>/` | suggested diff | внутри сессии работы над книгой |
+| 21 | `/bookbench:evolve propose` → `${CLAUDE_PLUGIN_DATA}/evolver/pending-changes/` | dry-run output | в local-dev |
+| 22 | `/bookbench:evolve apply` → `${CLAUDE_PLUGIN_ROOT}/...` + git commit | actual write | только в local-dev, с подтверждением |
+| 23 | `/bookbench:doctor` → `${CLAUDE_PLUGIN_DATA}/scan-paths.yaml` → файловая система | scan | по запросу пользователя |
 
 ### Mermaid-вариант (для этапа 16)
 
@@ -209,8 +209,8 @@ graph TB
     DOC -.->|no-touch| BK
 
     REG -->|registry-read| EV
-    BK -.->|/book:start adds entry| REG
-    BK -.->|/book:evolve reads logs| EV
+    BK -.->|/bookbench:start adds entry| REG
+    BK -.->|/bookbench:evolve reads logs| EV
 
     style DOC fill:#fee
     style BK fill:#eef
@@ -229,7 +229,7 @@ graph TB
 
   ПОЛЬЗОВАТЕЛЬ                                              GATE (✋ — пользователь)
        │
-       │ /book:write-section <N>
+       │ /bookbench:write-section <N>
        ▼
   ┌────────────────────────────────────────────────────────────────────────────┐
   │  [book-coordinator]  (главный диалог в роли — agent: в settings.json)      │
@@ -373,7 +373,7 @@ graph TB
 
   ОПЦИОНАЛЬНО — ПОСЛЕ ГЛАВЫ (или после N глав):
 
-       │ /book:tune
+       │ /bookbench:tune
        ▼
   ┌─────────────────────┐
   │ [book-tuner]    ★   │ skills: base-methodology
@@ -401,7 +401,7 @@ graph TB
   │  6. Confirm         │
   │     completeness    │
   │                     │
-  │  /book:tune apply <id>:                                                ★
+  │  /bookbench:tune apply <id>:                                                ★
   │  координатор пишет diff в файл гайдлайна + запись в TUNING-LOG.md
   └─────────────────────┘
 
@@ -414,7 +414,7 @@ graph TB
 
 | # | Откуда → Куда | Артефакт | Зачем |
 |---|---------------|----------|-------|
-| 1 | пользователь → координатор | `/book:write-section <N>` | старт цикла |
+| 1 | пользователь → координатор | `/bookbench:write-section <N>` | старт цикла |
 | 2 | strategist → `sections/<N>/spec.md` | spec.md | ТЗ главы |
 | 3 | координатор → пользователь | gate ✋ approve | пользовательский гейт |
 | 4 | writer → `sections/<N>/draft.md` | draft.md | драфт |
@@ -435,9 +435,9 @@ graph TB
 |---|---------------|----------|-------|
 | 15 | каждый агент → `.book/agent-guidelines/<role>/` | first read | гайдлайн — обязательная часть `<files_to_read>` |
 | 16 | координатор → `REJECTIONS-LOG.md` | после ручной переделки автора | вход для tuner |
-| 17 | пользователь → координатор → tuner (Task) | `/book:tune` | анализ паттернов замечаний |
+| 17 | пользователь → координатор → tuner (Task) | `/bookbench:tune` | анализ паттернов замечаний |
 | 18 | tuner → stdout (предложения) | список diff с приоритизацией | пользователь решает применять или нет |
-| 19 | координатор → `.book/agent-guidelines/<role>/<file>.md` + `TUNING-LOG.md` | при `/book:tune apply <id>` | применение правки гайдлайна |
+| 19 | координатор → `.book/agent-guidelines/<role>/<file>.md` + `TUNING-LOG.md` | при `/bookbench:tune apply <id>` | применение правки гайдлайна |
 
 #### Принципы потока (без изменений + новые)
 
@@ -450,7 +450,7 @@ graph TB
 7. Гейты пользователя — только в 2 точках цикла (без изменений).
 8. **(новое)** Каждый агент читает свой гайдлайн первым шагом — индивидуальность книги доставляется через гайдлайны, не через тело.
 9. **(новое)** book-tuner — отдельный, **не часть микро-цикла главы**; вызывается опционально по запросу автора.
-10. **(новое)** Tuner не правит сам — только предлагает; применение через `/book:tune apply <id>` идёт через координатора.
+10. **(новое)** Tuner не правит сам — только предлагает; применение через `/bookbench:tune apply <id>` идёт через координатора.
 
 ---
 
@@ -460,16 +460,16 @@ graph TB
 |---------|-----------|-----------|
 | Все агенты local | средняя и правая колонки (data + book) | пометка [9 ролей в .book/.claude/agents/] |
 | Universal Body + Local Guidelines | стрелки `agent-templates → .claude/agents` (тело) и `defaults → agent-guidelines` (индивидуальность) | стрелки «1. Read agent-guidelines/<role>/» в каждой фазе |
-| `${CLAUDE_PLUGIN_DATA}` | средняя колонка | стрелка `/book:tune` → координатор + неявная связь через registry для evolver |
+| `${CLAUDE_PLUGIN_DATA}` | средняя колонка | стрелка `/bookbench:tune` → координатор + неявная связь через registry для evolver |
 | 9 ролей субагентов | в `agent-templates/` плагина (шаблоны) + `.book/.claude/agents/` (копии) | 5 ролей цикла + 2 импорта (отдельный поток) + tuner (опциональный пост-цикл) |
 | `memory: project` | `.book/.claude/agent-memory/` | пишется на финальной фазе координатором |
 | `hooks` | `.book/.hooks/` | блокирующая валидация на writer/editor |
 | `mcpServers` | factchecker как L-агент | WebSearch/MCP в фазе 3 |
 | `permissionMode` | `.book/.claude/agents/book-coordinator.md` имеет `acceptEdits` | автономный прогон 5 фаз |
 | Файловый протокол | контракт «не трогать .book/» при `/plugin update` | передача артефактов через файлы |
-| Реестр книг | `${CLAUDE_PLUGIN_DATA}/registry.yaml` | косвенно — `/book:start` добавляет; `/book:evolve` читает |
+| Реестр книг | `${CLAUDE_PLUGIN_DATA}/registry.yaml` | косвенно — `/bookbench:start` добавляет; `/bookbench:evolve` читает |
 | Tuner | в `agent-templates/book-tuner.md` (шаблон) + `.book/.claude/agents/book-tuner.md` (копия) | отдельная стрелка после цикла главы |
-| Evolver | `/book:evolve` команда (видна только в local-dev); `${CLAUDE_PLUGIN_DATA}/evolver/` | не показан на схеме (b) — это меж-книжный поток, а не внутри одной книги |
+| Evolver | `/bookbench:evolve` команда (видна только в local-dev); `${CLAUDE_PLUGIN_DATA}/evolver/` | не показан на схеме (b) — это меж-книжный поток, а не внутри одной книги |
 
 ---
 

@@ -231,7 +231,7 @@ MUST: При упоминании единицы работы (глава / ра
 
 | Триггер | Действие |
 |---------|----------|
-| Координатор вызвал на `/book:factcheck-section <N>` | Procedure FACTCHECK |
+| Координатор вызвал на `/bookbench:factcheck-section <N>` | Procedure FACTCHECK |
 | Координатор вызвал в re-check-fragments mode | Procedure RECHECK-FRAGMENTS |
 | `iteration == 3` без pass | `status: escalate` (НЕ revise-required); никакой 4-й итерации |
 | Утверждение из `outdated-sources.md` | `[OUTDATED]` тэг + `revise-required` (если iteration < 3) |
@@ -240,7 +240,7 @@ MUST: При упоминании единицы работы (глава / ра
 
 ## Memory protocol
 
-В начале `/book:factcheck-section <N>`:
+В начале `/bookbench:factcheck-section <N>`:
 
 1. Read `agent-memory/factchecker/MEMORY.md`.
 2. Read `agent-guidelines/factchecker/{trusted-sources, outdated-sources, claim-tags-rules}.md`.

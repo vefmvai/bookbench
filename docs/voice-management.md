@@ -23,12 +23,12 @@ cohesion reference; the anti-cliche module reads its YAML twin
 
 The voice profile is **author-owned content**. The framework writes it once
 (via the voice-builder skill) and only re-writes it on explicit author request
-through `/book:tune` or `/book:voice rebuild`.
+through `/bookbench:tune` or `/bookbench:voice rebuild`.
 
 ## When does the voice gate fire?
 
 The voice gate is enforced **inside the body of `book-writer`** (TOV-08), not
-on `/book:start` and not at planning time. The trigger:
+on `/bookbench:start` and not at planning time. The trigger:
 
 > Before generating any line of `sections/<N>/draft.md`, the writer reads
 > `.book/context/voice-profile.md` and stops if the file is empty or contains
@@ -50,7 +50,7 @@ When the gate fires, the author chooses one of three paths via
 - **B1 — quick interview here, ~5 min.** Five questions answered inline in the
   current session; the voice-builder maps the answers onto the six parameters
   and writes the profile.
-- **B2 — dedicated session, ~15-20 min.** Run `/book:voice build` in a fresh
+- **B2 — dedicated session, ~15-20 min.** Run `/bookbench:voice build` in a fresh
   session. The skill conducts the same five questions, then generates a
   trial paragraph for the author to react to, with up to two iterations on
   the emotional intensity parameter.
@@ -66,17 +66,17 @@ parameters; 4-step B3 proposal) are documented in
 a filled `voice-profile.md` with a mandatory `## Reasoning` section that
 explains why each parameter received its value (TOV-12 transparency).
 
-## Five `/book:voice *` commands
+## Five `/bookbench:voice *` commands
 
 | Command | What it does |
 |---------|--------------|
-| `/book:voice build [--mode=quick|serious] [--rebuild]` | Activates the voice-builder skill in a dedicated session. Default mode is `serious` (path B2). `--rebuild` overwrites an existing profile after a confirmation and a backup. |
-| `/book:voice extract [--to-stdout|--to-file <path>]` | Packs the current book's profile and samples into a single self-contained markdown file. Read-only on `.book/`. By default streams to stdout. |
-| `/book:voice save-as <name> [--overwrite]` | Saves the current voice as `<name>.md` in the personal library. Refuses to overwrite without `--overwrite`. |
-| `/book:voice import <name>` | Copies `<name>.md` from the library into the current book; confirms before overwriting non-empty existing files; backs up replaced files into `.book/.backup/voice-profile/`. |
-| `/book:voice list` | Lists every voice in the library with name, save date, and a short summary of the six parameters. Strictly read-only. |
+| `/bookbench:voice build [--mode=quick|serious] [--rebuild]` | Activates the voice-builder skill in a dedicated session. Default mode is `serious` (path B2). `--rebuild` overwrites an existing profile after a confirmation and a backup. |
+| `/bookbench:voice extract [--to-stdout|--to-file <path>]` | Packs the current book's profile and samples into a single self-contained markdown file. Read-only on `.book/`. By default streams to stdout. |
+| `/bookbench:voice save-as <name> [--overwrite]` | Saves the current voice as `<name>.md` in the personal library. Refuses to overwrite without `--overwrite`. |
+| `/bookbench:voice import <name>` | Copies `<name>.md` from the library into the current book; confirms before overwriting non-empty existing files; backs up replaced files into `.book/.backup/voice-profile/`. |
+| `/bookbench:voice list` | Lists every voice in the library with name, save date, and a short summary of the six parameters. Strictly read-only. |
 
-`/book:voice rebuild` is an alias for `/book:voice build --rebuild` (PS-08.1-06).
+`/bookbench:voice rebuild` is an alias for `/bookbench:voice build --rebuild` (PS-08.1-06).
 
 ## Personal voices library `~/.bookbench/voices/`
 
@@ -103,12 +103,12 @@ Typical workflow for re-using a voice:
 
 ```bash
 # In book A, after voice-builder has filled .book/context/voice-profile.md
-/book:voice save-as my-warm-essay-voice
+/bookbench:voice save-as my-warm-essay-voice
 
 # Later, in book B
 cd ../book-b
-/book:voice list                          # see what is available
-/book:voice import my-warm-essay-voice    # apply it to book B
+/bookbench:voice list                          # see what is available
+/bookbench:voice import my-warm-essay-voice    # apply it to book B
 ```
 
 ## Editing the voice over time
@@ -116,11 +116,11 @@ cd ../book-b
 Voices change as the book takes shape. BookBench supports two ways to evolve
 a voice without losing the connection to past sections:
 
-- **`/book:tune`** — the tuner reviews recent `REJECTIONS.md` entries and
+- **`/bookbench:tune`** — the tuner reviews recent `REJECTIONS.md` entries and
   voice-drift signals from the editor; it proposes targeted edits to one or
   two parameters with a sample paragraph for confirmation. Use this after
   writing 1-3 sections when small adjustments are needed.
-- **`/book:voice rebuild`** — full reset of the profile. The voice-builder
+- **`/bookbench:voice rebuild`** — full reset of the profile. The voice-builder
   runs again from scratch. The previous profile is backed up to
   `.book/.backup/voice-profile/voice-profile.<timestamp>.md`. Use this when
   the voice is structurally wrong, not just slightly off.
@@ -134,11 +134,11 @@ a voice without losing the connection to past sections:
   or whether copy-and-edit is sufficient. Trigger for revisiting: at least
   three authors report editing the same handful of parameters across many
   books.
-- **No automatic voice transplant from imported books.** `/book:import`
+- **No automatic voice transplant from imported books.** `/bookbench:import`
   handles `voice-sample` files (Path A from etap 03) but does not currently
   back-fill the six-parameter profile from imported text. The voice-builder
-  skill is invoked only via the gate, `/book:voice build`, or
-  `/book:voice rebuild`.
+  skill is invoked only via the gate, `/bookbench:voice build`, or
+  `/bookbench:voice rebuild`.
 
 ## Privacy
 
@@ -151,7 +151,7 @@ passages of their own prose. BookBench treats it accordingly:
   publicly known authors as flavour signals; they are never the author's own
   voice.
 - **Book template `.gitignore` excludes voice content by default** (TOV-05).
-  When you scaffold a new book with `/book:start`, the resulting `.book/`
+  When you scaffold a new book with `/bookbench:start`, the resulting `.book/`
   folder includes a `.gitignore` that excludes `context/voice-profile.md` and
   `agent-guidelines/writer/voice-samples.md`. This is a **default safety net**
   — if you are running a public research project where voice transparency is
@@ -159,7 +159,7 @@ passages of their own prose. BookBench treats it accordingly:
 - **Personal library is outside the book folder.** `~/.bookbench/voices/` is
   not part of any git repository the author would publish. It is a
   per-machine, per-author space.
-- **Privacy guards in commands.** Every `/book:voice *` command refuses to
+- **Privacy guards in commands.** Every `/bookbench:voice *` command refuses to
   write inside the plugin tree (`${CLAUDE_PLUGIN_ROOT}`) and inside the
   current book when the destination is supposed to be the library
   (PS-08.1-07). The structural test `tests/voice-commands-privacy.test.sh`

@@ -1,6 +1,6 @@
 # Local-dev режим и эволюция плагина
 
-> Local-dev — режим установки плагина из локального чекаута для контрибьюторов и для maintainer'ов фреймворка. Разблокирует команду `/book:evolve` — меж-книжный анализ паттернов с гарантиями приватности.
+> Local-dev — режим установки плагина из локального чекаута для контрибьюторов и для maintainer'ов фреймворка. Разблокирует команду `/bookbench:evolve` — меж-книжный анализ паттернов с гарантиями приватности.
 
 ---
 
@@ -23,8 +23,8 @@ Local-dev — это режим установки плагина, при кот
 
 В обоих случаях `installation.yaml` пишет `source: local-dev`, и фреймворк разблокирует:
 
-- Команду `/book:evolve [propose|apply|status]` — меж-книжный анализ.
-- Команду `/book:update --from-local-dev <path>` — обновление книги из конкретного локального чекаута (полезно при тестировании).
+- Команду `/bookbench:evolve [propose|apply|status]` — меж-книжный анализ.
+- Команду `/bookbench:update --from-local-dev <path>` — обновление книги из конкретного локального чекаута (полезно при тестировании).
 
 Эти команды **не видны** в режимах GitHub release и Marketplace. Это структурная гарантия: конечный пользователь не может случайно сделать коммит в код плагина из своей сессии.
 
@@ -45,10 +45,10 @@ $ cd bookbench
 ✅ BookBench (local-dev) установлен.
 
 # 3. Проверь
-> /book:doctor
+> /bookbench:doctor
 🤖 BookBench (local-dev) — диагностика
    ├─ Source: /Users/.../bookbench (local-dev)
-   ├─ /book:evolve: visible (разблокирована)
+   ├─ /bookbench:evolve: visible (разблокирована)
    └─ ...
 ```
 
@@ -85,12 +85,12 @@ installed_at: 2026-05-08T14:32:11Z
 
 ## Дополнительные команды
 
-### `/book:evolve propose`
+### `/bookbench:evolve propose`
 
 Анализ паттернов в **зарегистрированных книгах** автора. Читает только мета-файлы каждой книги (см. раздел приватности ниже), ищет систематические паттерны (≥3 повторений в одной книге; ≥2 книги — для меж-книжного паттерна).
 
 ```
-> /book:evolve propose
+> /bookbench:evolve propose
 🤖 [bookbench-evolver] Анализирую зарегистрированные книги...
    ├─ Книга «История кофе» (registered 2026-04-10): 16 TUNING-LOG записей, 8 REJECTIONS
    ├─ Книга «Биография учёного XIX в.» (registered 2026-03-05): 23 / 12
@@ -115,12 +115,12 @@ installed_at: 2026-05-08T14:32:11Z
    ...
 
    Записал в ${CLAUDE_PLUGIN_DATA}/evolver/pending-changes/2026-05-08-1645/
-✅ /book:evolve propose завершён. Используй /book:evolve apply <id> для применения.
+✅ /bookbench:evolve propose завершён. Используй /bookbench:evolve apply <id> для применения.
 ```
 
 Ничего не пишется в код плагина без явного `apply`.
 
-### `/book:evolve apply <pending-id>`
+### `/bookbench:evolve apply <pending-id>`
 
 Применение предложенной правки. Делает:
 
@@ -129,7 +129,7 @@ installed_at: 2026-05-08T14:32:11Z
 3. Архивирует в `${CLAUDE_PLUGIN_DATA}/evolver/analysis-history/`.
 
 ```
-> /book:evolve apply 2026-05-08-1645
+> /bookbench:evolve apply 2026-05-08-1645
 ✋ Применить PATTERN 1 (правка agent-templates/book-writer.md)?
    Diff:
    [...]
@@ -144,12 +144,12 @@ installed_at: 2026-05-08T14:32:11Z
 
 Дальше — обычный maintainer-flow: тестирование на синтетической книге, PR в основной репозиторий, релиз 0.1.x.
 
-### `/book:evolve status`
+### `/bookbench:evolve status`
 
 Текущее состояние:
 
 ```
-> /book:evolve status
+> /bookbench:evolve status
 🤖 Pending changes: 2
    ├─ 2026-05-08-1645 (PATTERN 1, critical, 3 books, awaiting apply)
    └─ 2026-05-07-2210 (PATTERN 2, optional, 2 books, awaiting apply)
@@ -158,19 +158,19 @@ installed_at: 2026-05-08T14:32:11Z
    Total applied (history): 7
 ```
 
-### `/book:update --from-local-dev <path>`
+### `/bookbench:update --from-local-dev <path>`
 
 Обновление папки книги из конкретного локального чекаута. Полезно при тестировании: ты сделал правку в `agent-templates/book-writer.md`, и хочешь увидеть её в твоей синтетической книге **без** релиза.
 
 ```
-> /book:update --from-local-dev /Users/.../bookbench
+> /bookbench:update --from-local-dev /Users/.../bookbench
 🤖 [book-coordinator] 3-way merge с чекаутом /Users/.../bookbench
    ├─ .book/.claude/agents/book-writer.md — изменён, предлагаю обновить
    ├─ .book/.hooks/anti-ai-cliche-lint.sh — без изменений
    └─ ...
 ```
 
-Подробности по `/book:update` — в [`upgrade-guide.md`](upgrade-guide.md).
+Подробности по `/bookbench:update` — в [`upgrade-guide.md`](upgrade-guide.md).
 
 ---
 
@@ -182,12 +182,12 @@ installed_at: 2026-05-08T14:32:11Z
 
 В каждой книге:
 
-- `TUNING-LOG.md` — все правки гайдлайнов и конфига (через `/book:tune apply`, через `/book:guidelines`, через ручные правки).
-- `REJECTIONS-LOG.md` — все случаи, когда автор после `/book:write-section` правил готовую главу руками.
+- `TUNING-LOG.md` — все правки гайдлайнов и конфига (через `/bookbench:tune apply`, через `/bookbench:guidelines`, через ручные правки).
+- `REJECTIONS-LOG.md` — все случаи, когда автор после `/bookbench:write-section` правил готовую главу руками.
 
 Это происходит автоматически по ходу работы.
 
-### Шаг 2. После 3+ книг — `/book:evolve propose`
+### Шаг 2. После 3+ книг — `/bookbench:evolve propose`
 
 Maintainer (в local-dev) запускает анализ. Evolver читает только мета-файлы из всех зарегистрированных книг, агрегирует паттерны, предлагает правки в код плагина.
 
@@ -195,13 +195,13 @@ Maintainer (в local-dev) запускает анализ. Evolver читает 
 
 Открывает `${CLAUDE_PLUGIN_DATA}/evolver/pending-changes/<id>/`, читает diff, решает: применить, пропустить, отвергнуть.
 
-### Шаг 4. `/book:evolve apply <id>` — запись в код плагина
+### Шаг 4. `/bookbench:evolve apply <id>` — запись в код плагина
 
 Команда пишет diff в `${CLAUDE_PLUGIN_ROOT}` и делает git commit в чекауте.
 
 ### Шаг 5. Тестирование
 
-На синтетической книге (или на одной из реальных книг maintainer'а) — `/book:write-section` с обновлённым телом субагента. Если работает корректно — продолжаем.
+На синтетической книге (или на одной из реальных книг maintainer'а) — `/bookbench:write-section` с обновлённым телом субагента. Если работает корректно — продолжаем.
 
 ### Шаг 6. PR в основной репозиторий
 
@@ -209,7 +209,7 @@ Maintainer (в local-dev) запускает анализ. Evolver читает 
 
 ### Шаг 7. Релиз 0.1.x
 
-Maintainer'ы фреймворка собирают накопленные правки в минорный релиз. Авторы книг получают улучшения через `/plugin update bookbench` (но папки книг не трогаются — `WF-04`; для подтягивания обновлений тел субагентов в существующую книгу — `/book:update`).
+Maintainer'ы фреймворка собирают накопленные правки в минорный релиз. Авторы книг получают улучшения через `/plugin update bookbench` (но папки книг не трогаются — `WF-04`; для подтягивания обновлений тел субагентов в существующую книгу — `/bookbench:update`).
 
 ---
 
@@ -286,6 +286,6 @@ privacy:
 ## Что дальше
 
 - [`contributing.md`](contributing.md) — как контрибьютить, требования к стилю и SKILL.md
-- [`upgrade-guide.md`](upgrade-guide.md) — `/book:update` и его связь с local-dev
+- [`upgrade-guide.md`](upgrade-guide.md) — `/bookbench:update` и его связь с local-dev
 - [`architecture.md`](architecture.md) — где живёт `${CLAUDE_PLUGIN_DATA}/evolver/` в общей картине
-- [`customization.md`](customization.md) — `/book:tune` (внутрикнижный аналог `/book:evolve`)
+- [`customization.md`](customization.md) — `/bookbench:tune` (внутрикнижный аналог `/bookbench:evolve`)

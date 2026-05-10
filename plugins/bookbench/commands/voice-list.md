@@ -4,10 +4,10 @@ argument-hint: ""
 allowed-tools: [Read, Bash, Glob, Grep]
 ---
 
-# /book:voice list
+# /bookbench:voice list
 
 <purpose>
-Show the contents of the personal voices library so the author can pick a voice for /book:voice import.
+Show the contents of the personal voices library so the author can pick a voice for /bookbench:voice import.
 </purpose>
 
 <!-- Stage 08.1, Wave B, T4: full implementation. PS-08.1-03 path resolution. PS-08.1-07 read-only. -->
@@ -60,7 +60,7 @@ echo "VOICES_DIR=$VOICES_DIR"
 ```bash
 if [ ! -d "$VOICES_DIR" ]; then
   echo "voice list: library directory does not exist yet ($VOICES_DIR)."
-  echo "  Use /book:voice save-as <name> after /book:voice build to create your first voice."
+  echo "  Use /bookbench:voice save-as <name> after /bookbench:voice build to create your first voice."
   exit 0
 fi
 
@@ -114,7 +114,7 @@ done
 echo ""
 if [ "$COUNT" = "0" ]; then
   echo "voice list: no voices saved yet."
-  echo "  Build a voice with /book:voice build, then save it with /book:voice save-as <name>."
+  echo "  Build a voice with /bookbench:voice build, then save it with /bookbench:voice save-as <name>."
 else
   echo "voice list: $COUNT voice(s) found."
 fi
@@ -126,10 +126,10 @@ fi
 voice list: done.
 
 To use a voice in the current book:
-  /book:voice import <name>
+  /bookbench:voice import <name>
 
 To save the current book's voice into the library:
-  /book:voice save-as <name>
+  /bookbench:voice save-as <name>
 ```
 
 ### Constitutional rules for this command

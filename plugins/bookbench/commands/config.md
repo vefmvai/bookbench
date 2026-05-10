@@ -4,10 +4,10 @@ argument-hint: "[<section>] [<key>=<value>]"
 allowed-tools: [Read, Write, Edit, Bash, AskUserQuestion]
 ---
 
-# /book:config
+# /bookbench:config
 
 <purpose>
-Dashboard editor for the current book. Distinct from `/book:settings` (which edits the global plugin settings). Three-level cascade: `${CLAUDE_PLUGIN_DATA}/settings.yaml` → `${CLAUDE_PLUGIN_ROOT}/defaults.yaml` (per genre) → `.book/config.yaml`.
+Dashboard editor for the current book. Distinct from `/bookbench:settings` (which edits the global plugin settings). Three-level cascade: `${CLAUDE_PLUGIN_DATA}/settings.yaml` → `${CLAUDE_PLUGIN_ROOT}/defaults.yaml` (per genre) → `.book/config.yaml`.
 </purpose>
 
 <!-- ЭТАП 14: реализовано — см. <execution> ниже -->
@@ -31,9 +31,9 @@ Eight-step pattern.
 ### Step 1 — Pre-flight
 
 ```bash
-[ -d .book ] || { echo "No .book/ directory. Run /book:start first."; exit 0; }
+[ -d .book ] || { echo "No .book/ directory. Run /bookbench:start first."; exit 0; }
 [ -f .book/config.yaml ] || {
-  echo "No .book/config.yaml. Run /book:start to create it."
+  echo "No .book/config.yaml. Run /bookbench:start to create it."
   exit 0
 }
 
@@ -56,10 +56,10 @@ SETTINGS="$PLUGIN_DATA/settings.yaml"
 
 Three call shapes:
 
-- `/book:config` — list all sections with cascade display.
-- `/book:config <section>` — show section-level fields.
-- `/book:config <section>.<key>=<value>` — set a field.
-- `/book:config <key>=<value>` — set a top-level field.
+- `/bookbench:config` — list all sections with cascade display.
+- `/bookbench:config <section>` — show section-level fields.
+- `/bookbench:config <section>.<key>=<value>` — set a field.
+- `/bookbench:config <key>=<value>` — set a top-level field.
 
 ```bash
 SECTION=""
@@ -95,8 +95,8 @@ Configuration cascade for «My Book»
   ...
 
 Recommended next:
-  /book:config writing                 — see writing section in detail.
-  /book:config writing.target=18000    — change a value.
+  /bookbench:config writing                 — see writing section in detail.
+  /bookbench:config writing.target=18000    — change a value.
 ```
 
 ### Step 4 — Mode B: section view (`<section>` only)
@@ -176,14 +176,14 @@ fi
 
 ```bash
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-printf '\n%s — `/book:config` — %s: %s → %s\n' \
+printf '\n%s — `/bookbench:config` — %s: %s → %s\n' \
   "$NOW" "$KEY_PATH" "$OLD_VALUE" "$NEW_VALUE" >> .book/STATE.md
 
 echo "Updated $KEY_PATH: $OLD_VALUE → $NEW_VALUE"
 echo ""
 echo "Recommended next:"
-echo "  /book:config $SECT       — see other fields in this section."
-echo "  /book:config             — full cascade view."
+echo "  /bookbench:config $SECT       — see other fields in this section."
+echo "  /bookbench:config             — full cascade view."
 ```
 
 ### Constitutional rules
@@ -191,7 +191,7 @@ echo "  /book:config             — full cascade view."
 - **MUST** display the cascade (book vs genre-default vs global) when listing.
 - **MUST** create a backup before any edit.
 - **MUST** verify the edit committed by re-reading the file.
-- **NEVER** edit `defaults.yaml` (genre defaults) or `settings.yaml` (global) — those are `/plugin update` and `/book:settings` territory.
+- **NEVER** edit `defaults.yaml` (genre defaults) or `settings.yaml` (global) — those are `/plugin update` and `/bookbench:settings` territory.
 - **NEVER** retroactively re-process existing sections when `language` or `genre` change — only future blocks see the new value.
 
 </execution>

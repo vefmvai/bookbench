@@ -4,10 +4,10 @@ argument-hint: "<name> [--overwrite]"
 allowed-tools: [Read, Write, Bash, Glob, Grep]
 ---
 
-# /book:voice save-as
+# /bookbench:voice save-as
 
 <purpose>
-Pack the current book's voice (profile + optional samples) and store it as a single markdown file in the personal voices library, so the same voice can be reused across future books via /book:voice import.
+Pack the current book's voice (profile + optional samples) and store it as a single markdown file in the personal voices library, so the same voice can be reused across future books via /bookbench:voice import.
 </purpose>
 
 <!-- Stage 08.1, Wave B, T4: full implementation. PS-08.1-03 path resolution. PS-08.1-07 privacy enforcement. -->
@@ -40,7 +40,7 @@ while [ $# -gt 0 ]; do
 done
 
 if [ -z "$NAME" ]; then
-  echo "voice save-as: <name> is required. Usage: /book:voice save-as <name> [--overwrite]" 1>&2
+  echo "voice save-as: <name> is required. Usage: /bookbench:voice save-as <name> [--overwrite]" 1>&2
   exit 1
 fi
 
@@ -141,13 +141,13 @@ PROFILE_PATH="$BOOK_ROOT/context/voice-profile.md"
 SAMPLES_PATH="$BOOK_ROOT/agent-guidelines/writer/voice-samples.md"
 
 if [ ! -f "$PROFILE_PATH" ]; then
-  echo "voice save-as: $PROFILE_PATH does not exist — run /book:voice build first." 1>&2
+  echo "voice save-as: $PROFILE_PATH does not exist — run /bookbench:voice build first." 1>&2
   exit 1
 fi
 
 MEANINGFUL=$(grep -vE '^\s*$|^\s*#|^>|TBD|\(Add entries here\.\)|<!-- ' "$PROFILE_PATH" | wc -l | tr -d ' ')
 if [ "${MEANINGFUL:-0}" -le 3 ]; then
-  echo "voice save-as: voice-profile.md looks empty — nothing to save. Run /book:voice build first." 1>&2
+  echo "voice save-as: voice-profile.md looks empty — nothing to save. Run /bookbench:voice build first." 1>&2
   exit 1
 fi
 
@@ -210,10 +210,10 @@ Saved to your personal voices library:
 
 To reuse this voice in another book:
   cd <other-book-folder>
-  /book:voice import $NAME
+  /bookbench:voice import $NAME
 
 To list all saved voices:
-  /book:voice list
+  /bookbench:voice list
 ```
 
 ### Constitutional rules for this command

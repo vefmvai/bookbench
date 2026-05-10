@@ -1,11 +1,11 @@
 ---
 name: workflow:check
-description: Static validator for .book/workflow.md. Parses the YAML inside, verifies block names against bookbench/blocks-catalog.md, checks gate references, validates cross-section dependencies, and reports problems with severity tags. Read-only. Run automatically by /book:workflow:edit after every edit.
+description: Static validator for .book/workflow.md. Parses the YAML inside, verifies block names against bookbench/blocks-catalog.md, checks gate references, validates cross-section dependencies, and reports problems with severity tags. Read-only. Run automatically by /bookbench:workflow:edit after every edit.
 argument-hint: ""
 allowed-tools: [Read, Write, Bash, Glob]
 ---
 
-# /book:workflow:check
+# /bookbench:workflow:check
 
 <purpose>
 Static validation of the workflow file. Catches typos, missing blocks, unresolved references, broken gates before they break runtime navigation. Run after every author edit; safe to run any time.
@@ -34,7 +34,7 @@ Read-only validator. Five-step pattern: pre-flight → parse workflow → cross-
 [ -d .book ] || { echo "No .book/ directory."; exit 0; }
 [ -f .book/workflow.md ] || {
   echo "No .book/workflow.md."
-  echo "Either run /book:start to create one or /book:research-genre to generate."
+  echo "Either run /bookbench:start to create one or /bookbench:research-genre to generate."
   exit 0
 }
 ```
@@ -96,7 +96,7 @@ For `section_overrides` keys, confirm they are valid section numbers (positive i
 ### Step 5 — Render report
 
 ```
-== /book:workflow:check ==
+== /bookbench:workflow:check ==
 File:    .book/workflow.md
 Catalog: ${CLAUDE_PLUGIN_ROOT}/blocks-catalog.md
 
@@ -115,7 +115,7 @@ Issues:
 If issues exist — write the same content to `.book/.workflow-check-report.md`. If clean — remove the report file (if it exists) and print:
 
 ```
-== /book:workflow:check ==
+== /bookbench:workflow:check ==
 ✓ workflow.md is valid. No issues.
 ```
 
@@ -125,15 +125,15 @@ If clean:
 
 ```
 Recommended next:
-  /book:next                 — use the workflow now.
-  /book:workflow:edit        — make further changes.
+  /bookbench:next                 — use the workflow now.
+  /bookbench:workflow:edit        — make further changes.
 ```
 
 If issues:
 
 ```
 Recommended next:
-  /book:workflow:edit        — fix the issues above.
+  /bookbench:workflow:edit        — fix the issues above.
   See .book/.workflow-check-report.md for the full report.
 ```
 

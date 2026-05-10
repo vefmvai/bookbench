@@ -1,13 +1,13 @@
 ---
 name: import-classification-protocol
-description: Описывает классификационную таксономию из одиннадцати типов фрагментов для конвейера импорта — parameter, voice-sample, glossary-term, characters, common-misconception, plot-connector, used-metaphor, source, hook-phrase, visual-reference, other — и формат JSON-вывода для intel/classifications/. Используется агентом book-doc-classifier при запуске команды /book:import. Задаёт правила confidence-скоринга и форму тегированного фрагмента, который дальше потребляет синтезатор.
+description: Описывает классификационную таксономию из одиннадцати типов фрагментов для конвейера импорта — parameter, voice-sample, glossary-term, characters, common-misconception, plot-connector, used-metaphor, source, hook-phrase, visual-reference, other — и формат JSON-вывода для intel/classifications/. Используется агентом book-doc-classifier при запуске команды /bookbench:import. Задаёт правила confidence-скоринга и форму тегированного фрагмента, который дальше потребляет синтезатор.
 ---
 
 # Import classification protocol skill
 
 ## When to use
 
-Injected into `book-doc-classifier`. Activated only by `/book:import` (Sub-DAG of the import flow). The classifier runs in parallel per file (one Task per imported source).
+Injected into `book-doc-classifier`. Activated only by `/bookbench:import` (Sub-DAG of the import flow). The classifier runs in parallel per file (one Task per imported source).
 
 ## Eleven fragment types
 

@@ -58,7 +58,7 @@ Trigger: нужно написать автору про единицу рабо
 
 - Имена файлов и директорий: `sections/<N>/`, `section-state.yaml`
 - Имена полей в YAML/JSON: `current_section`, `section_word`, `section_chars_range`
-- Имена команд: `/book:write-section`, `/book:plan-section`, `/book:audit-section`
+- Имена команд: `/bookbench:write-section`, `/bookbench:plan-section`, `/bookbench:audit-section`
 - Имена полей в STATE.md: `current_section`, `section_loop`
 - Имена блоков workflow.md: `write-section`, `plan-section`
 - Передача артефактов между субагентами: `sections/<N>/spec.md`, `draft.md`, `edited.md`

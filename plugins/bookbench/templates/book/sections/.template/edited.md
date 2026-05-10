@@ -10,8 +10,8 @@ audit_passes: 0                       # number of anti-cliche audit passes
 human_test_passed: null
 ---
 
-<!-- автогенерируется при /book:write-section в Phase 4; единственный финальный текст главы для /book:ship -->
+<!-- автогенерируется при /bookbench:write-section в Phase 4; единственный финальный текст главы для /bookbench:ship -->
 
 # Section (edited)
 
-(The polished, fact-checked, anti-cliche-cleaned text of the section. This is what `/book:ship` collects into the final book.)
+(The polished, fact-checked, anti-cliche-cleaned text of the section. This is what `/bookbench:ship` collects into the final book.)

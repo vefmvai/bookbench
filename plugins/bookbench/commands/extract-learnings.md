@@ -4,10 +4,10 @@ argument-hint: ""
 allowed-tools: [Task, Read, Write, Bash, AskUserQuestion]
 ---
 
-# /book:extract-learnings
+# /bookbench:extract-learnings
 
 <purpose>
-Help the author look back on the project: what stuck, what got rejected, which patterns recurred, what is worth carrying into the next book. Especially valuable before `/book:archive` or before starting a new book in the same genre.
+Help the author look back on the project: what stuck, what got rejected, which patterns recurred, what is worth carrying into the next book. Especially valuable before `/bookbench:archive` or before starting a new book in the same genre.
 </purpose>
 
 <!-- ЭТАП 14: реализовано — см. <execution> ниже -->
@@ -37,7 +37,7 @@ Eight-step pattern with one Task delegation to `book-tuner` in cross-book retros
 N_SECTIONS=$(find .book/sections -maxdepth 2 -name 'edited.md' -type f | wc -l | tr -d ' ')
 if [ "$N_SECTIONS" -lt 3 ]; then
   echo "Warning: only $N_SECTIONS sections finished — learnings will be thin."
-  echo "Recommended: run /book:extract-learnings after >= 3 sections."
+  echo "Recommended: run /bookbench:extract-learnings after >= 3 sections."
 fi
 ```
 
@@ -104,7 +104,7 @@ Task(
       • Be concrete: 1-2 sentence bullets, not paragraphs.
 
     Use the four-phase Procedure (collect / cluster / prioritise / propose)
-    you use in `/book:tune`, but the OUTPUT here is a retrospective, not
+    you use in `/bookbench:tune`, but the OUTPUT here is a retrospective, not
     proposals.
   """,
   files_to_read: [
@@ -146,7 +146,7 @@ If learnings.md contains a section labelled `## Cross-book recommendations` (gen
 ```bash
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 LEARNINGS_LINES=$(wc -l < .book/context/learnings.md)
-printf '\n%s — `/book:extract-learnings` — wrote learnings.md (%d lines, %d tuning, %d rejections)\n' \
+printf '\n%s — `/bookbench:extract-learnings` — wrote learnings.md (%d lines, %d tuning, %d rejections)\n' \
   "$NOW" "$LEARNINGS_LINES" "$TUNING_COUNT" "$REJECTIONS_COUNT" >> .book/STATE.md
 ```
 
@@ -156,17 +156,17 @@ printf '\n%s — `/book:extract-learnings` — wrote learnings.md (%d lines, %d 
 Learnings extracted: .book/context/learnings.md ($LEARNINGS_LINES lines)
 
 Recommended next:
-  /book:archive             — archive the book (it is finished).
-  /book:start               — start the next book; the tuner will use these learnings.
-  /book:evolve propose      — (dev-mode) consider folding learnings into plugin defaults.
+  /bookbench:archive             — archive the book (it is finished).
+  /bookbench:start               — start the next book; the tuner will use these learnings.
+  /bookbench:evolve propose      — (dev-mode) consider folding learnings into plugin defaults.
 ```
 
 ### Constitutional rules
 
 - **MUST** be read-only with respect to sections and guidelines. Only `.book/context/learnings.md` is written.
 - **MUST** delegate to `book-tuner` (it is the role with the right system prompt for analysis).
-- **MUST** not propose changes to guidelines from this command — that is `/book:tune`.
-- **NEVER** invoke `/book:evolve` automatically — the author decides explicitly.
+- **MUST** not propose changes to guidelines from this command — that is `/bookbench:tune`.
+- **NEVER** invoke `/bookbench:evolve` automatically — the author decides explicitly.
 - **NEVER** read inside `sections/*/draft.md` or `factcheck.md` (only `audit-report.md` and aggregate logs).
 
 </execution>

@@ -7,7 +7,7 @@
 ## Setup
 
 - Папка: `/tmp/test-book-step4b/`. Пустая.
-- Запуск: `/book:start`.
+- Запуск: `/bookbench:start`.
 
 ## Author messages
 
@@ -49,7 +49,7 @@
 - ✅ `.book/config.yaml > book.genre = "narrative-non-fiction"` (не «popular-science»).
 - ✅ `.book.proposed.yaml` отсутствует после Step 9a.
 - ✅ Финальное сообщение Step 11: «Книга инициализирована: «Мозг для всех»» (используется `formats.book.document_word_capitalized + document_word_gender_suffix`).
-- ✅ STATE.md содержит ровно одну запись `/book:start — initialised` (не дублируется на retry в § 3).
+- ✅ STATE.md содержит ровно одну запись `/bookbench:start — initialised` (не дублируется на retry в § 3).
 
 ## Fail criteria
 

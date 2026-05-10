@@ -90,7 +90,7 @@ workflow:
 ```markdown
 # Voice samples — passages в стиле автора
 
-> Извлечено из приложенных автором файлов на /book:start. Используется voice-builder перед первой главой.
+> Извлечено из приложенных автором файлов на /bookbench:start. Используется voice-builder перед первой главой.
 
 ## Passage 1
 <содержимое passage-1.md>
@@ -105,7 +105,7 @@ workflow:
 ## Expected `.book/STATE.md` History line
 
 ```
-<ISO timestamp> — /book:start — initialised "<title>" (format=book, genre=popular-science, audience="...", style_marker=B2, import=1)
+<ISO timestamp> — /bookbench:start — initialised "<title>" (format=book, genre=popular-science, audience="...", style_marker=B2, import=1)
 ```
 
 ## Acceptance criteria

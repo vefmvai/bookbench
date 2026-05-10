@@ -4,10 +4,10 @@ argument-hint: "[<path>]"
 allowed-tools: [Read, Write, Edit, Bash, AskUserQuestion]
 ---
 
-# /book:register
+# /bookbench:register
 
 <purpose>
-Pull a found-on-disk book into the registry without re-running `/book:start`. Useful after `git clone`, after migrating from another machine, or after creating a `.book/` folder manually.
+Pull a found-on-disk book into the registry without re-running `/bookbench:start`. Useful after `git clone`, after migrating from another machine, or after creating a `.book/` folder manually.
 </purpose>
 
 <!-- ЭТАП 14: реализовано — см. <execution> ниже -->
@@ -35,13 +35,13 @@ BOOK_PATH="$(cd "$BOOK_PATH" 2>/dev/null && pwd -P || echo "$BOOK_PATH")"
 
 if [ ! -d "$BOOK_PATH/.book" ]; then
   echo "Error: '$BOOK_PATH' does not contain a .book/ folder."
-  echo "Run /book:start to initialise a new book."
+  echo "Run /bookbench:start to initialise a new book."
   exit 0
 fi
 
 if [ ! -f "$BOOK_PATH/.book/config.yaml" ]; then
   echo "Error: '$BOOK_PATH/.book/config.yaml' is missing."
-  echo "This may not be a valid BookBench book. Run /book:doctor for diagnostics."
+  echo "This may not be a valid BookBench book. Run /bookbench:doctor for diagnostics."
   exit 0
 fi
 ```
@@ -172,9 +172,9 @@ Registered: $ID
   genre: $GENRE
 
 Recommended next:
-  /book:list             — verify the new entry shows.
-  /book:status           — overview of this book (run from the book directory).
-  /book:doctor           — verify there are no consistency issues.
+  /bookbench:list             — verify the new entry shows.
+  /bookbench:status           — overview of this book (run from the book directory).
+  /bookbench:doctor           — verify there are no consistency issues.
 ```
 
 ### Constitutional rules

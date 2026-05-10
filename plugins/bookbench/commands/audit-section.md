@@ -4,7 +4,7 @@ argument-hint: "<section-number>"
 allowed-tools: [Task, Read, Write, Edit, Bash, Glob, AskUserQuestion]
 ---
 
-# /book:audit-section
+# /bookbench:audit-section
 
 <purpose>
 Read-only-style audit of a single section. Output is `sections/<id>/audit-report.md`. Does not touch the section text.
@@ -32,7 +32,7 @@ This command is read-only with respect to section content. It calls `book-editor
 
 ```bash
 ARG="$ARGUMENTS"
-[ -z "$ARG" ] && { echo "Usage: /book:audit-section <section-number>"; exit 0; }
+[ -z "$ARG" ] && { echo "Usage: /bookbench:audit-section <section-number>"; exit 0; }
 N=$(printf '%s' "$ARG" | sed -E 's/[^0-9]//g')
 [ -z "$N" ] && { echo "Section number must be an integer ≥ 1."; exit 0; }
 PADDED=$(printf '%03d' "$N")
@@ -42,13 +42,13 @@ CHDIR=".book/sections/section-${PADDED}"
 ### Step 2 — Pre-flight
 
 ```bash
-[ -d .book ] || { echo "No .book/. Run /book:start."; exit 0; }
+[ -d .book ] || { echo "No .book/. Run /bookbench:start."; exit 0; }
 [ -d "$SECDIR" ] || { echo "Section folder $SECDIR does not exist."; exit 0; }
-[ -s "$SECDIR/edited.md" ] || { echo "$SECDIR/edited.md is missing. Run /book:write-section $N first."; exit 0; }
+[ -s "$SECDIR/edited.md" ] || { echo "$SECDIR/edited.md is missing. Run /bookbench:write-section $N first."; exit 0; }
 COMPLETED=$(awk '/^completed:/{print $2; exit}' "$SECDIR/section-state.yaml" || echo false)
 [ "$COMPLETED" = "true" ] || {
   echo "Section $N is not marked completed (completed: $COMPLETED)."
-  echo "Audit is intended for finished sections; run /book:write-section $N to finalise it first."
+  echo "Audit is intended for finished sections; run /bookbench:write-section $N to finalise it first."
   exit 0
 }
 
@@ -85,7 +85,7 @@ Total budget: 30–60 KB. Do NOT include any other section's draft/edited files.
 - `prompt`:
 
   ```
-  You are book-editor in AUDIT-MODE (read-only) for /book:audit-section ${N}.
+  You are book-editor in AUDIT-MODE (read-only) for /bookbench:audit-section ${N}.
 
   Active skills (apply both): consistency-check, anti-cliche-check.
 
@@ -149,11 +149,11 @@ Audit of section ${N}: ${PASS}
   edited.md unchanged: yes (sha256 matches before/after)
 
 Recommended next:
-  ${PASS == "false" ? "Inspect issues in audit-report.md, then optionally /book:re-edit-section ${N} (stage 14)." : "/book:plan-section $((N+1)) — start the next section."}
-  /book:status                 — see overall progress.
+  ${PASS == "false" ? "Inspect issues in audit-report.md, then optionally /bookbench:re-edit-section ${N} (stage 14)." : "/bookbench:plan-section $((N+1)) — start the next section."}
+  /bookbench:status                 — see overall progress.
 ```
 
-Note: `/book:re-edit-section` is implemented in stage 14. At stage 13 the audit produces the report; the author can manually act on it. Mention that explicitly to set expectations.
+Note: `/bookbench:re-edit-section` is implemented in stage 14. At stage 13 the audit produces the report; the author can manually act on it. Mention that explicitly to set expectations.
 
 ### Step 7 — STATE update
 
@@ -161,7 +161,7 @@ Note: `/book:re-edit-section` is implemented in stage 14. At stage 13 the audit 
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 sed -i.bak -E "s/^- \`last_action\`:.*/- \`last_action\`: audit-section ${N} ($PASS)/" .book/STATE.md
 rm -f .book/STATE.md.bak
-printf '\n%s — `/book:audit-section %s` — issues=%s pass=%s\n' "$NOW" "$N" "$ISSUES" "$PASS" >> .book/STATE.md
+printf '\n%s — `/bookbench:audit-section %s` — issues=%s pass=%s\n' "$NOW" "$N" "$ISSUES" "$PASS" >> .book/STATE.md
 ```
 
 ### Constitutional rules for this command

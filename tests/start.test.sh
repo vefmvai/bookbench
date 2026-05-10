@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # tests/start.test.sh
 #
-# Snapshot-тест регрессий для команды /book:start (этап 24, T9 — D-38, D-34, D-35, D-36, D-37, D-39, D-40).
+# Snapshot-тест регрессий для команды /bookbench:start (этап 24, T9 — D-38, D-34, D-35, D-36, D-37, D-39, D-40).
 #
-# Поскольку /book:start — markdown-промпт, исполняемый Claude Code (а не bash-скрипт),
+# Поскольку /bookbench:start — markdown-промпт, исполняемый Claude Code (а не bash-скрипт),
 # полноценная end-to-end симуляция требует Claude Code SDK. Этот тест работает уровнем ниже:
 # проверяет статические инварианты структуры команды, коуч-промпта, defaults.yaml и
 # eval-кейсов, гарантируя что регрессии 6 классов ошибок не вернутся в код.

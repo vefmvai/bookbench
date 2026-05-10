@@ -1,10 +1,10 @@
 # BookBench plugin defaults
 #
-# This file holds genre defaults that are inherited by a new book at /book:start.
-# After /book:start the values are copied into .book/config.yaml and into per-role
+# This file holds genre defaults that are inherited by a new book at /bookbench:start.
+# After /bookbench:start the values are copied into .book/config.yaml and into per-role
 # guideline templates; from then on the book has its own copy and is unaffected
 # by changes here. To re-pull defaults into an existing book use the optional
-# /book:update --reset-defaults (planned for 0.2+, see CFG-2).
+# /bookbench:update --reset-defaults (planned for 0.2+, see CFG-2).
 #
 # Schema version is bumped on incompatible changes; the loader migrates books
 # whose schema_version is older.
@@ -45,7 +45,7 @@ profiles:
   # output the reader actually sees). Verify / orchestrate / classify
   # roles drop to Haiku, EXCEPT factchecker — fact verification
   # demands more nuance than Haiku can reliably deliver
-  # (see PS-14.1-02). The tuner runs rarely (only on /book:tune)
+  # (see PS-14.1-02). The tuner runs rarely (only on /bookbench:tune)
   # and analyses logs, so Haiku is sufficient there.
   budget:
     coordinator: haiku        # orchestrates file passes; no creative load
@@ -106,8 +106,8 @@ genres:
   popular-science:
 
     # compatible_formats — D-30 (etap 20): formats this genre is normally
-    # paired with. Used by /book:start coach-mode to narrow format hypothesis,
-    # and by /book:doctor to validate consistency. See formats-design.md.
+    # paired with. Used by /bookbench:start coach-mode to narrow format hypothesis,
+    # and by /bookbench:doctor to validate consistency. See formats-design.md.
     compatible_formats: ["book", "article", "long-read"]
 
     # addressing_default — D-37 (etap 24): consensus в русскоязычном научпопе — «вы» или «ты»
@@ -205,9 +205,9 @@ genres:
         - factchecker
         - editor
         - marketer
-        - classifier      # /book:import only
-        - synthesizer     # /book:import only
-        - tuner           # /book:tune only
+        - classifier      # /bookbench:import only
+        - synthesizer     # /bookbench:import only
+        - tuner           # /bookbench:tune only
       # models — informational fallback for older books that pin a model
       # per role at the genre level. Modern books rely on profiles above
       # (see `default_profile` and `profiles:`); this map mirrors the
@@ -338,9 +338,9 @@ genres:
   # ============================================================
   .template:
     # compatible_formats — D-30 (etap 20). Empty by default;
-    # /book:research-genre fills this when generating a new genre preset.
+    # /bookbench:research-genre fills this when generating a new genre preset.
     compatible_formats: []
-    addressing_default: ""               # /book:research-genre fills this when generating a new genre preset
+    addressing_default: ""               # /bookbench:research-genre fills this when generating a new genre preset
     writing: {}
     agents: {}
     quality_gates: {}
@@ -365,7 +365,7 @@ genres:
 #   • compatible_genres   — reverse link for library consistency
 #                           (must match genres.<name>.compatible_formats)
 #
-# Extensibility: extra formats are generated via /book:research-format
+# Extensibility: extra formats are generated via /bookbench:research-format
 # (specced in stage 20, implemented in stage 22 per RD-20-A) and saved to
 # ${CLAUDE_PLUGIN_DATA}/user-formats/<name>.yaml. Local user formats override
 # built-in formats with the same name (cascade per D-17).
@@ -457,7 +457,7 @@ formats:
     default_for: "0.3.0"
 
   # ============================================================
-  # Format template — used by /book:research-format to generate new formats
+  # Format template — used by /bookbench:research-format to generate new formats
   # ============================================================
   .template:
     display_name_ru: ""

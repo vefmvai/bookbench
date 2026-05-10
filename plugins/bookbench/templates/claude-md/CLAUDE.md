@@ -26,12 +26,12 @@ The book's content lives in `.book/`. The plugin code lives in `${CLAUDE_PLUGIN_
 In this folder:
 
 ```
-> /book:resume       # if continuing work
-> /book:status       # to see where you are
-> /book:next         # to get a recommendation
+> /bookbench:resume       # if continuing work
+> /bookbench:status       # to see where you are
+> /bookbench:next         # to get a recommendation
 ```
 
-If this is a brand-new folder, run `/book:start` first.
+If this is a brand-new folder, run `/bookbench:start` first.
 
 ## Conventions
 
@@ -41,6 +41,6 @@ If this is a brand-new folder, run `/book:start` first.
 
 ## Help
 
-- `/book:help` — list of plugin commands.
+- `/bookbench:help` — list of plugin commands.
 - `docs/` inside the plugin — full documentation.
 - `https://github.com/vefmvai/bookbench` — homepage.

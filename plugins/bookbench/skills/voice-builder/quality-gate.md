@@ -23,7 +23,7 @@
   длительность). `## Algorithm` имеет precondition «used by both B1 and B3».
   **Статус:** прошёл.
 - **Constitution содержит NEVER/ALWAYS** — есть в `## When to use`
-  («Never activated on /book:start, ...»), в `## Output contract` («never
+  («Never activated on /bookbench:start, ...»), в `## Output contract` («never
   writes anywhere else», «never inside the plugin code tree»), в `## Notes`
   («never carries time-sensitive information»). **Статус:** прошёл.
 - **Numbered Procedures используют императив** — алгоритм проекции (Step 1
@@ -35,7 +35,7 @@
 - **Persona consistent** — голос скилла на всём протяжении: технический,
   процедурный, без mentor-mode и без «we'll help you». **Статус:** прошёл.
 - **Нет противоречий между Identity и Behavior** — в `## When to use` сказано
-  «Never activated on /book:start»; в Path B3 явно описано чтение артефактов
+  «Never activated on /bookbench:start»; в Path B3 явно описано чтение артефактов
   книги (PROJECT.md, target-audience.md), что уже произошло до первой главы;
   противоречия нет. **Статус:** прошёл.
 - **Output контракт реализуем** — `## Output contract` ясно перечисляет три
@@ -61,12 +61,12 @@
 - **Воспроизведи системный промпт в одно предложение и сравни с description.**
   Одно предложение: «Скилл строит voice profile для книги, когда нет
   готовых текстов для импорта; запускается из book-writer перед первой
-  главой, из /book:voice build, или из /book:voice rebuild; предлагает три
+  главой, из /bookbench:voice build, или из /bookbench:voice rebuild; предлагает три
   пути B1/B2/B3 и проецирует абстрактные ответы автора на 6-параметрическую
   модель голоса с обязательным разделом Reasoning.»
-  **Description содержит** триггеры (book-writer, /book:voice build,
-  /book:voice rebuild), три пути с временными бюджетами, output-контракт
-  (`voice-profile.md` с Reasoning), и явное «not activated on /book:start
+  **Description содержит** триггеры (book-writer, /bookbench:voice build,
+  /bookbench:voice rebuild), три пути с временными бюджетами, output-контракт
+  (`voice-profile.md` с Reasoning), и явное «not activated on /bookbench:start
   ...». Соответствие — **прошёл**.
 
 ---

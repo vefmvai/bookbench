@@ -1,6 +1,6 @@
 # Addressing rules — правила обращения к читателю (для редактора)
 
-> **Источник.** `.book/config.yaml > book.addressing_mode`. Заполняется на `/book:start` § 4a (этап 24, D-37).
+> **Источник.** `.book/config.yaml > book.addressing_mode`. Заполняется на `/bookbench:start` § 4a (этап 24, D-37).
 >
 > **Hard rule.** Editor сверяет согласованность каждого `draft.md` с этим режимом, флагирует расхождения, при необходимости правит на этапе `edited.md`.
 
@@ -8,7 +8,7 @@
 
 `addressing_mode: ${ADDRESSING_MODE}`
 
-(Заполняется на Step 6a команды `/book:start`.)
+(Заполняется на Step 6a команды `/bookbench:start`.)
 
 ---
 
@@ -51,11 +51,11 @@ e-addressing-NNN: <иссечение | замена>: «<old>» → «<new>». 
 
 ## Если addressing_mode пуст
 
-Если `book.addressing_mode = ""` (автор не задал на `/book:start`) — editor НЕ исправляет регистр самостоятельно. Только flag-ит расхождения в Deviation log с пометкой «addressing_mode не задан; не правлю до явного указания».
+Если `book.addressing_mode = ""` (автор не задал на `/bookbench:start`) — editor НЕ исправляет регистр самостоятельно. Только flag-ит расхождения в Deviation log с пометкой «addressing_mode не задан; не правлю до явного указания».
 
 В этом случае coordinator поднимает вопрос автору при первой же фактической секции (one-time prompt: «Заметил, что в книге нет фиксированного регистра обращения. На "ты" / на "вы" / безличное / смешанное?»).
 
 ---
 
 *Создан: этап 24 (T3, D-37).*
-*Шаблон. Реальный файл в `.book/agent-guidelines/editor/addressing-rules.md` создаётся при `/book:start` Step 6a.*
+*Шаблон. Реальный файл в `.book/agent-guidelines/editor/addressing-rules.md` создаётся при `/bookbench:start` Step 6a.*

@@ -1,11 +1,11 @@
 ---
 name: workflow:edit
-description: Opens .book/workflow.md in $EDITOR for direct edits. Backs up the current file to .book/.backup/workflow-<TS>.md before opening. After the editor closes, automatically runs /book:workflow:check; if validation fails, offers to revert to backup. UX-04 from stage 7.2.
+description: Opens .book/workflow.md in $EDITOR for direct edits. Backs up the current file to .book/.backup/workflow-<TS>.md before opening. After the editor closes, automatically runs /bookbench:workflow:check; if validation fails, offers to revert to backup. UX-04 from stage 7.2.
 argument-hint: "[--in-editor]"
 allowed-tools: [Read, Write, Edit, Bash, AskUserQuestion]
 ---
 
-# /book:workflow:edit
+# /bookbench:workflow:edit
 
 <purpose>
 Direct manual edit of the workflow file via `$EDITOR`. Preferred when the author has a clear change in mind and prefers a text-editor workflow over an interactive dialog. After save, the file is validated automatically.
@@ -22,7 +22,7 @@ Direct manual edit of the workflow file via `$EDITOR`. Preferred when the author
 
 - `.book/workflow.md` — possibly modified by the author.
 - `.book/.backup/workflow-<TS>.md` — pre-edit copy.
-- After save: report from `/book:workflow:check`.
+- After save: report from `/bookbench:workflow:check`.
 
 <execution>
 
@@ -31,12 +31,12 @@ Eight-step pattern: pre-flight → backup → open editor → validate → optio
 ### Step 1 — Pre-flight
 
 ```bash
-[ -d .book ] || { echo "No .book/ directory. Run /book:start first."; exit 0; }
+[ -d .book ] || { echo "No .book/ directory. Run /bookbench:start first."; exit 0; }
 
 if [ ! -f .book/workflow.md ]; then
   echo "No .book/workflow.md. Either:"
-  echo "  • Run /book:start to create one from a preset."
-  echo "  • Run /book:research-genre <genre> to generate one."
+  echo "  • Run /bookbench:start to create one from a preset."
+  echo "  • Run /bookbench:research-genre <genre> to generate one."
   echo "  • Manually create .book/workflow.md with the YAML schema."
   exit 0
 fi
@@ -58,7 +58,7 @@ Present an `AskUserQuestion`:
 - Body: «This will:
   - Backup current `workflow.md` to `.book/.backup/workflow-<TS>.md`.
   - Open `workflow.md` in `$EDITOR` (`<EDITOR_CMD>`).
-  - Run `/book:workflow:check` automatically after save.»
+  - Run `/bookbench:workflow:check` automatically after save.»
 - Options:
   - `Open editor` — proceed.
   - `Show current workflow first` — print the file head (≈80 lines) and re-ask.
@@ -94,12 +94,12 @@ No changes detected. Backup at $BACKUP is preserved.
 
 Skip to Step 8.
 
-### Step 5 — Auto-run /book:workflow:check
+### Step 5 — Auto-run /bookbench:workflow:check
 
 If the file changed, run the validator inline (the same logic as `commands/workflow-check.md`). Capture exit code and report.
 
 ```bash
-# Equivalent of running /book:workflow:check
+# Equivalent of running /bookbench:workflow:check
 # Inline implementation: parse workflow.md, cross-reference catalog, build report
 # (The validation logic mirrors workflow-check.md Step 2-4.)
 CHECK_OUT=$(/* run inline validator; collect critical / high count */)
@@ -114,7 +114,7 @@ If the validator returned CRITICAL issues, present an `AskUserQuestion`:
 - Title: «Workflow has CRITICAL issues»
 - Body: List the first 5 critical issues from `CHECK_OUT`.
 - Options:
-  - `Keep changes (will fix later)` — leave the file as-is; the next `/book:next` will warn.
+  - `Keep changes (will fix later)` — leave the file as-is; the next `/bookbench:next` will warn.
   - `Revert to backup` — copy `$BACKUP` over `workflow.md`.
   - `Re-open editor` — re-open `$EDITOR` to fix and re-validate.
 
@@ -125,7 +125,7 @@ NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 NLINES_BEFORE=$(wc -l < "$BACKUP")
 NLINES_AFTER=$(wc -l < .book/workflow.md)
 DIFF=$((NLINES_AFTER - NLINES_BEFORE))
-printf '\n%s — `/book:workflow:edit` — workflow edited (Δlines %+d, validator: %s)\n' \
+printf '\n%s — `/bookbench:workflow:edit` — workflow edited (Δlines %+d, validator: %s)\n' \
   "$NOW" "$DIFF" "$([ "$CHECK_RC" -eq 0 ] && echo OK || echo "issues")" >> .book/STATE.md
 ```
 
@@ -134,29 +134,29 @@ printf '\n%s — `/book:workflow:edit` — workflow edited (Δlines %+d, validat
 If validation clean:
 
 ```
-Workflow saved. ✓ /book:workflow:check passed.
+Workflow saved. ✓ /bookbench:workflow:check passed.
 Backup: $BACKUP
 
 Recommended next:
-  /book:next       — verify the new workflow recommends what you expect.
-  /book:status     — see overall progress.
+  /bookbench:next       — verify the new workflow recommends what you expect.
+  /bookbench:status     — see overall progress.
 ```
 
 If validation has CRITICAL issues and the author chose «Keep»:
 
 ```
 Workflow saved with CRITICAL issues. Backup: $BACKUP
-/book:next may misbehave until the issues are fixed.
+/bookbench:next may misbehave until the issues are fixed.
 
 Recommended next:
-  /book:workflow:edit         — re-open and fix.
-  /book:workflow:check        — re-run validation.
+  /bookbench:workflow:edit         — re-open and fix.
+  /bookbench:workflow:check        — re-run validation.
 ```
 
 ### Constitutional rules
 
 - **MUST** create a backup before opening `$EDITOR`. The backup name must include a timestamp.
-- **MUST** auto-run `/book:workflow:check` after save (never trust the author's edit blindly).
+- **MUST** auto-run `/bookbench:workflow:check` after save (never trust the author's edit blindly).
 - **MUST** offer revert if validation fails CRITICAL.
 - **MUST** detect no-op edits via sha256 and skip the check + history append in that case.
 - **NEVER** discard the backup file silently; backups are pruned by a separate housekeeping command (stage 15+).

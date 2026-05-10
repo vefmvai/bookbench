@@ -1,10 +1,10 @@
 ---
-description: Открывает интерактивное обсуждение раздела N с агентом book-strategist до формального написания ТЗ. Полезно, когда автор хочет в диалоге уточнить угол подачи, крючок или ключевой тезис раздела. Результат сохраняется в sections/<N>/discussion.md и подаётся на вход команде /book:plan-section.
+description: Открывает интерактивное обсуждение раздела N с агентом book-strategist до формального написания ТЗ. Полезно, когда автор хочет в диалоге уточнить угол подачи, крючок или ключевой тезис раздела. Результат сохраняется в sections/<N>/discussion.md и подаётся на вход команде /bookbench:plan-section.
 argument-hint: "<section-number>"
 allowed-tools: [Task, Read, Write, AskUserQuestion]
 ---
 
-# /book:discuss-section
+# /bookbench:discuss-section
 
 <purpose>
 Pre-spec dialog with the strategist to refine the section angle. Not part of the strict micro-cycle for popular-science (the strategist owns spec-formation directly), but valuable for genres with strong authorial-voice considerations: memoir, fiction, philosophical non-fiction.
@@ -25,7 +25,7 @@ Pre-spec dialog with the strategist to refine the section angle. Not part of the
 
 <execution>
 
-Six-step pattern. Less rigorous than `/book:plan-section` because the output is exploratory.
+Six-step pattern. Less rigorous than `/bookbench:plan-section` because the output is exploratory.
 
 ### Step 1 — Pre-flight
 
@@ -33,7 +33,7 @@ Six-step pattern. Less rigorous than `/book:plan-section` because the output is 
 [ -d .book ] || { echo "No .book/ directory."; exit 0; }
 
 SECTION_N="$ARGUMENTS"
-[ -z "$SECTION_N" ] && { echo "Usage: /book:discuss-section <N>"; exit 0; }
+[ -z "$SECTION_N" ] && { echo "Usage: /bookbench:discuss-section <N>"; exit 0; }
 
 SECTION_DIR=$(printf '.book/sections/section-%03d' "$SECTION_N")
 mkdir -p "$SECTION_DIR"
@@ -87,7 +87,7 @@ Task(
          author to confirm or refine.
 
     Constraints:
-      • Do NOT write spec.md from this command. Spec belongs to /book:plan-section.
+      • Do NOT write spec.md from this command. Spec belongs to /bookbench:plan-section.
       • Append-only edits to discussion.md. Never overwrite.
       • One question or proposal per turn. Wait for the author to answer
         before continuing.
@@ -113,7 +113,7 @@ After the dialog completes, ensure `<DISC_FILE>` has gained at least one Q-A rou
 
 ```bash
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-printf '\n%s — `/book:discuss-section %d` — discussion updated\n' \
+printf '\n%s — `/bookbench:discuss-section %d` — discussion updated\n' \
   "$NOW" "$SECTION_N" >> .book/STATE.md
 ```
 
@@ -123,15 +123,15 @@ printf '\n%s — `/book:discuss-section %d` — discussion updated\n' \
 Discussion saved: $DISC_FILE
 
 Recommended next:
-  /book:plan-section $SECTION_N    — formalise the spec based on this discussion.
-  /book:discuss-section $SECTION_N — continue the discussion later.
+  /bookbench:plan-section $SECTION_N    — formalise the spec based on this discussion.
+  /bookbench:discuss-section $SECTION_N — continue the discussion later.
 ```
 
 ### Constitutional rules
 
 - **MUST** delegate the dialog to `book-strategist`. The orchestrator does not generate questions.
 - **MUST** be append-only on `discussion.md`. The history of the conversation is the artefact.
-- **MUST** not write `spec.md` — that is `/book:plan-section`.
+- **MUST** not write `spec.md` — that is `/bookbench:plan-section`.
 - **NEVER** call writer / factchecker / editor.
 
 </execution>

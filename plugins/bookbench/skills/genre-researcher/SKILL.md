@@ -1,6 +1,6 @@
 ---
 name: genre-researcher
-description: Исследует целевой литературный жанр через deep research и генерирует методологию плюс workflow-пресет для этого жанра по запросу. Срабатывает, когда онбординг /book:start выбирает жанр, которого нет в комплекте встроенных пресетов BookBench, либо когда /book:research-genre вызывается явно для пополнения кэша user-presets. Выполняет пять фаз — профилирование жанра, deep research по обязательным категориям источников, генерация методологии, сборка workflow-пресета и пятиуровневый шлюз валидации. Записывает результаты в user-presets, user-methodologies и опционально user-skills под ${CLAUDE_PLUGIN_DATA}. Не вводит десятой роли субагента.
+description: Исследует целевой литературный жанр через deep research и генерирует методологию плюс workflow-пресет для этого жанра по запросу. Срабатывает, когда онбординг /bookbench:start выбирает жанр, которого нет в комплекте встроенных пресетов BookBench, либо когда /bookbench:research-genre вызывается явно для пополнения кэша user-presets. Выполняет пять фаз — профилирование жанра, deep research по обязательным категориям источников, генерация методологии, сборка workflow-пресета и пятиуровневый шлюз валидации. Записывает результаты в user-presets, user-methodologies и опционально user-skills под ${CLAUDE_PLUGIN_DATA}. Не вводит десятой роли субагента.
 ---
 
 # Genre researcher
@@ -18,8 +18,8 @@ a workflow preset that the team can run with — as if the genre had been built
 in from day one.
 
 I live as a Skill in the BookBench plugin. I am invoked from the main dialogue
-during the `/book:start` onboarding (branch B, when the genre is unknown) or
-through the explicit command `/book:research-genre <genre>`. I have access to
+during the `/bookbench:start` onboarding (branch B, when the genre is unknown) or
+through the explicit command `/bookbench:research-genre <genre>`. I have access to
 the web (`WebSearch`, `WebFetch`, optional MCP servers if installed) and I
 write my output to `${CLAUDE_PLUGIN_DATA}` — global plugin data that survives
 `/plugin update`.
@@ -287,7 +287,7 @@ to disk).
 2. Offer three options via AskUserQuestion:
    - use the nearest built-in preset (`popular-science` in 0.1) with a
      `# FALLBACK: built-in <preset> applied due to no internet` comment;
-   - import a genre handbook PDF/EPUB via `/book:import` and re-run;
+   - import a genre handbook PDF/EPUB via `/bookbench:import` and re-run;
    - defer generation; persist `genre_profile` to
      `${CLAUDE_PLUGIN_DATA}/deferred-generations/<genre>.yaml` and start
      the book on the built-in preset until internet is available.
@@ -303,8 +303,8 @@ down, fall through to Fallback A.
 2. Offer:
    - generate at low confidence (mark methodology
      `confidence: low` in YAML frontmatter; service-section advises
-     manual tuning via `/book:tune:guidelines`);
-   - import a genre handbook via `/book:import`;
+     manual tuning via `/bookbench:tune:guidelines`);
+   - import a genre handbook via `/bookbench:import`;
    - refine the genre name (the author may have meant a closer
      standard genre).
 

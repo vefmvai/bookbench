@@ -40,7 +40,7 @@ skills/genres/<genre>/
 
 Образец — `skills/genres/popular-science/SKILL.md` (176 строк). Используй его как референс структуры.
 
-Запуск через `/book:research-genre <genre>` тоже может **сгенерировать** новый жанровый скилл — если результат хороший, это базис для PR.
+Запуск через `/bookbench:research-genre <genre>` тоже может **сгенерировать** новый жанровый скилл — если результат хороший, это базис для PR.
 
 ### Расширение `anti-ai-cliche` на новые языки
 
@@ -105,7 +105,7 @@ id	language	level	pattern	description
 
 - Открой issue с описанием use-case.
 - Объясни, почему существующие 40+ команд не покрывают.
-- Предложи имя в slash-namespace `/book:` (без префиксов вне `book:`).
+- Предложи имя в slash-namespace `/bookbench:` (без префиксов вне `book:`).
 
 Не любая идея — команда. Часто это конфигурация (через `config.yaml`), скилл (через `skills/`) или рецепт в FAQ.
 
@@ -133,7 +133,7 @@ id	language	level	pattern	description
 
 1. **Issue первым.** Открой issue с описанием намерения. Если это maintain-fix (опечатка, битая ссылка, уточнение в документации) — issue не обязательно, можно сразу PR.
 2. **Fork → branch.** Сделай fork репозитория на GitHub, создай branch с осмысленным именем: `add-narrative-nonfiction-skill`, `fix-voice-gate-edge-case`, `docs-improve-quickstart`.
-3. **Local-dev режим.** Установи плагин из чекаута: `/plugin install ./bookbench`. Это разблокирует `/book:evolve` и позволяет тестировать на синтетических книгах.
+3. **Local-dev режим.** Установи плагин из чекаута: `/plugin install ./bookbench`. Это разблокирует `/bookbench:evolve` и позволяет тестировать на синтетических книгах.
 4. **Внеси изменения.** В соответствии со стилем (см. ниже).
 5. **Тесты.** Если меняешь скилл — добавь evaluation case'ы. Если меняешь hook — прогони `bookbench/plugins/bookbench/templates/hooks/tests/anti-ai-cliche-lint.test.sh`.
 6. **PR.** Сабмить PR с описанием:
@@ -396,6 +396,6 @@ BookBench опирается на:
 ## Что дальше
 
 - [`architecture.md`](architecture.md) — общая картина для контрибьюторов
-- [`dev-mode.md`](dev-mode.md) — local-dev workflow с `/book:evolve`
+- [`dev-mode.md`](dev-mode.md) — local-dev workflow с `/bookbench:evolve`
 - [`section-cycle.md`](section-cycle.md) — что в каждой фазе цикла (для понимания, что менять)
 - [`upgrade-guide.md`](upgrade-guide.md) — что не трогается при обновлении (важно для совместимости)

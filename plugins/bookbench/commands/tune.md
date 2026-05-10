@@ -1,16 +1,16 @@
 ---
-description: Runs book-tuner to analyse TUNING-LOG, REJECTIONS-LOG and recent guideline edits, then proposes guideline changes systemising repeated author corrections. Without an explicit subform routes to /book:tune:guidelines (UX-08 default). The apply subform applies a single suggestion identified by its proposal id and records the apply in TUNING-LOG.md with approved_by author and applied_at timestamp.
+description: Runs book-tuner to analyse TUNING-LOG, REJECTIONS-LOG and recent guideline edits, then proposes guideline changes systemising repeated author corrections. Without an explicit subform routes to /bookbench:tune:guidelines (UX-08 default). The apply subform applies a single suggestion identified by its proposal id and records the apply in TUNING-LOG.md with approved_by author and applied_at timestamp.
 argument-hint: "[apply <id>] [--all] [--role <role>] [--since <date>]"
 allowed-tools: [Read, Write, Edit, Glob, Grep, Task, AskUserQuestion]
 ---
 
-# /book:tune
+# /bookbench:tune
 
 <purpose>
 Local tuning loop: detect repeated rejection patterns and turn them into
-actionable guideline edits. The tuner only proposes; `/book:tune apply <id>`
-is required to write. UX-08: bare `/book:tune` is an alias that defaults to
-`/book:tune:guidelines`. Use `/book:tune:workflow` explicitly to tune
+actionable guideline edits. The tuner only proposes; `/bookbench:tune apply <id>`
+is required to write. UX-08: bare `/bookbench:tune` is an alias that defaults to
+`/bookbench:tune:guidelines`. Use `/bookbench:tune:workflow` explicitly to tune
 `workflow.md` blocks instead of guideline files.
 </purpose>
 
@@ -18,12 +18,12 @@ is required to write. UX-08: bare `/book:tune` is an alias that defaults to
 
 ## Forms
 
-- `/book:tune` — alias to `/book:tune:guidelines` (UX-08).
-- `/book:tune apply <id>` — apply a specific proposal that was previously
+- `/bookbench:tune` — alias to `/bookbench:tune:guidelines` (UX-08).
+- `/bookbench:tune apply <id>` — apply a specific proposal that was previously
   written to TUNING-LOG with `status: proposed`.
-- `/book:tune:guidelines` — analyse signals, propose edits to
+- `/bookbench:tune:guidelines` — analyse signals, propose edits to
   `.book/agent-guidelines/<role>/<file>.md`. Two-step: analyse → apply.
-- `/book:tune:workflow` — analyse signals, propose edits to `.book/workflow.md`.
+- `/bookbench:tune:workflow` — analyse signals, propose edits to `.book/workflow.md`.
   Higher-risk; requires extra confirmation.
 
 ## Step 1 — Parse arguments and dispatch
@@ -33,20 +33,20 @@ RAW="${ARGUMENTS:-}"
 set -- $RAW
 SUB="${1:-}"
 
-# Apply-form detection: /book:tune apply <id>
+# Apply-form detection: /bookbench:tune apply <id>
 if [ "$SUB" = "apply" ]; then
   shift
   PROPOSAL_ID="${1:-}"
   [ -z "$PROPOSAL_ID" ] && {
-    echo "Usage: /book:tune apply <proposal-id>"
-    echo "Find proposal ids with /book:tune (analyse first, then apply)."
+    echo "Usage: /bookbench:tune apply <proposal-id>"
+    echo "Find proposal ids with /bookbench:tune (analyse first, then apply)."
     exit 0
   }
   echo "tune: routing to apply mode with id=$PROPOSAL_ID"
   # Continue to Step 2A below.
 else
-  # Bare /book:tune (no subform) — UX-08 alias to /book:tune:guidelines.
-  echo "tune: no explicit subform; defaulting to /book:tune:guidelines (UX-08)."
+  # Bare /bookbench:tune (no subform) — UX-08 alias to /bookbench:tune:guidelines.
+  echo "tune: no explicit subform; defaulting to /bookbench:tune:guidelines (UX-08)."
   echo "tune: forwarding original arguments to guidelines analysis."
   # Re-dispatch by reading and executing the body of tune-guidelines.md.
   # Continue to Step 2G below.
@@ -58,7 +58,7 @@ fi
 ### Pre-flight
 
 ```bash
-[ -d .book ] || { echo "tune apply: no .book/ folder. Run /book:start first."; exit 0; }
+[ -d .book ] || { echo "tune apply: no .book/ folder. Run /bookbench:start first."; exit 0; }
 [ -f .book/TUNING-LOG.md ] || {
   echo "tune apply: .book/TUNING-LOG.md missing. Nothing to apply."
   exit 0
@@ -73,7 +73,7 @@ where `id == $PROPOSAL_ID` and `status == proposed`. If not found:
 ```text
 tune apply: proposal $PROPOSAL_ID not found in .book/TUNING-LOG.md, or its
 status is no longer `proposed` (it may already be applied, rejected, or it
-may not exist). Run /book:tune to refresh proposals.
+may not exist). Run /bookbench:tune to refresh proposals.
 ```
 
 ### Read full proposal record
@@ -172,8 +172,8 @@ End of apply mode.
 
 ## Step 2G — Default to guidelines analysis
 
-When `/book:tune` was invoked without `apply` and without an explicit subform,
-forward to `/book:tune:guidelines` by reading the body of
+When `/bookbench:tune` was invoked without `apply` and without an explicit subform,
+forward to `/bookbench:tune:guidelines` by reading the body of
 `${CLAUDE_PLUGIN_ROOT}/commands/tune-guidelines.md` and executing it with
 the original arguments preserved.
 
@@ -188,7 +188,7 @@ echo "tune: dispatching guidelines analysis (UX-08 alias)."
 ```
 
 The model then loads `tune-guidelines.md` and continues as if the user had
-typed `/book:tune:guidelines` with the same flags. End of dispatch.
+typed `/bookbench:tune:guidelines` with the same flags. End of dispatch.
 
 ## Notes
 

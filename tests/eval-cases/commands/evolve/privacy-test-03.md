@@ -8,7 +8,7 @@ A registered book with:
   from `book-doc-classifier` and `book-doc-synthesizer`.
 - Eligible registry entry.
 
-User runs `/book:evolve propose` with two other eligible books.
+User runs `/bookbench:evolve propose` with two other eligible books.
 
 ## Expected behaviors
 

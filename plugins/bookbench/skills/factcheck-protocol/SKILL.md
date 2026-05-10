@@ -7,7 +7,7 @@ description: Описывает adversarial-протокол факт-чекин
 
 ## When to use
 
-Injected into `book-factchecker`. Activated in Phase 3 (full section factcheck after writer) and Phase 4b (one-shot re-check of editor-flagged `[NEEDS_RECHECK]` blocks). Also invoked during `/book:audit-section` and `/book:audit-book` in audit-mode (no revise-loop).
+Injected into `book-factchecker`. Activated in Phase 3 (full section factcheck after writer) and Phase 4b (one-shot re-check of editor-flagged `[NEEDS_RECHECK]` blocks). Also invoked during `/bookbench:audit-section` and `/bookbench:audit-book` in audit-mode (no revise-loop).
 
 ## Core principle — adversarial stance
 
@@ -23,7 +23,7 @@ Every factual claim in a section receives one of four tags in `factcheck.md`:
 |-----|---------|-----------|
 | `VERIFIED` | Confirmed against ≥1 trusted source. | Cited inline in factcheck.md with source URL/DOI/ISBN. |
 | `CITED` | Already cited in draft.md but the cite needs to be passed through. | Verify the cite is real and accurate. |
-| `ASSUMED` | Plausible but unverifiable; author asserts it. | Requires hedging in draft.md ("by some accounts", "in one telling") OR explicit author confirmation via `/book:resolve` style flow. |
+| `ASSUMED` | Plausible but unverifiable; author asserts it. | Requires hedging in draft.md ("by some accounts", "in one telling") OR explicit author confirmation via `/bookbench:resolve` style flow. |
 | `UNVERIFIABLE` | Cannot be confirmed nor denied with available sources. | Return `revise-required` to writer with three options: hedge, drop, or supply manual source. |
 
 ## Claim extraction procedure

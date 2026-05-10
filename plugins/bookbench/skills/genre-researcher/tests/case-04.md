@@ -2,7 +2,7 @@
 
 ## Input
 
-User runs `/book:research-genre fantasy --offline`. The `--offline` flag
+User runs `/bookbench:research-genre fantasy --offline`. The `--offline` flag
 forces `run_environment: no-internet` regardless of actual network state.
 WebSearch and any MCP servers are not invoked.
 
@@ -16,7 +16,7 @@ WebSearch and any MCP servers are not invoked.
 - The skill offers three options via AskUserQuestion:
   (a) use the nearest built-in preset (popular-science in 0.1) with a
       `# FALLBACK: built-in <preset> applied due to no internet` comment;
-  (b) import a genre handbook PDF/EPUB via `/book:import` and re-run;
+  (b) import a genre handbook PDF/EPUB via `/bookbench:import` and re-run;
   (c) defer generation; persist `genre_profile` to
       `${CLAUDE_PLUGIN_DATA}/deferred-generations/fantasy.yaml` and stop.
 - For option (c), the file is written and the command exits cleanly.
@@ -34,7 +34,7 @@ WebSearch and any MCP servers are not invoked.
   or user-presets/ (because the deferred-genre flow does not produce a
   full package).
 - The next-step message names the command the author should run when
-  internet is available (`/book:research-genre fantasy --refresh`).
+  internet is available (`/bookbench:research-genre fantasy --refresh`).
 
 ## Target models
 

@@ -1,10 +1,10 @@
 ---
-description: Searches inside the book — sections, glossary, registries, worldbuilding — for a query. Read-only. Uses Glob and Grep to find every occurrence; assembles a concise report grouped by source. UX-05 from stage 7.2. Distinct from /book:research-external (internet search) and /book:research-genre (genre methodology research).
+description: Searches inside the book — sections, glossary, registries, worldbuilding — for a query. Read-only. Uses Glob and Grep to find every occurrence; assembles a concise report grouped by source. UX-05 from stage 7.2. Distinct from /bookbench:research-external (internet search) and /bookbench:research-genre (genre methodology research).
 argument-hint: "<query> [--section <N>] [--scope sections|context|memory|all]"
 allowed-tools: [Read, Glob, Grep, Bash, Write]
 ---
 
-# /book:research-internal
+# /bookbench:research-internal
 
 <purpose>
 Internal research — searching inside what is already written or imported into the book. For checking cross-references, finding earlier mentions of a concept, locating where a character appeared first, etc. Read-only search through sections, context files, and (optionally) agent memory.
@@ -30,11 +30,11 @@ Read-only command. Six-step pattern (no AskUserQuestion, no state mutation by de
 ### Step 1 — Pre-flight
 
 ```bash
-[ -d .book ] || { echo "No .book/ directory. Run /book:start first."; exit 0; }
+[ -d .book ] || { echo "No .book/ directory. Run /bookbench:start first."; exit 0; }
 
 if [ -z "${ARGUMENTS:-}" ]; then
-  echo "Error: /book:research-internal requires a query."
-  echo "Usage: /book:research-internal \"<query>\" [--section <N>] [--scope <scope>]"
+  echo "Error: /bookbench:research-internal requires a query."
+  echo "Usage: /bookbench:research-internal \"<query>\" [--section <N>] [--scope <scope>]"
   exit 0
 fi
 
@@ -166,9 +166,9 @@ Internal research done.
 Hits: <TOTAL_HITS> across <FILE_COUNT> files.
 
 Recommended next:
-  /book:research-internal "<refined query>"  — refine.
-  /book:research-external "<topic>"           — branch into external research.
-  /book:plan-section <N>                       — use findings in a section spec.
+  /bookbench:research-internal "<refined query>"  — refine.
+  /bookbench:research-external "<topic>"           — branch into external research.
+  /bookbench:plan-section <N>                       — use findings in a section spec.
 ```
 
 ### Constitutional rules

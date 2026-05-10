@@ -2,7 +2,7 @@
 
 > This file is the description of your book — the why, the constraints, the decisions you have made along the way. It is read by every BookBench role at the start of every task. Keep it focused.
 
-<!-- Filled by /book:start with answers to the install interview -->
+<!-- Filled by /bookbench:start with answers to the install interview -->
 
 ## Vision
 
@@ -18,7 +18,7 @@
 
 ## Genre
 
-(`popular-science` / `narrative-non-fiction` / `monograph` / `dissertation` / custom — set during `/book:start`.)
+(`popular-science` / `narrative-non-fiction` / `monograph` / `dissertation` / custom — set during `/bookbench:start`.)
 
 ## Decisions log
 

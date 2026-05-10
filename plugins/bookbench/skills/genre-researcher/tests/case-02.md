@@ -2,14 +2,14 @@
 
 ## Input
 
-User runs `/book:research-genre memoir` while offline. WebSearch fails;
+User runs `/bookbench:research-genre memoir` while offline. WebSearch fails;
 no MCP servers are configured.
 
 ## Expected behaviors
 
 - Skill detects WebSearch unavailability after the first failed call.
 - Switches to fallback scenario "no internet" (GR-10):
-  prompts the author to manually feed sources via `/book:import` or to
+  prompts the author to manually feed sources via `/bookbench:import` or to
   proceed with a minimal preset based on baseline knowledge with explicit
   caveats.
 - Does NOT fabricate sources.

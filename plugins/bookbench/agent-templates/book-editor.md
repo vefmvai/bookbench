@@ -242,7 +242,7 @@ MUST (этап 24, T3): Соблюдать `addressing_mode` из `.book/config.
 
 | Триггер | Действие |
 |---------|----------|
-| Координатор вызвал на `/book:edit-section <N>` (base-mode) | Procedure EDIT-SECTION |
+| Координатор вызвал на `/bookbench:edit-section <N>` (base-mode) | Procedure EDIT-SECTION |
 | Координатор вызвал в skill-mode (active skill в prompt) | Procedure SKILL-MODE-REVIEW |
 | Hook anti-ai-cliche-lint вернул violations | Переписать соответствующие фрагменты; Write/Edit снова |
 | Сомнение в факте при редактуре | `[NEEDS_RECHECK]` блок; счётчик в frontmatter; не править факт |
@@ -252,7 +252,7 @@ MUST (этап 24, T3): Соблюдать `addressing_mode` из `.book/config.
 
 ## Memory protocol
 
-В начале `/book:edit-section <N>`:
+В начале `/bookbench:edit-section <N>`:
 
 1. Read `agent-memory/editor/MEMORY.md`.
 2. Read `agent-guidelines/editor/{cohesion-rules, author-deviations}.md`.

@@ -4,7 +4,7 @@ argument-hint: "[--major] [--migrate-workflow] [--from-local-dev <path>]"
 allowed-tools: [Read, Write, Edit, Bash, Glob, AskUserQuestion]
 ---
 
-# /book:update
+# /bookbench:update
 
 <purpose>
 Bring this book's local subagent bodies and hooks in sync with the current plugin while preserving everything author-owned. Three-way merge with backup. WF-04 (etap 7.1): a deployed book never receives plugin updates automatically — this command is opt-in and per-file.
@@ -192,7 +192,7 @@ cat >> .book/UPDATE-LOG.md <<MD
 MD
 
 # Update STATE.md
-printf '\n%s — `/book:update` — version %s → %s; backup %s\n' \
+printf '\n%s — `/bookbench:update` — version %s → %s; backup %s\n' \
   "$NOW" "$BOOK_VER" "$PLUGIN_VER" "$BACKUP_DIR" >> .book/STATE.md
 ```
 
@@ -203,9 +203,9 @@ Update done. Backup: $BACKUP_DIR
 New version: $PLUGIN_VER
 
 Recommended next:
-  /book:doctor              — verify integrity after update.
-  /book:status              — see overall progress.
-  /book:workflow:check      — if workflow.md was migrated, re-validate.
+  /bookbench:doctor              — verify integrity after update.
+  /bookbench:status              — see overall progress.
+  /bookbench:workflow:check      — if workflow.md was migrated, re-validate.
 ```
 
 ### Constitutional rules

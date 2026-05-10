@@ -4,10 +4,10 @@ argument-hint: "<topic> [--section <N>] [--depth quick|standard|deep] [--prefer-
 allowed-tools: [Task, Read, Write, Bash, AskUserQuestion]
 ---
 
-# /book:research-external
+# /bookbench:research-external
 
 <purpose>
-External research about a topic via the internet. Distinct from `/book:research-internal` (which searches inside the book) and from `/book:research-genre` (which builds a genre methodology). Delegated to `book-factchecker` because it owns the MCP / WebSearch / citation tools.
+External research about a topic via the internet. Distinct from `/bookbench:research-internal` (which searches inside the book) and from `/bookbench:research-genre` (which builds a genre methodology). Delegated to `book-factchecker` because it owns the MCP / WebSearch / citation tools.
 </purpose>
 
 <!-- ЭТАП 14: реализовано — см. <execution> ниже; полный дизайн — `research-design.md` § 2 этапа 7.2 -->
@@ -36,11 +36,11 @@ Eight-step orchestrator: validate → resolve paths → confirm → Task to fact
 ### Step 1 — Pre-flight
 
 ```bash
-[ -d .book ] || { echo "No .book/ directory. Run /book:start first."; exit 0; }
+[ -d .book ] || { echo "No .book/ directory. Run /bookbench:start first."; exit 0; }
 
 if [ -z "${ARGUMENTS:-}" ]; then
-  echo "Error: /book:research-external requires a topic."
-  echo "Usage: /book:research-external \"<topic>\" [--section <N>] [--depth quick|standard|deep]"
+  echo "Error: /bookbench:research-external requires a topic."
+  echo "Usage: /bookbench:research-external \"<topic>\" [--section <N>] [--depth quick|standard|deep]"
   exit 0
 fi
 
@@ -86,7 +86,7 @@ if [ -n "$SECTION_N" ]; then
   SECTION_DIR=$(printf '.book/sections/section-%03d' "$SECTION_N")
   [ -d "$SECTION_DIR" ] || {
     echo "Error: section $SECTION_N does not exist ($SECTION_DIR)."
-    echo "Run /book:plan-section $SECTION_N first or omit --section."
+    echo "Run /bookbench:plan-section $SECTION_N first or omit --section."
     exit 0
   }
   OUT_DIR="$SECTION_DIR/research/external"
@@ -169,7 +169,7 @@ N_SOURCES=$(grep -cE '^\| [0-9]+ \|' "$OUT_FILE" || echo 0)
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 SCOPE="general"
 [ -n "$SECTION_N" ] && SCOPE="section $SECTION_N"
-printf '\n%s — `/book:research-external` — topic «%s», %d sources, scope %s\n' \
+printf '\n%s — `/bookbench:research-external` — topic «%s», %d sources, scope %s\n' \
   "$NOW" "$TOPIC" "$N_SOURCES" "$SCOPE" >> .book/STATE.md
 ```
 
@@ -184,9 +184,9 @@ External research done: <OUT_FILE>
 Sources: <N_SOURCES>
 
 Recommended next:
-  /book:plan-section <N>      — feed the research into section spec.
-  /book:write-section <N>     — writer will pick up the research file automatically.
-  /book:research-external "<another topic>"  — extend the research.
+  /bookbench:plan-section <N>      — feed the research into section spec.
+  /bookbench:write-section <N>     — writer will pick up the research file automatically.
+  /bookbench:research-external "<another topic>"  — extend the research.
 ```
 
 ### Constitutional rules

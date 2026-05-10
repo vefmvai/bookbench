@@ -4,7 +4,7 @@ argument-hint: "[<role>] [<file>]"
 allowed-tools: [Read, Write, Edit, Bash, Glob, AskUserQuestion]
 ---
 
-# /book:guidelines
+# /bookbench:guidelines
 
 <purpose>
 Manual access to per-role guidelines without going through the tuner. The guidelines folder holds book-specific overrides for each subagent: trusted sources for the factchecker, voice samples for the writer, forbidden phrases per role, etc. Direct edits made via this command are logged so the tuner can later analyse patterns.
@@ -29,12 +29,12 @@ Eight-step pattern (read-only by default; edit branch adds optional Edit step).
 ### Step 1 — Pre-flight
 
 ```bash
-[ -d .book ] || { echo "No .book/ directory. Run /book:start first."; exit 0; }
+[ -d .book ] || { echo "No .book/ directory. Run /bookbench:start first."; exit 0; }
 
 GUIDELINES_DIR=".book/agent-guidelines"
 if [ ! -d "$GUIDELINES_DIR" ]; then
   echo "Error: $GUIDELINES_DIR/ does not exist."
-  echo "It should have been created by /book:start. Run /book:doctor."
+  echo "It should have been created by /bookbench:start. Run /bookbench:doctor."
   exit 0
 fi
 
@@ -77,8 +77,8 @@ Guidelines in $GUIDELINES_DIR:
   tuner/          — N files
 
 Recommended next:
-  /book:guidelines writer            — list writer's guideline files.
-  /book:guidelines factchecker       — list factchecker's guideline files.
+  /bookbench:guidelines writer            — list writer's guideline files.
+  /bookbench:guidelines factchecker       — list factchecker's guideline files.
 ```
 
 ```bash
@@ -108,8 +108,8 @@ done
 
 echo ""
 echo "Recommended next:"
-echo "  /book:guidelines $ROLE <file>       — view/edit a specific file."
-echo "  /book:tune                          — get tuner suggestions."
+echo "  /bookbench:guidelines $ROLE <file>       — view/edit a specific file."
+echo "  /bookbench:tune                          — get tuner suggestions."
 ```
 
 ### Step 4 — Mode C: role + file — show / edit
@@ -128,7 +128,7 @@ if [ ! -f "$FILE_PATH" ]; then
   ls -1 "$GUIDELINES_DIR/$ROLE/"*.md 2>/dev/null | xargs -n1 basename
   echo ""
   echo "To create a new file:"
-  echo "  /book:guidelines $ROLE $FILE_BASE --new   (stage 15+ feature)"
+  echo "  /bookbench:guidelines $ROLE $FILE_BASE --new   (stage 15+ feature)"
   exit 0
 fi
 ```
@@ -187,11 +187,11 @@ if [ "$SHA_BEFORE" != "$SHA_AFTER" ]; then
   mode: guidelines
   trigger:
     type: manual-edit
-    via: /book:guidelines
+    via: /bookbench:guidelines
   files_changed:
     - path: $FILE_PATH
       change_type: edit
-  reason: "Manual author edit via /book:guidelines"
+  reason: "Manual author edit via /bookbench:guidelines"
   status: applied
   source: manual
   applied_by: manual
@@ -210,8 +210,8 @@ fi
 
 ```
 Recommended next:
-  /book:guidelines $ROLE             — list other files for this role.
-  /book:tune                         — see if the tuner has suggestions.
+  /bookbench:guidelines $ROLE             — list other files for this role.
+  /bookbench:tune                         — see if the tuner has suggestions.
 ```
 
 ### Constitutional rules

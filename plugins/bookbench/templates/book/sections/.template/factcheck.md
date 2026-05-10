@@ -11,7 +11,7 @@ claims_unverifiable: 0
 cross_section_inconsistencies: 0
 ---
 
-<!-- автогенерируется при /book:write-section в Phase 3; не трогается ни писателем, ни редактором — оба читают, фактчекер пишет -->
+<!-- автогенерируется при /bookbench:write-section в Phase 3; не трогается ни писателем, ни редактором — оба читают, фактчекер пишет -->
 
 # Factcheck report
 

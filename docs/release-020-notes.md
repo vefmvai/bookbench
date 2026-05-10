@@ -45,7 +45,7 @@
 ## Что осталось известными хвостами
 
 - **35 редких команд всё ещё с английскими описаниями** (наследие 0.1.5). Перевод запланирован на 0.2.1 — отдельный точечный патч, не блокирует 0.2.0.
-- **Префикс `/book:` против `/bookbench:`** — `slash_prefix: "book"` указан и в `manifest.json`, и в `.claude-plugin/plugin.json`, но фактическое поведение Claude Code 2.1.x при `git-subdir`-источнике эмпирически проверяется только после `/plugin install`. Если префикс снова окажется `/bookbench:`, это не баг релиза, а ограничение Claude Code, и фикс уйдёт в апстрим Anthropic, а не в наш плагин.
+- **Префикс `/bookbench:` против `/bookbench:`** — `slash_prefix: "book"` указан и в `manifest.json`, и в `.claude-plugin/plugin.json`, но фактическое поведение Claude Code 2.1.x при `git-subdir`-источнике эмпирически проверяется только после `/plugin install`. Если префикс снова окажется `/bookbench:`, это не баг релиза, а ограничение Claude Code, и фикс уйдёт в апстрим Anthropic, а не в наш плагин.
 
 ## Один главный совет автору перед `/plugin update`
 
@@ -59,4 +59,4 @@
 /reload-plugins
 ```
 
-После этого `/book:doctor` должен показать `BookBench 0.2.0`, а в `~/.claude/plugins/cache/bookbench/.../<sha>/` должны быть видны `commands/`, `skills/`, `agent-templates/`, `lib/`, `templates/` — то, чего не хватало в кэшах 0.1.x из-за sparse-checkout.
+После этого `/bookbench:doctor` должен показать `BookBench 0.2.0`, а в `~/.claude/plugins/cache/bookbench/.../<sha>/` должны быть видны `commands/`, `skills/`, `agent-templates/`, `lib/`, `templates/` — то, чего не хватало в кэшах 0.1.x из-за sparse-checkout.

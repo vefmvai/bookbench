@@ -1,6 +1,6 @@
 ---
 name: voice-builder
-description: Строит профиль голоса (voice profile) книги с нуля, когда нет исходных текстов для импорта. Активируется из агента book-writer перед первым draft.md, из команды /book:voice build в выделенной сессии или из /book:voice rebuild. Предлагает три пути — B1 быстрое интервью ~5 минут, B2 серьёзная выделенная сессия ~15-20 минут с тестовым абзацем и итерацией, B3 агент сам предлагает профиль из артефактов книги. Проецирует абстрактные ответы автора (любимые писатели, желаемое впечатление у читателя) на шестипараметрическую модель голоса из скилла voice-profile. На выходе — заполненный .book/context/voice-profile.md с обязательной секцией Reasoning. Не активируется на /book:start, /book:plan-book, /book:plan-section и /book:discuss-section — на стадиях планирования голос ещё не применяется.
+description: Строит профиль голоса (voice profile) книги с нуля, когда нет исходных текстов для импорта. Активируется из агента book-writer перед первым draft.md, из команды /bookbench:voice build в выделенной сессии или из /bookbench:voice rebuild. Предлагает три пути — B1 быстрое интервью ~5 минут, B2 серьёзная выделенная сессия ~15-20 минут с тестовым абзацем и итерацией, B3 агент сам предлагает профиль из артефактов книги. Проецирует абстрактные ответы автора (любимые писатели, желаемое впечатление у читателя) на шестипараметрическую модель голоса из скилла voice-profile. На выходе — заполненный .book/context/voice-profile.md с обязательной секцией Reasoning. Не активируется на /bookbench:start, /bookbench:plan-book, /bookbench:plan-section и /bookbench:discuss-section — на стадиях планирования голос ещё не применяется.
 model: sonnet
 ---
 
@@ -15,15 +15,15 @@ Activated in three triggers, never otherwise:
    empty or containing only TBD placeholders. The writer stops, returns a
    `voice_pending` diagnostic to the coordinator, and the coordinator invokes
    this skill via `AskUserQuestion` over the three paths B1/B2/B3.
-2. From the explicit command `/book:voice build` (a dedicated session with
+2. From the explicit command `/bookbench:voice build` (a dedicated session with
    `--mode=quick|serious` and an optional `--rebuild` flag).
-3. From the explicit command `/book:voice rebuild` (alias of
-   `/book:voice build --rebuild`) — when the author wants to redo voice from
+3. From the explicit command `/bookbench:voice rebuild` (alias of
+   `/bookbench:voice build --rebuild`) — when the author wants to redo voice from
    scratch, e.g., after writing the first three sections and realising the
    voice is wrong.
 
-**Never activated on** `/book:start`, `/book:plan-book`, `/book:plan-section`,
-or `/book:discuss-section`. Reason: at those stages no section prose is being
+**Never activated on** `/bookbench:start`, `/bookbench:plan-book`, `/bookbench:plan-section`,
+or `/bookbench:discuss-section`. Reason: at those stages no section prose is being
 generated, so a voice profile is not yet needed; deferring the work until the
 first section avoids forcing the author into a 5-15 min decision while they
 are still shaping the book idea. Gate enforcement happens in the body of
@@ -37,7 +37,7 @@ The default is not preset — the author must choose.
 | Path | Time | Where it runs | Who leads | Pick when |
 |------|------|---------------|-----------|-----------|
 | B1 — quick interview | ~5 min | inline in current session | author answers, builder maps | author has clear references and wants to keep momentum |
-| B2 — dedicated session | ~15-20 min | new tab, `/book:voice build` | author + builder, with a sample paragraph and one optional iteration | author wants to give voice serious attention |
+| B2 — dedicated session | ~15-20 min | new tab, `/bookbench:voice build` | author + builder, with a sample paragraph and one optional iteration | author wants to give voice serious attention |
 | B3 — agent proposes | ~2-3 min to confirm | inline, builder reads book artefacts | builder leads, author confirms | author cannot articulate references or wants to start fast |
 
 All three paths converge on the same output contract — a filled
@@ -123,7 +123,7 @@ each parameter choice.
 
 ## Path B2 — serious dedicated session (~15-20 min)
 
-This path is invoked from `/book:voice build` in a fresh Claude Code tab.
+This path is invoked from `/bookbench:voice build` in a fresh Claude Code tab.
 
 1. Run all five mandatory questions of B1, plus Q6 and Q7 (both upgraded to
    mandatory in B2).
@@ -140,9 +140,9 @@ This path is invoked from `/book:voice build` in a fresh Claude Code tab.
    the profile; generate one more trial paragraph (this is iteration 2).
 7. **Cap = 2 iterations.** After two iterations, stop and tell the author:
    "Two iterations did not converge. This usually means the interview did
-   not capture the right signal; try `/book:voice rebuild` after writing
+   not capture the right signal; try `/bookbench:voice rebuild` after writing
    one short experimental section, or import an external voice sample via
-   `/book:import voice-sample`."
+   `/bookbench:import voice-sample`."
 8. On final `mine`, persist the profile and, if the author provided a passage
    in Q7, write it to `voice-samples.md`.
 
@@ -160,7 +160,7 @@ Numbered Procedure (PS-08.1-09).
 
 Read all of:
 
-- `.book/PROJECT.md` (or the equivalent topic file produced at `/book:start`)
+- `.book/PROJECT.md` (or the equivalent topic file produced at `/bookbench:start`)
   for the genre, topic, and author intent;
 - `.book/context/target-audience.md` for the audience profile;
 - `.book/sections/<N>/spec.md` for the current section (the one the writer
@@ -387,7 +387,7 @@ The actual voice content lives in the book folder, not in the plugin.
   doubles cost without quality gain at this scope.
 - Cap = 2 iterations in B2 is intentional. More iterations indicate a
   signal-quality problem (interview missed the right reference), not a
-  model problem; the right next move is `/book:voice rebuild` after some
+  model problem; the right next move is `/bookbench:voice rebuild` after some
   real draft text exists.
 - Reference signal vocabulary stays generic in this skill body
   (`Sapolsky`, `Kahneman`, `Annie Dillard` — public, broadly recognised

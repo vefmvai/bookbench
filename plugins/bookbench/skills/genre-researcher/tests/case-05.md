@@ -2,7 +2,7 @@
 
 ## Input
 
-User runs `/book:research-genre kishōtenketsu`. WebSearch is available but
+User runs `/bookbench:research-genre kishōtenketsu`. WebSearch is available but
 the genre is niche enough that fewer than three sources can be collected
 within the 15-minute time budget for the mandatory categories
 (handbooks, writing guides, published authors' essays).
@@ -17,8 +17,8 @@ within the 15-minute time budget for the mandatory categories
   category coverage, then offers via AskUserQuestion:
   (a) generate at low confidence — methodology gets
       `confidence: low` in YAML frontmatter; service-section advises
-      manual tuning via `/book:tune:guidelines`;
-  (b) import a genre handbook via `/book:import` and re-run;
+      manual tuning via `/bookbench:tune:guidelines`;
+  (b) import a genre handbook via `/bookbench:import` and re-run;
   (c) refine the genre name (the author may have meant a closer
       standard genre — the skill lists 2–3 candidates).
 - For option (a), the package is generated and persisted with the
@@ -32,7 +32,7 @@ within the 15-minute time budget for the mandatory categories
   - `${CLAUDE_PLUGIN_DATA}/user-methodologies/kishotenketsu-methodology.md`
     contains `confidence: low` in its YAML frontmatter.
   - The methodology's service-section names
-    `/book:tune:guidelines` as the recommended next step for refinement.
+    `/bookbench:tune:guidelines` as the recommended next step for refinement.
   - The preset `${CLAUDE_PLUGIN_DATA}/user-presets/kishotenketsu.yaml` is
     persisted and parses as valid YAML.
 - For option (c) with refinement:

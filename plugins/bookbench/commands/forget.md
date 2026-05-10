@@ -1,13 +1,13 @@
 ---
-description: Removes a book entry from the global registry. The .book/ folder on disk stays untouched. Asks the author to type the book id to confirm — Type-to-Confirm pattern — to avoid accidental loss. Symmetric with /book:register.
+description: Removes a book entry from the global registry. The .book/ folder on disk stays untouched. Asks the author to type the book id to confirm — Type-to-Confirm pattern — to avoid accidental loss. Symmetric with /bookbench:register.
 argument-hint: "<id-or-path>"
 allowed-tools: [Read, Edit, Bash, AskUserQuestion]
 ---
 
-# /book:forget
+# /bookbench:forget
 
 <purpose>
-Hard-remove a book from the registry. Symmetric to `/book:register`. The disk content remains intact — re-register at any time. Use Type-to-Confirm to prevent accidents.
+Hard-remove a book from the registry. Symmetric to `/bookbench:register`. The disk content remains intact — re-register at any time. Use Type-to-Confirm to prevent accidents.
 </purpose>
 
 <!-- ЭТАП 14: реализовано — см. <execution> ниже -->
@@ -29,9 +29,9 @@ Eight-step pattern with extra-strict confirmation: validate → resolve → loca
 
 ```bash
 if [ -z "${ARGUMENTS:-}" ]; then
-  echo "Error: /book:forget requires an id or absolute path."
-  echo "Usage: /book:forget <id-or-path>"
-  echo "Run /book:list to see available ids."
+  echo "Error: /bookbench:forget requires an id or absolute path."
+  echo "Usage: /bookbench:forget <id-or-path>"
+  echo "Run /bookbench:list to see available ids."
   exit 0
 fi
 
@@ -53,7 +53,7 @@ fi
 
 ### Step 2 — Parse argument and locate
 
-Same locator logic as `/book:archive` Step 2-3:
+Same locator logic as `/bookbench:archive` Step 2-3:
 - If starts with `/` — treat as path; normalise; find entry by `path`.
 - Else — treat as id; find entry by `id`.
 
@@ -61,7 +61,7 @@ If no match:
 
 ```
 Error: no registry entry matches '<TARGET>'.
-Run /book:list to see available ids.
+Run /bookbench:list to see available ids.
 ```
 
 ```bash
@@ -98,8 +98,8 @@ Present an `AskUserQuestion`:
 - Body:
   - `id:    <MATCH_ID>`
   - Note: «The .book/ folder on disk will NOT be deleted. Only the registry entry is removed.»
-  - «To recover later, run `/book:register <path>`.»
-  - «To soft-hide instead of hard-remove, prefer `/book:archive`.»
+  - «To recover later, run `/bookbench:register <path>`.»
+  - «To soft-hide instead of hard-remove, prefer `/bookbench:archive`.»
 - Options:
   - `Continue (will ask for type-to-confirm next)` — proceed.
   - `Cancel` — exit.
@@ -161,8 +161,8 @@ Forgotten: $MATCH_ID
   files on disk at <path>: untouched
 
 Recommended next:
-  /book:list             — confirm the book is no longer listed.
-  /book:register <path>  — re-add later if needed.
+  /bookbench:list             — confirm the book is no longer listed.
+  /bookbench:register <path>  — re-add later if needed.
 ```
 
 ### Constitutional rules

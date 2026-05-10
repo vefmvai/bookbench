@@ -1,6 +1,6 @@
 # Guidelines for book-doc-synthesizer
 
-> The synthesizer reads this file before every /book:import synthesis pass.
+> The synthesizer reads this file before every /bookbench:import synthesis pass.
 
 ## What goes here
 

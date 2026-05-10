@@ -39,14 +39,14 @@
 > /reload-plugins
 ```
 
-Плагин разворачивает свой код в `${CLAUDE_PLUGIN_ROOT}` (с 0.2.0 — это подпапка `plugins/bookbench/` репозитория, отгружаемая через `git-subdir`) и инициализирует папку данных `${CLAUDE_PLUGIN_DATA}` при первом запуске любой `/book:*` команды.
+Плагин разворачивает свой код в `${CLAUDE_PLUGIN_ROOT}` (с 0.2.0 — это подпапка `plugins/bookbench/` репозитория, отгружаемая через `git-subdir`) и инициализирует папку данных `${CLAUDE_PLUGIN_DATA}` при первом запуске любой `/bookbench:*` команды.
 
 Подробности по режимам установки (local-dev / GitHub release / Marketplace) — в [`installation.md`](installation.md).
 
-После установки в любой директории доступны команды `/book:*`. Чтобы убедиться, что всё на месте:
+После установки в любой директории доступны команды `/bookbench:*`. Чтобы убедиться, что всё на месте:
 
 ```
-> /book:doctor
+> /bookbench:doctor
 🤖 BookBench 0.2.0 — диагностика
    ├─ Claude Code: 2.4 ✅
    ├─ ${CLAUDE_PLUGIN_ROOT}: смонтирован ✅
@@ -71,7 +71,7 @@ $ claude
 Внутри Claude Code:
 
 ```
-> /book:start
+> /bookbench:start
 🤖 [book-coordinator] Привет. У вас уже есть наброски, заметки или чаты по этой книге? (y/n)
 📝 n
 🤖 Отлично — начинаем с чистого листа. Несколько вопросов:
@@ -108,7 +108,7 @@ $ claude
    └─ .book/agent-memory/   (пустые MEMORY.md по 5 ролям цикла)
 
 ✅ Книга «История кофе» развёрнута. Записан в реестр книг (registry.yaml).
-   Следующий шаг: /book:plan-book — стратег предложит план книги.
+   Следующий шаг: /bookbench:plan-book — стратег предложит план книги.
 ```
 
 > **Что произошло.** Координатор скопировал шаблон папки книги из плагина, развернул workflow для жанра «научпоп» (он уже встроен), приготовил 9 локальных тел субагентов в `.book/.claude/agents/` и записал книгу в глобальный реестр. Теперь эта папка автономна: обновления плагина её не тронут (см. `WF-04` в [`upgrade-guide.md`](upgrade-guide.md)).
@@ -116,7 +116,7 @@ $ claude
 ### Шаг A-2. План книги через стратега
 
 ```
-> /book:plan-book
+> /bookbench:plan-book
 🤖 [book-coordinator] вызываю book-strategist...
    <files_to_read>: PROJECT.md, ROADMAP.md, agent-guidelines/strategist/, popular-science-methodology
    skills: base-methodology, popular-science-methodology
@@ -151,7 +151,7 @@ $ claude
 ### Шаг A-3. ТЗ первой главы
 
 ```
-> /book:plan-section 1
+> /bookbench:plan-section 1
 🤖 [book-coordinator] вызываю book-strategist для ТЗ главы 1...
 🤖 [book-strategist] записал sections/01/spec.md:
 
@@ -191,7 +191,7 @@ $ claude
 ### Шаг A-4. Запуск 5-фазного цикла главы
 
 ```
-> /book:write-section 1
+> /bookbench:write-section 1
 🤖 [book-coordinator] запускаю микро-цикл главы 1.
 
    Фаза 1/5: Стратег — уже выполнено (spec.md от A-3)
@@ -205,7 +205,7 @@ $ claude
    
 ✋ Перед написанием первой главы нужен профиль голоса. Выбери путь:
    B1 — быстрое интервью прямо здесь (5 минут, 5 вопросов).
-   B2 — отдельная сессия /book:voice build (15-20 минут, с пробным абзацем).
+   B2 — отдельная сессия /bookbench:voice build (15-20 минут, с пробным абзацем).
    B3 — агент сам предложит профиль на основе плана книги (2-3 минуты на подтверждение).
 📝 B3
 🤖 [book-writer] передаю управление voice-builder, активирую путь B3.
@@ -288,10 +288,10 @@ $ claude
 ```
 📝 [читает edited.md, доволен; читает marketing.md, правит одну формулировку
    в Telegram-посте через обычный редактор]
-> /book:status
+> /bookbench:status
 🤖 Книга «История кофе»: глава 1 завершена.
    Готово: 1 / 25 глав (4%).
-   Следующее: /book:plan-section 2 или /book:next.
+   Следующее: /bookbench:plan-section 2 или /bookbench:next.
 ```
 
 ### Шаг A-6. Следующая глава
@@ -300,7 +300,7 @@ $ claude
 
 ### Шаг A-7. Что дальше
 
-После 5–10 глав имеет смысл запустить `/book:tune` — tuner проанализирует `REJECTIONS-LOG.md` (где координатор фиксирует каждую вашу правку готовой главы) и предложит правки гайдлайнов. Если 3+ раз вы правили одно и то же — это будет предложено как critical-приоритет.
+После 5–10 глав имеет смысл запустить `/bookbench:tune` — tuner проанализирует `REJECTIONS-LOG.md` (где координатор фиксирует каждую вашу правку готовой главы) и предложит правки гайдлайнов. Если 3+ раз вы правили одно и то же — это будет предложено как critical-приоритет.
 
 ---
 
@@ -313,7 +313,7 @@ $ claude
 ```bash
 $ mkdir history-of-coffee && cd history-of-coffee
 $ claude
-> /book:start --from-existing
+> /bookbench:start --from-existing
 🤖 [book-coordinator] Привет. У вас уже есть наброски/чаты/черновики.
    Где они хранятся?
    1) Локальная папка md/docx/txt
@@ -332,7 +332,7 @@ $ claude
 ### Шаг B-2. Запустить импорт
 
 ```
-> /book:import
+> /bookbench:import
 🤖 [book-coordinator] запускаю оркестратор импорта.
 
    Фаза 1/2: Параллельная классификация
@@ -372,10 +372,10 @@ $ claude
    ├─ Что отложено: 12 BLOCKER'ов (фрагменты с conflicting типами)
    └─ Что отвергнуто: 23 дубликата
 
-📝 пользователь смотрит INGEST-DECISIONS.md, правит 3 решения через /book:resolve
-> /book:resolve fragment-127 section-15
-> /book:resolve fragment-204 reject
-> /book:resolve fragment-318 section-8
+📝 пользователь смотрит INGEST-DECISIONS.md, правит 3 решения через /bookbench:resolve
+> /bookbench:resolve fragment-127 section-15
+> /bookbench:resolve fragment-204 reject
+> /bookbench:resolve fragment-318 section-8
 🤖 ✅ Решения применены.
 ```
 
@@ -387,14 +387,14 @@ $ claude
 📝 y
 🤖 ✅ Подключаю popular-science-methodology.
 
-> /book:plan-book --from-imports
+> /bookbench:plan-book --from-imports
 🤖 [book-strategist] финализирую ROADMAP с учётом импорта.
    ├─ Из набросков автора: 18 глав
    ├─ Из синтезатора: 5 глав, заполненных на 60%+ (section-3.docx → глава 8)
    ├─ Пробелы: 7 глав без материала
    └─ Конфликт: глава 12 в набросках и фрагмент чата claude.ai пересекаются
 ✋ Финализируй ROADMAP. Что делать с конфликтом?
-📝 [сводит конфликт через /book:resolve, утверждает план из 25 глав]
+📝 [сводит конфликт через /bookbench:resolve, утверждает план из 25 глав]
 🤖 ✅ ROADMAP.md, red-thread-keywords.md созданы.
 ```
 
@@ -408,7 +408,7 @@ $ claude
    - Emotional intensity: warm
    - Dash typography: medium
    - Anglicism tolerance: moderate
-✋ Подтверждаешь voice profile? (y / поправить / запустить /book:voice build)
+✋ Подтверждаешь voice profile? (y / поправить / запустить /bookbench:voice build)
 📝 [уточняет 1 параметр: anglicism tolerance → strict]
 🤖 ✅ voice-profile.md обновлён.
 ```
@@ -418,7 +418,7 @@ $ claude
 ### Шаг B-5. Старт главы, где есть импортированный черновик
 
 ```
-> /book:plan-section 5
+> /bookbench:plan-section 5
 🤖 [book-strategist] обнаружил: для главы 5 импортирован черновик из section-3.docx (60% готов).
 🤖 sections/05/spec.md создан с пометкой:
    ├─ Режим: integrate-existing-draft
@@ -431,7 +431,7 @@ $ claude
 ### Шаг B-6. Микро-цикл в режиме «дополнения»
 
 ```
-> /book:write-section 5
+> /bookbench:write-section 5
 🤖 Фаза 2/5: Писатель в режиме from-existing
    ├─ Дополняет 40% объёма
    ├─ Переписывает AI-склонные куски (section-3.docx был частично из claude.ai)
@@ -445,13 +445,13 @@ $ claude
 
 ### Шаги B-7 и B-8. Финал главы и аудит после нескольких глав
 
-После завершения главы 5 — финальный обзор как в `A-5`. После 5-10 глав — `/book:audit-book` обнаружит специфичные для импорта проблемы (типичны 8-15 ИИ-клише в импортированных кусках чатов и 3-5 неверифицированных утверждений).
+После завершения главы 5 — финальный обзор как в `A-5`. После 5-10 глав — `/bookbench:audit-book` обнаружит специфичные для импорта проблемы (типичны 8-15 ИИ-клише в импортированных кусках чатов и 3-5 неверифицированных утверждений).
 
 ---
 
 ## Что появилось в папке
 
-После `/book:start` и завершения первой главы:
+После `/bookbench:start` и завершения первой главы:
 
 ```
 history-of-coffee/
@@ -462,9 +462,9 @@ history-of-coffee/
     ├── STATE.md                       ← журнал состояния
     ├── config.yaml                    ← количественные параметры
     ├── workflow.md                    ← пресет научпопа
-    ├── TUNING-LOG.md                  ← (пусто; заполняется через /book:tune apply)
+    ├── TUNING-LOG.md                  ← (пусто; заполняется через /bookbench:tune apply)
     ├── REJECTIONS-LOG.md              ← (пусто; заполняется при ручных правках готовых глав)
-    ├── UPDATE-LOG.md                  ← (пусто; заполняется при /book:update)
+    ├── UPDATE-LOG.md                  ← (пусто; заполняется при /bookbench:update)
     ├── context/
     │   ├── parameters.md              ← фиксированные решения (P-01, P-02, ...)
     │   ├── voice-profile.md           ← голос автора (заполняется в writer-gate)
@@ -510,14 +510,14 @@ history-of-coffee/
 
 | Симптом | Что делать |
 |---------|------------|
-| `/book:start` не отвечает или зависает после первого вопроса | Проверить, что Claude Code 2.x; проверить `/book:doctor`; перезапустить сессию (`/clear`) — `/book:start` идемпотентна, продолжит откуда остановился |
-| Voice gate сработал «не вовремя» (нет настроения настраивать голос) | Выбрать путь B3 — агент сам предложит за 2-3 минуты на основе уже имеющегося плана. Или путь B2 (`/book:voice build`) — это отдельная сессия, она не сожжёт текущий контекст |
+| `/bookbench:start` не отвечает или зависает после первого вопроса | Проверить, что Claude Code 2.x; проверить `/bookbench:doctor`; перезапустить сессию (`/clear`) — `/bookbench:start` идемпотентна, продолжит откуда остановился |
+| Voice gate сработал «не вовремя» (нет настроения настраивать голос) | Выбрать путь B3 — агент сам предложит за 2-3 минуты на основе уже имеющегося плана. Или путь B2 (`/bookbench:voice build`) — это отдельная сессия, она не сожжёт текущий контекст |
 | Фактчекер не нашёл источник на простой факт | Проверить, есть ли у фактчекера WebSearch (`agent-templates/book-factchecker.md` → секция `tools:`). Если есть — возможно, это специфика темы (см. `factchecker/agent-guidelines/trusted-sources.md`). Можно подтвердить тэг `[ASSUMED]` вручную |
-| Hook anti-ai-cliche блокирует правомерную фразу | Открыть `.book/agent-guidelines/writer/forbidden-phrases.md`, добавить исключение. Или `/book:tune` — tuner предложит обобщённое правило, если такая ситуация повторилась 3+ раз |
-| Стратег предложил странный план книги | Прервать, отредактировать `PROJECT.md` (точнее описать книгу и аудиторию), запустить `/book:plan-book` ещё раз. Стратег идемпотентен — переписывает `ROADMAP.md` |
-| Координатор не помнит, на какой главе остановились | `/book:status` — читает `STATE.md`. `/book:resume` — продолжает текущий этап. `/book:next` — даёт умную подсказку |
-| Не уверен, что workflow подходит твоему жанру | `/book:workflow:check` — статическая валидация `workflow.md`. Если жанр специфичный — `/book:research-genre <ваш-жанр>` запустит genre-researcher |
-| После `/book:write-section` не появилось `marketing.md` | Возможно, маркетолог отключён в `workflow.md > section_loop.params.enable_marketer: false`. Включить — отредактировать файл, перезапустить `/book:write-section:market <N>` (атомарная подкоманда только маркетинговой фазы) |
+| Hook anti-ai-cliche блокирует правомерную фразу | Открыть `.book/agent-guidelines/writer/forbidden-phrases.md`, добавить исключение. Или `/bookbench:tune` — tuner предложит обобщённое правило, если такая ситуация повторилась 3+ раз |
+| Стратег предложил странный план книги | Прервать, отредактировать `PROJECT.md` (точнее описать книгу и аудиторию), запустить `/bookbench:plan-book` ещё раз. Стратег идемпотентен — переписывает `ROADMAP.md` |
+| Координатор не помнит, на какой главе остановились | `/bookbench:status` — читает `STATE.md`. `/bookbench:resume` — продолжает текущий этап. `/bookbench:next` — даёт умную подсказку |
+| Не уверен, что workflow подходит твоему жанру | `/bookbench:workflow:check` — статическая валидация `workflow.md`. Если жанр специфичный — `/bookbench:research-genre <ваш-жанр>` запустит genre-researcher |
+| После `/bookbench:write-section` не появилось `marketing.md` | Возможно, маркетолог отключён в `workflow.md > section_loop.params.enable_marketer: false`. Включить — отредактировать файл, перезапустить `/bookbench:write-section:market <N>` (атомарная подкоманда только маркетинговой фазы) |
 
 Расширенный troubleshooting — в [`faq.md`](faq.md), кластер 5 «Troubleshooting» (включая B-14-01..05 как known issues 0.1.0 с workaround).
 

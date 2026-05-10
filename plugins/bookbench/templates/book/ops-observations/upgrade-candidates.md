@@ -60,7 +60,7 @@ Friction in the author's interaction with the system:
 
 - Long author replies that mix content critique and process complaint
   ("the metaphor is weak AND why is the factchecker so slow").
-- Missing commands (author tries `/book:something` and gets a
+- Missing commands (author tries `/bookbench:something` and gets a
   not-found).
 - Confusing or absent next-step messages.
 

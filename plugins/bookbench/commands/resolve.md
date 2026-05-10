@@ -1,13 +1,13 @@
 ---
-description: Resolves a competing-variant from INGEST-DECISIONS.md after /book:import. Without an action argument runs an interactive dialog with the variant context; with a|b|merge|reject applies the choice directly. Updates the destination file (section draft, glossary entry, voice sample, agent memory) and records the resolution in INGEST-DECISIONS.md.
+description: Resolves a competing-variant from INGEST-DECISIONS.md after /bookbench:import. Without an action argument runs an interactive dialog with the variant context; with a|b|merge|reject applies the choice directly. Updates the destination file (section draft, glossary entry, voice sample, agent memory) and records the resolution in INGEST-DECISIONS.md.
 argument-hint: "<variant-id> [a|b|merge|reject]"
 allowed-tools: [Task, Read, Write, Edit, Bash, AskUserQuestion]
 ---
 
-# /book:resolve
+# /bookbench:resolve
 
 <purpose>
-Finalise a single competing-variant after import. Without an argument: dialog with full context. With one of `a|b|merge|reject`: applied immediately with confirmation. Symmetric companion to `/book:import` which leaves competing variants pending.
+Finalise a single competing-variant after import. Without an argument: dialog with full context. With one of `a|b|merge|reject`: applied immediately with confirmation. Symmetric companion to `/bookbench:import` which leaves competing variants pending.
 </purpose>
 
 <!-- ЭТАП 14: реализовано — см. <execution> ниже -->
@@ -32,7 +32,7 @@ Eight-step pattern with optional Task delegation to `book-doc-synthesizer` (when
 ```bash
 [ -d .book ] || { echo "No .book/ directory."; exit 0; }
 [ -f .book/INGEST-DECISIONS.md ] || {
-  echo "No INGEST-DECISIONS.md. Run /book:import first."
+  echo "No INGEST-DECISIONS.md. Run /bookbench:import first."
   exit 0
 }
 
@@ -48,8 +48,8 @@ for arg in $ARGUMENTS; do
 done
 
 if [ -z "$VARIANT_ID" ]; then
-  echo "Error: /book:resolve requires a variant id."
-  echo "Usage: /book:resolve <variant-id> [a|b|merge|reject]"
+  echo "Error: /bookbench:resolve requires a variant id."
+  echo "Usage: /bookbench:resolve <variant-id> [a|b|merge|reject]"
   echo ""
   echo "Pending variants:"
   awk '/^- V-/ {print "  " $2}' .book/INGEST-DECISIONS.md
@@ -69,7 +69,7 @@ VARIANT_BLOCK=$(awk -v id="$VARIANT_ID" '
 
 if [ -z "$VARIANT_BLOCK" ]; then
   echo "Error: variant $VARIANT_ID not found in pending list."
-  echo "Run /book:resolve (no argument) to see available ids."
+  echo "Run /bookbench:resolve (no argument) to see available ids."
   exit 0
 fi
 ```
@@ -173,7 +173,7 @@ awk -v id="$VARIANT_ID" -v action="$ACTION" -v now="$NOW" '
 
 ```bash
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-printf '\n%s — `/book:resolve` — variant %s resolved as %s\n' \
+printf '\n%s — `/bookbench:resolve` — variant %s resolved as %s\n' \
   "$NOW" "$VARIANT_ID" "$ACTION" >> .book/STATE.md
 
 # Count remaining pending
@@ -184,12 +184,12 @@ echo "Remaining pending variants: $PENDING"
 echo ""
 if [ "$PENDING" -gt 0 ]; then
   echo "Recommended next:"
-  echo "  /book:resolve <next-variant-id>   — keep going."
+  echo "  /bookbench:resolve <next-variant-id>   — keep going."
 else
   echo "All variants resolved."
   echo "Recommended next:"
-  echo "  /book:status            — see overall progress."
-  echo "  /book:plan-book         — (re-)plan now that everything is in place."
+  echo "  /bookbench:status            — see overall progress."
+  echo "  /bookbench:plan-book         — (re-)plan now that everything is in place."
 fi
 ```
 

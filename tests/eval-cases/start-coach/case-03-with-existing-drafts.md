@@ -2,7 +2,7 @@
 
 > **Покрытие:** автор приложил 2 файла-черновика глав. Триггерится автоимпорт без флага. Формат гипотеза — `book` (по структуре файлов: `глава-XX.md`).
 >
-> **Источник правды:** `lib/start-coach-prompt.md` § 6 Trigger→Action; `matching-design.md` § 3.2 (метаданные исходников); § 3.6 (ветка `/book:import`).
+> **Источник правды:** `lib/start-coach-prompt.md` § 6 Trigger→Action; `matching-design.md` § 3.2 (метаданные исходников); § 3.6 (ветка `/bookbench:import`).
 
 ## Setup
 
@@ -64,7 +64,7 @@
 - Подсказка: «Сейчас не буду спрашивать про твой стиль и голос. Если хочешь — можешь скинуть voice-profile или подборку любимых текстов. Если нет — поговорим перед первой главой.»
 - Автор пропускает (ничего не отвечает по стилю).
 - `STYLE_MARKER = B3` (нет voice-samples; section-drafts не считаются за voice-samples).
-- (Опционально, на 0.4+) — book-classifier мог бы извлечь voice-samples из section-draft автоматически как 3-5 эталонных пассажа 200-500 слов. На 0.3.0 это ручная работа автора через `/book:tune` или `/book:voice extract` после первой секции.
+- (Опционально, на 0.4+) — book-classifier мог бы извлечь voice-samples из section-draft автоматически как 3-5 эталонных пассажа 200-500 слов. На 0.3.0 это ручная работа автора через `/bookbench:tune` или `/bookbench:voice extract` после первой секции.
 
 ## Expected post-scaffold
 
@@ -89,11 +89,11 @@ workflow:
 ### `.book/STATE.md` History
 
 ```
-<ISO timestamp> — /book:start — initialised "<title>" (format=book, genre=popular-science, audience="...", style_marker=B3, import=1)
+<ISO timestamp> — /bookbench:start — initialised "<title>" (format=book, genre=popular-science, audience="...", style_marker=B3, import=1)
 ```
 
 ### Hint в next-step message
-- Дополнительная строка про автоимпорт: «Прикреплённые файлы (2 черновика глав) импортированы в `.book/inputs/`. Можешь запустить `/book:import` в полном режиме для полной обработки или `/book:plan-book` чтобы построить план книги исходя из существующих набросков.»
+- Дополнительная строка про автоимпорт: «Прикреплённые файлы (2 черновика глав) импортированы в `.book/inputs/`. Можешь запустить `/bookbench:import` в полном режиме для полной обработки или `/bookbench:plan-book` чтобы построить план книги исходя из существующих набросков.»
 
 ## Acceptance criteria
 

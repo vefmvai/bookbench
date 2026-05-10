@@ -1,6 +1,6 @@
 # Addressing rules — правила обращения к читателю
 
-> **Источник.** `.book/config.yaml > book.addressing_mode`. Заполняется на `/book:start` § 4a (этап 24, D-37) либо через `/book:config addressing_mode <value>`.
+> **Источник.** `.book/config.yaml > book.addressing_mode`. Заполняется на `/bookbench:start` § 4a (этап 24, D-37) либо через `/bookbench:config addressing_mode <value>`.
 >
 > **Hard rule.** Применяется к каждому абзацу в `draft.md`. Editor проверяет согласованность; смешение режимов в одной секции (если `addressing_mode != "смешанное"`) — нарушение.
 
@@ -8,7 +8,7 @@
 
 `addressing_mode: ${ADDRESSING_MODE}`
 
-(Этот плейсхолдер заменяется реальным значением на `/book:start` Step 6a; до момента подтверждения автором — пусто.)
+(Этот плейсхолдер заменяется реальным значением на `/bookbench:start` Step 6a; до момента подтверждения автором — пусто.)
 
 ---
 
@@ -64,4 +64,4 @@
 ---
 
 *Создан: этап 24 (T3, D-37).*
-*Шаблон. Реальный файл в `.book/agent-guidelines/writer/addressing-rules.md` создаётся при `/book:start` Step 6a; плейсхолдер `${ADDRESSING_MODE}` заменяется значением из `.book.proposed.yaml > book.addressing_mode`.*
+*Шаблон. Реальный файл в `.book/agent-guidelines/writer/addressing-rules.md` создаётся при `/bookbench:start` Step 6a; плейсхолдер `${ADDRESSING_MODE}` заменяется значением из `.book.proposed.yaml > book.addressing_mode`.*

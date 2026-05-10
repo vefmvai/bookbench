@@ -4,12 +4,12 @@ argument-hint: "<genre> [--refresh] [--offline] [--interactive]"
 allowed-tools: [Read, Write, AskUserQuestion, WebSearch, WebFetch, Task, Bash, Glob]
 ---
 
-# /book:research-genre
+# /bookbench:research-genre
 
 <purpose>
 Run the genre-researcher skill to produce a methodology + workflow preset
 package for the requested genre. This command is the explicit invocation
-form (the implicit form is the unknown-genre branch of `/book:start`).
+form (the implicit form is the unknown-genre branch of `/bookbench:start`).
 </purpose>
 
 <!-- Stage 14, Wave B, T3: full implementation. -->
@@ -37,11 +37,11 @@ while [ $# -gt 0 ]; do
 done
 
 if [ -z "$GENRE" ]; then
-  echo "Usage: /book:research-genre <genre> [--refresh] [--offline] [--interactive]"
+  echo "Usage: /bookbench:research-genre <genre> [--refresh] [--offline] [--interactive]"
   echo "Examples:"
-  echo "  /book:research-genre detective"
-  echo "  /book:research-genre memoir --refresh"
-  echo "  /book:research-genre fantasy --offline"
+  echo "  /bookbench:research-genre detective"
+  echo "  /bookbench:research-genre memoir --refresh"
+  echo "  /bookbench:research-genre fantasy --offline"
   exit 0
 fi
 echo "research-genre: genre='$GENRE' refresh=$REFRESH offline=$OFFLINE interactive=$INTERACTIVE"
@@ -86,7 +86,7 @@ HAS_PRESET=0
 
 if [ "$HAS_PRESET" -eq 1 ] && [ "$REFRESH" -eq 0 ]; then
   echo "research-genre: a preset for '$SLUG' already exists at $PRESET_FILE."
-  echo "Run with --refresh to regenerate it, or use /book:start --genre $SLUG to start a book on the cached preset."
+  echo "Run with --refresh to regenerate it, or use /bookbench:start --genre $SLUG to start a book on the cached preset."
   exit 0
 fi
 
@@ -108,7 +108,7 @@ If the requested genre is already shipped as a built-in (e.g.,
 BUILTIN_DIR="$PLUGIN_ROOT/skills/genres/$SLUG"
 if [ -d "$BUILTIN_DIR" ] && [ "$REFRESH" -eq 0 ]; then
   echo "research-genre: '$SLUG' is a built-in genre at $BUILTIN_DIR; no research needed."
-  echo "Run /book:start --genre $SLUG to use the built-in preset directly."
+  echo "Run /bookbench:start --genre $SLUG to use the built-in preset directly."
   exit 0
 fi
 ```
@@ -229,11 +229,11 @@ If the author was running this command from inside a book directory (i.e.,
 in the History section:
 
 ```text
-- <ISO timestamp> | /book:research-genre <slug> | confidence=<high|medium|low> | status=applied
+- <ISO timestamp> | /bookbench:research-genre <slug> | confidence=<high|medium|low> | status=applied
 ```
 
 This is **not** required when the command is run outside a book context
-(e.g., during onboarding before `/book:start` has scaffolded `.book/`).
+(e.g., during onboarding before `/bookbench:start` has scaffolded `.book/`).
 
 ## Step 10 — Next-step message
 
@@ -245,19 +245,19 @@ research-genre: persisted package for "$SLUG":
 
 Next steps:
   - Start a new book with this preset:
-      /book:start --genre $SLUG
+      /bookbench:start --genre $SLUG
   - Inspect the preset:
-      /book:list (after starting a book)
+      /bookbench:list (after starting a book)
   - Refine the package later:
-      /book:research-genre $SLUG --refresh
+      /bookbench:research-genre $SLUG --refresh
 ```
 
 ## Notes
 
 - This command is the explicit form. The implicit form is invoked from
-  `/book:start` branch B (when the author picks an unknown genre); that
+  `/bookbench:start` branch B (when the author picks an unknown genre); that
   flow re-uses the same Task delegation but skips the slug pre-flight and
-  the next-step message (it is part of the larger `/book:start` UX).
+  the next-step message (it is part of the larger `/bookbench:start` UX).
 - The skill writes only to `${CLAUDE_PLUGIN_DATA}` (cross-platform user
   data, survives `/plugin update`). It never writes to
   `${CLAUDE_PLUGIN_ROOT}` (read-only at runtime).
@@ -266,7 +266,7 @@ Next steps:
 - `--offline` triggers Fallback A (no-internet) inside the skill; the
   resulting package is marked `confidence: low` in the methodology
   frontmatter and the author is invited to refine it via
-  `/book:tune:guidelines` later.
+  `/bookbench:tune:guidelines` later.
 - Privacy guarantee: the researcher reads from the public web and from
   built-in plugin sources only. It does not read any book directory's
   `sections/`, `inputs/`, `intel/`, `debug/`, or `agent-memory/`.

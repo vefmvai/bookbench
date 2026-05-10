@@ -7,7 +7,7 @@
 ## Setup
 
 - Папка: `/tmp/test-book-addressing/`.
-- Запуск: `/book:start`.
+- Запуск: `/bookbench:start`.
 
 ## Author messages
 

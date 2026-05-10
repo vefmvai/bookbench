@@ -1,6 +1,6 @@
 # Ingest decisions
 
-> Created during `/book:import`. Three buckets: auto-resolved, competing-variants (await `/book:resolve`), rejected. Append-only audit trail.
+> Created during `/bookbench:import`. Three buckets: auto-resolved, competing-variants (await `/bookbench:resolve`), rejected. Append-only audit trail.
 
 ## Auto-resolved
 
@@ -8,7 +8,7 @@
 
 ## Competing-variants
 
-(Populated by book-doc-synthesizer; conflicts that need `/book:resolve <variant-id>`.)
+(Populated by book-doc-synthesizer; conflicts that need `/bookbench:resolve <variant-id>`.)
 
 ## Rejected
 

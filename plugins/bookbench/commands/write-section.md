@@ -5,7 +5,7 @@ allowed-tools: [Task, Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion]
 on_completed: ask
 ---
 
-# /book:write-section
+# /bookbench:write-section
 
 <purpose>
 The thickest command of the framework. Drives the whole 5+1 phase pipeline for one section. Atomic re-runs of one phase are available via the four `:phase` subcommands.
@@ -17,7 +17,7 @@ The thickest command of the framework. Drives the whole 5+1 phase pipeline for o
 
 - `<section-number>` (positional).
 - `--on-completed` (optional, default `ask`): action when section is already `completed: true`. Values: `re-write`, `re-edit`, `abort`, `ask`. Closes OQ-19.
-- Existing `sections/<id>/spec.md` (created by `/book:plan-section`).
+- Existing `sections/<id>/spec.md` (created by `/bookbench:plan-section`).
 - `.book/context/`, `.book/agent-guidelines/<role>/`, all relevant `agent-memory/<role>/MEMORY.md`.
 - Previous sections' `summary.md` (per per-role context budget — see `context-control.md`).
 
@@ -36,13 +36,13 @@ The thickest command of the framework. Drives the whole 5+1 phase pipeline for o
 
 ## on_completed parameter (closes OQ-19)
 
-When the user invokes `/book:write-section <N>` for a section whose `section-state.yaml.completed` is `true`, behaviour follows `on_completed`:
+When the user invokes `/bookbench:write-section <N>` for a section whose `section-state.yaml.completed` is `true`, behaviour follows `on_completed`:
 
 | Value | Behaviour |
 |-------|-----------|
 | `ask` (default) | Coordinator presents an `AskUserQuestion`: re-write, re-edit, abort. |
 | `re-write` | Backs up `edited.md` to `<artifact>-prev-<ts>.md` and re-runs the full pipeline. |
-| `re-edit` | Re-runs Phase 4 (Editor) only, equivalent to `/book:write-section:edit <N>`. |
+| `re-edit` | Re-runs Phase 4 (Editor) only, equivalent to `/bookbench:write-section:edit <N>`. |
 | `abort` | Exits with a notice; no changes made. |
 
 The same parameter is mirrored in `section-loop-block.md` for consistency.
@@ -51,10 +51,10 @@ The same parameter is mirrored in `section-loop-block.md` for consistency.
 
 Use the atomic subcommands:
 
-- `/book:write-section:draft <N>` — re-run only writer.
-- `/book:write-section:factcheck <N>` — re-run only factchecker (with loop).
-- `/book:write-section:edit <N>` — re-run only editor.
-- `/book:write-section:market <N>` — re-run only marketer.
+- `/bookbench:write-section:draft <N>` — re-run only writer.
+- `/bookbench:write-section:factcheck <N>` — re-run only factchecker (with loop).
+- `/bookbench:write-section:edit <N>` — re-run only editor.
+- `/bookbench:write-section:market <N>` — re-run only marketer.
 
 <execution>
 
@@ -64,7 +64,7 @@ This is the heaviest command of the framework. It implements `Procedure WRITE-SE
 
 ```bash
 ARG="$ARGUMENTS"
-[ -z "$ARG" ] && { echo "Usage: /book:write-section <section-number> [--on-completed re-write|re-edit|abort|ask]"; exit 0; }
+[ -z "$ARG" ] && { echo "Usage: /bookbench:write-section <section-number> [--on-completed re-write|re-edit|abort|ask]"; exit 0; }
 
 # Default
 ON_COMPLETED="ask"
@@ -87,7 +87,7 @@ echo "N=$N PADDED=$PADDED SECDIR=$SECDIR ON_COMPLETED=$ON_COMPLETED"
 
 ### Step 2 — Resolve plugin paths and book context
 
-Run the same `PLUGIN_ROOT`/`PLUGIN_DATA`/`PLUGIN_VERSION` resolver as `/book:start` Step 2. Read `.book/config.yaml` to detect:
+Run the same `PLUGIN_ROOT`/`PLUGIN_DATA`/`PLUGIN_VERSION` resolver as `/bookbench:start` Step 2. Read `.book/config.yaml` to detect:
 
 - `agents.enabled` — whether marketer is in the list.
 - `agents.loop_limits.factchecker_writer_revise` (default 3, DEC-03).
@@ -96,21 +96,21 @@ Run the same `PLUGIN_ROOT`/`PLUGIN_DATA`/`PLUGIN_VERSION` resolver as `/book:sta
 ### Step 3 — Pre-flight checks
 
 ```bash
-[ -d .book ] || { echo "No .book/. Run /book:start."; exit 0; }
+[ -d .book ] || { echo "No .book/. Run /bookbench:start."; exit 0; }
 
 # Genre pending guard (D-36, etap 24).
 GENRE_LINE=$(grep -E '^[[:space:]]+genre:[[:space:]]' .book/config.yaml | head -1 | sed -E 's/^[[:space:]]+genre:[[:space:]]+//; s/[[:space:]]*#.*$//; s/^"//; s/"$//' | tr -d ' ')
 if [ "$GENRE_LINE" = "pending" ] || [ "$GENRE_LINE" = "null" ] || [ -z "$GENRE_LINE" ]; then
   echo "ERROR: жанр в .book/config.yaml — pending или не задан."
-  echo "Запусти /book:research-genre <slug>, чтобы сгенерировать пресет, или назначь готовый жанр через /book:config genre <slug>, прежде чем продолжать."
+  echo "Запусти /bookbench:research-genre <slug>, чтобы сгенерировать пресет, или назначь готовый жанр через /bookbench:config genre <slug>, прежде чем продолжать."
   exit 2
 fi
 
-[ -d "$SECDIR" ] || { echo "Section folder $SECDIR does not exist. Run /book:plan-section $N first."; exit 0; }
+[ -d "$SECDIR" ] || { echo "Section folder $SECDIR does not exist. Run /bookbench:plan-section $N first."; exit 0; }
 [ -s "$SECDIR/spec.md" ] || {
   # PS-13-02: refuse with hint, do NOT auto-call
   echo "$SECDIR/spec.md is missing or empty."
-  echo "Run /book:plan-section $N first to create the spec."
+  echo "Run /bookbench:plan-section $N first to create the spec."
   exit 0
 }
 
@@ -126,7 +126,7 @@ If `COMPLETED == true` (section already done), branch on `ON_COMPLETED`:
 |-------|--------|
 | `ask` | Present `AskUserQuestion`: «Section $N is completed. Choose: re-write (full pipeline) / re-edit (editor only) / abort.» |
 | `re-write` | Back up artefacts to `$SECDIR/<artifact>-prev-<TS>.md`, reset `section-state.yaml` (`phase: writing, loop_count: 0, completed: false`), continue from Step 5. |
-| `re-edit` | Hand off to `/book:write-section:edit $N` semantics — call only the editor (Step 8 below). Skip Steps 5–7 and 9. |
+| `re-edit` | Hand off to `/bookbench:write-section:edit $N` semantics — call only the editor (Step 8 below). Skip Steps 5–7 and 9. |
 | `abort` | Exit with notice. |
 
 Backup recipe:
@@ -161,7 +161,7 @@ NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 sed -i.bak -E "s/^- \`current_section\`:.*/- \`current_section\`: section_loop/" .book/STATE.md
 sed -i.bak -E "s/^- \`last_action\`:.*/- \`last_action\`: write-section ${N} started/" .book/STATE.md
 rm -f .book/STATE.md.bak
-printf '\n%s — `/book:write-section %s` — pipeline started\n' "$NOW" "$N" >> .book/STATE.md
+printf '\n%s — `/bookbench:write-section %s` — pipeline started\n' "$NOW" "$N" >> .book/STATE.md
 ```
 
 Patch `section-state.yaml` `phase: writing`.
@@ -187,7 +187,7 @@ Call `Task`:
 - `prompt`:
 
   ```
-  You are book-writer for /book:write-section ${N} — INITIAL DRAFT mode.
+  You are book-writer for /bookbench:write-section ${N} — INITIAL DRAFT mode.
 
   Required output: ${SECDIR}/draft.md
   Mandatory parts:
@@ -254,7 +254,7 @@ For each iteration:
    - `prompt`:
 
      ```
-     You are book-factchecker for /book:write-section ${N} — iteration ${ITER}/${LOOP_LIMIT}.
+     You are book-factchecker for /bookbench:write-section ${N} — iteration ${ITER}/${LOOP_LIMIT}.
 
      Required output: ${SECDIR}/factcheck.md (overwrite if exists; previous iteration is
      already saved as factcheck-v$((ITER-1)).md by the coordinator).
@@ -309,7 +309,7 @@ For each iteration:
          - Title: «Factcheck loop exhausted (section $N)»
          - Options: `Hedge claims (writer adds "approximately"/"some studies suggest")` / `Drop the failing claims` / `I will provide sources manually` / `Accept with [ASSUMED] markers`.
          - On `Hedge`/`Drop` — call writer one more time in revise mode with explicit author instruction; then re-call factchecker once; if still not pass — go to «accept with markers».
-         - On `Manually` — pause: print «Edit ${SECDIR}/draft.md by hand, add sources, then run `/book:write-section:factcheck $N`.» Exit.
+         - On `Manually` — pause: print «Edit ${SECDIR}/draft.md by hand, add sources, then run `/bookbench:write-section:factcheck $N`.» Exit.
          - On `Accept` — leave the failing claims marked `[ASSUMED]` and proceed to Step 8 with a note in `section-state.yaml.notes`.
 
 After the loop:
@@ -342,7 +342,7 @@ ${PREV_SECDIR}/summary.md                      (if exists)
 - `prompt`:
 
   ```
-  You are book-editor in BASE-MODE for /book:write-section ${N}.
+  You are book-editor in BASE-MODE for /bookbench:write-section ${N}.
 
   Required output: ${SECDIR}/edited.md (new file, do NOT overwrite draft.md).
 
@@ -432,7 +432,7 @@ rm -f "$SECDIR/section-state.yaml.bak"
 
 sed -i.bak -E "s/^- \`last_action\`:.*/- \`last_action\`: section ${N} written/" .book/STATE.md
 rm -f .book/STATE.md.bak
-printf '\n%s — `/book:write-section %s` — section completed (factcheck iters=%d)\n' "$NOW" "$N" "${ITER:-1}" >> .book/STATE.md
+printf '\n%s — `/bookbench:write-section %s` — section completed (factcheck iters=%d)\n' "$NOW" "$N" "${ITER:-1}" >> .book/STATE.md
 ```
 
 ### Step 14 — Next-step message
@@ -444,8 +444,8 @@ Section ${N} written and accepted.
   Factcheck iterations: ${ITER}
 
 Recommended next:
-  /book:audit-section ${N}    — independent audit of the finished section (read-only).
-  /book:plan-section $((N+1)) — start the next section.
+  /bookbench:audit-section ${N}    — independent audit of the finished section (read-only).
+  /bookbench:plan-section $((N+1)) — start the next section.
 ```
 
 ### Constitutional rules for this command
@@ -456,7 +456,7 @@ Recommended next:
 - **MUST** back up artefacts on `re-write` and `Reject (full re-write)`.
 - **NEVER** edit `draft.md`, `factcheck.md`, `edited.md`, `marketing.md` directly (file-ownership invariant).
 - **NEVER** call `book-tuner` or `bookbench-evolver` from this command (those are stage 14).
-- **NEVER** skip the spec gate (already enforced — `/book:plan-section` runs first; we error out if `spec.md` is missing).
+- **NEVER** skip the spec gate (already enforced — `/bookbench:plan-section` runs first; we error out if `spec.md` is missing).
 - **NEVER** progress past `factcheck_status: pass` without writing it to disk.
 
 ### Stage-14 hand-off notes

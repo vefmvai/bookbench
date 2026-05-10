@@ -9,7 +9,7 @@ A registered book at `~/example-books/memoir-test/` with:
 - `.book/intel/classification.json` — classifier output derived from `inputs/`.
 - `.book/TUNING-LOG.md` with two entries.
 
-User runs `/book:evolve propose` (local-dev, three eligible books).
+User runs `/bookbench:evolve propose` (local-dev, three eligible books).
 
 ## Expected behaviors
 
