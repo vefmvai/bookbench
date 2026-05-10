@@ -15,7 +15,12 @@
 # ────────────────────────────────────────────────────────────
 book:
   title: "TBD"               # читаемое название; используется в маркетинговых артефактах
-  genre: popular-science     # выбирает дефолты из defaults.yaml; только popular-science поставляется встроенным
+  genre: popular-science     # выбирает дефолты из defaults.yaml; popular-science | narrative-non-fiction |
+                             # monograph | fiction | <user-preset> | pending
+                             # pending = жанр будет выбран позже через /book:research-genre.
+                             # При pending команды plan-book / plan-section / write-section блокируются
+                             # с подсказкой запустить /book:research-genre <slug> или /book:config genre <slug>.
+                             # См. lib/start-coach-prompt.md § 3 ветка B3 (D-36).
   format: book               # одно из: article | long-read | book | monograph | dissertation
                              # Расширяется через /book:research-format (сохраняет пресет в ${CLAUDE_PLUGIN_DATA}/user-formats/).
                              # Определяет слово для единицы работы (глава / раздел / часть) и типичные объёмы.
@@ -25,6 +30,11 @@ book:
                              # Для длинных портретов — хранить полный текст в .book/context/audience.md,
                              # а здесь оставить краткое резюме. Влияет на примеры, метафоры, уровень сложности.
                              # См. decisions-20.md (Измерение 4: Аудитория).
+  addressing_mode: ""        # регистр обращения к читателю: "ты" | "вы" | "безличное" | "смешанное"
+                             # Заполняется в коуч-режиме /book:start (§ 4a). По умолчанию пусто.
+                             # Влияет на каждое предложение book-writer и book-editor через
+                             # .book/agent-guidelines/{writer,editor}/addressing-rules.md.
+                             # См. decisions-24.md (D-37) и lib/start-coach-prompt.md § 4a.
   language: ru               # влияет на языковые антиклише, профиль голоса, маркетинг
   registry_id: "TBD"         # заполняется автоматически через /book:start
 

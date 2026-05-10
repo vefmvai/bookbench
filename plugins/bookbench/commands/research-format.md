@@ -185,7 +185,7 @@ fi
 echo "research-format: run_environment=$ENV"
 ```
 
-В режиме `no-internet` — пропустить Step 8 (внешний поиск) и сразу перейти к Step 9 с дефолтами от `book` (по `research-format-spec.md` → «Edge cases → Что делать, если ресёрч не дал результата»).
+В режиме `no-internet` — пропустить Step 8 (внешний поиск) и сразу перейти к Step 9 со значениями по умолчанию от `book` (по `research-format-spec.md` → «Edge cases → Что делать, если ресёрч не дал результата»).
 
 ## Step 8 — Deep Research (если `ENV=normal`)
 
@@ -217,7 +217,7 @@ RESEARCH_RESULTS:
 
 ## Step 9 — Generate YAML preset
 
-Скопировать шаблон из `${CLAUDE_PLUGIN_ROOT}/defaults.yaml > formats..template` и заполнить значения. Если ресёрч не дал результата — использовать дефолты от `book` для числовых параметров, `section_word` берётся из описания автора, `compatible_genres: []` с пометкой.
+Скопировать шаблон из `${CLAUDE_PLUGIN_ROOT}/defaults.yaml > formats..template` и заполнить значения. Если ресёрч не дал результата — использовать значения по умолчанию от `book` для числовых параметров, `section_word` берётся из описания автора, `compatible_genres: []` с пометкой.
 
 ```yaml
 <SLUG>:
@@ -323,7 +323,7 @@ research-format: пресет для `$SLUG` сохранён.
 - Команда никогда не пишет в `${CLAUDE_PLUGIN_ROOT}` (это файл плагина, read-only во время выполнения). Только `${CLAUDE_PLUGIN_DATA}/user-formats/` и `${CLAUDE_PLUGIN_DATA}/research-log.md`.
 - При совпадении имени пользовательского пресета со встроенным форматом будущей версии плагина — приоритет у пользовательского (каскад D-17, локальное переопределяет глобальное). Это безопасное поведение для D-21 (`/book:update`).
 - `--refresh` архивирует предыдущий пресет в `research-archives/format-<slug>/<timestamp>-prev-preset.yaml` для возможности отката.
-- `--offline` — fallback без интернета: используются дефолты от `book`, `section_word` берётся из описания автора, `compatible_genres: []`. Пресет помечается в `source_description`: «ресёрч недостаточен; параметры на основе дефолтов формата `book`».
+- `--offline` — резервный режим без интернета: используются значения по умолчанию от `book`, `section_word` берётся из описания автора, `compatible_genres: []`. Пресет помечается в `source_description`: «ресёрч недостаточен; параметры на основе значений по умолчанию формата `book`».
 - Privacy: команда читает только описание автора (через `--description` или AskUserQuestion) и публичные веб-источники. Не читает `.book/sections/`, `.book/inputs/`, `.book/intel/`.
 
 ## Constitutional rules for this command

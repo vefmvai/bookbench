@@ -6,7 +6,67 @@
 
 ## [Unreleased]
 
-_n/a — все изменения текущего цикла вошли в 0.3.1._
+_n/a — все изменения текущего цикла вошли в 0.3.2._
+
+---
+
+## [0.3.2] — 2026-05-10
+
+Patch-релиз: закрытие 6 классов ошибок коуч-диалога `/book:start`, выявленных при первом живом запуске 0.3.0/0.3.1 на статье-манифесте «Спираль» 2026-05-10. Никаких breaking changes по структуре `.book/` относительно 0.3.1.
+
+### Fixed
+
+- **Класс ошибки #1: коуч развернул `.book/` без явного «да» по каждому измерению.** Добавлен **Step 4b — шлюз подтверждения** в `commands/start.md`: между коуч-диалогом и развёртыванием `.book/` команда показывает автору сводку и принимает «Да, создавай .book/» либо «Поправь <X>» (X — одно из 5 измерений: Title / Format / Genre / Audience / Addressing / Voice path). Hard guard `if [ "${UNFOLD_CONFIRMED:-0}" != "1" ]; then exit 1` в начале Step 6. § 0 коуч-промпта: узкое MAY-сжатие — три обязательных условия (а) автор всё описал в первом ТЕКСТОВОМ сообщении; (б) сводка <200 знаков; (в) явное «да» по каждому измерению отдельно. Скиданные файлы НИКОГДА не считаются «всё описано чётко».
+- **Класс ошибки #2: коуч записал «временный popular-science» вместо пустого custom.** Добавлена ветка **B3-pending** в `lib/start-coach-prompt.md` § 3: автор может выбрать «оставить genre в pending до следующей сессии». В `.book/config.yaml > book.genre` — sentinel `pending` (плюс `genre_pending_reason`). Команды `/book:plan-book`, `/book:plan-section`, `/book:write-section` блокируются с подсказкой запустить `/book:research-genre <slug>`. Жанровые гайдлайны из `defaults.yaml` НЕ копируются в `.book/agent-guidelines/<role>/` при pending.
+- **Класс ошибки #3: коуч использовал «ты» вместо «вы» по умолчанию.** Введён первоклассный параметр `book.addressing_mode` (`ты | вы | безличное | смешанное`) в `templates/book/config.yaml`. Новый § 4a в коуч-промпте: вопрос автору с derived_default из `defaults.yaml` (приоритет `genres.<genre>.addressing_default` > `formats.<format>.addressing_default` > общий fallback `«вы»`). Запрет выводить регистр из voice-profile или черновиков. Каскадно прокидывается в `.book/agent-guidelines/{writer,editor}/addressing-rules.md`.
+- **Класс ошибки #4 (КРИТИЧЕСКИЙ): коуч извлёк `voice-profile.md` из черновика без согласия автора.** Введён **voice-profile lifecycle** (`lib/voice-profile-lifecycle.md`): 4 состояния `none / draft / confirmed / calibrating`, контракт «субагент ИГНОРИРУЕТ файл со status:draft|calibrating» через MUST-блок в `book-writer.md` и `book-editor.md`. На `/book:start` запрещена запись `.book/context/voice-profile.md` (без `.draft`); только `voice-profile.md.draft` или указатель `voice-source-pointer.md`. § 5 коуч-промпта переписан: B1-confirmed (явный заголовок voice-profile) / B1-derived (раздел «стиль» в широком документе → указатель) / B2-pending (тексты в стиле автора → `.book/inputs/staged-voice-samples/`, не agent-guidelines/) / B2-confirmed (явное «готовое / образец» от автора) / B3 (ничего не приложено).
+- **Класс ошибки #5: финальное сообщение «Книга инициализирована» при формате long-read.** Введён адаптивный `document_word` (D-38, симметрично D-31) в `defaults.yaml > formats.<format>`: три поля `document_word`, `document_word_capitalized`, `document_word_gender_suffix`. Step 11 `commands/start.md` использует `${DOCUMENT_WORD_CAPITALIZED} инициализирован${DOCUMENT_WORD_GENDER_SUFFIX}`: «Лонгрид инициализирован» (long-read), «Статья инициализирована» (article), «Книга инициализирована» (book), «Монография инициализирована» (monograph), «Диссертация инициализирована» (dissertation). MUST-блок про `document_word` в `book-writer.md` и `book-editor.md`.
+- **Класс ошибки #6: англицизмы-кальки в русскоязычных текстах.** Создан `lib/terminology-ru.md` — глоссарий 14+ калек («дефолт», «воркфлоу», «скаффолдинг», «сэмплы», «батч» и др.) с русскими эквивалентами. Создан `templates/hooks/terminology-lint.sh` (отдельный лёгкий hook от `anti-ai-cliche-lint.sh`) с двумя уровнями реакции: «блок» (exit 2) для калек с прямым эквивалентом; «предупреждение» (exit 0) для остальных. Вычищены существующие вхождения в `commands/{next,research-format,start}.md`, `lib/{section-word-helpers,start-coach-prompt}.md`. Сохранены: «лонгрид», «фреймворк», «коуч», «markdown», «frontmatter».
+
+### Added
+
+- **`lib/voice-profile-lifecycle.md`** — описание 4 состояний voice-profile с frontmatter-схемой и переходами (D-35).
+- **`lib/sacred-policy.md`** — три правила автогенерации файлов: запрет автозаписи в `.book/agent-guidelines/`, запрет автозаписи в `.book/context/<status:confirmed>`, обязательный frontmatter `created_by` + `requires_confirmation` (D-41).
+- **`lib/terminology-ru.md`** — глоссарий калек и терминологическая политика BookBench (D-40).
+- **`.book.proposed.yaml`** — промежуточный конфиг между коуч-диалогом и развёртыванием `.book/` (D-39). Удаляется после успешного Step 6 или при отмене.
+- **`templates/agent-guidelines/{writer,editor}/addressing-rules.md`** — шаблоны для четырёх режимов обращения с плейсхолдером `${ADDRESSING_MODE}` (D-37).
+- **`templates/hooks/terminology-lint.sh`** — отдельный PostToolUse hook для проверки калек (D-40).
+- **5 новых eval-кейсов в `tests/eval-cases/start-coach/`** — case-06 (Step 4b gate), case-07 (B3 genre pending), case-08 (addressing mode), case-09 (voice lifecycle), case-10 (document_word long-read).
+- **`tests/start.test.sh`** — snapshot-тест регрессий 7 пакетов проверок (Step 4b gate / voice-profile lifecycle / genre pending / addressing_mode / document_word / sacred-policy / terminology). 35 PASS / 0 FAIL.
+- **Поле `addressing_mode`** в `templates/book/config.yaml` под `book` (D-37).
+- **Поле `addressing_default`** в каждом жанре и каждом формате `defaults.yaml` (D-37).
+- **Поля `document_word*`** в каждом из 5 форматов `defaults.yaml` (D-38).
+- **Sentinel `pending`** в комментарии к полю `genre` `templates/book/config.yaml` (D-36).
+- **Режим `--from-staged`** в `commands/voice-build.md` — использует `.book/inputs/staged-voice-samples/` как стартовый материал диалога (D-35).
+- **Guard на `genre: pending`** в `commands/{plan-book,plan-section,write-section}.md` Step 1/2/3 — exit 2 с подсказкой про `/book:research-genre` (D-36).
+
+### Changed
+
+- **§ 0 `lib/start-coach-prompt.md`:** MAY-сжатие сужено до трёх обязательных условий + явный запрет на использование скиданных файлов как доказательство «автор всё описал чётко».
+- **§ 1 `lib/start-coach-prompt.md`:** open-invitation усилена предупреждением о диалоговой природе фазы — «короткая дискуссия, каждое решение — после твоего "да"».
+- **§ 5 `lib/start-coach-prompt.md`:** убрано «или эквивалент» из B1; разделено на B1-confirmed (явный заголовок voice-profile) и B1-derived (раздел «стиль» в широком документе — указатель, без структуризации).
+- **§ 6 `lib/start-coach-prompt.md` пункт 6:** автоимпорт текстов в авторском стиле — НЕ в `agent-guidelines/`, а в `.book/inputs/staged-voice-samples/` с диалогом «черновик / готовое / просто пример».
+- **`commands/start.md` Step 11:** хардкод `Книга инициализирована: «${BOOK_TITLE}»` заменён на адаптивный `${DOCUMENT_WORD_CAPITALIZED} инициализирован${DOCUMENT_WORD_GENDER_SUFFIX}: «${BOOK_TITLE}»` с резолвингом из `defaults.yaml`.
+- **`agent-templates/book-writer.md` Voice gate (TOV-08):** усилен через проверку frontmatter `status:` (D-35); файлы со `status: draft|calibrating` или только `.draft`-файлы трактуются как `none`.
+- **`agent-templates/book-editor.md`:** добавлен MUST-блок про `document_word` (D-38), MUST-блок про lifecycle voice-profile (D-35), MUST-блок про `addressing_mode` (D-37).
+
+### Migration (для пользователей 0.3.1)
+
+```
+/plugin uninstall bookbench@bookbench
+/plugin marketplace remove bookbench
+/plugin marketplace add vefmvai/bookbench
+/plugin install bookbench@bookbench
+/reload-plugins
+/book:doctor   # должно показать BookBench 0.3.2
+```
+
+Никаких breaking changes по структуре `.book/`. Существующие книги 0.3.1 автоматически совместимы — поле `book.addressing_mode` отсутствует, но субагенты знают как работать без него (editor flag-ит без правки до явного указания).
+
+### Known issues
+
+- **35 редких команд по-прежнему имеют английские описания** (наследие 0.1.5, перенесено как known issue в 0.2.0). Перевод отложен на 0.3.x patch.
+- **T10 контрольный сценарий «Спираль»** проверен в режиме статической верификации (snapshot-тест + eval-кейсы). Реальный live-run с `brief.md` + `spiral.md` остаётся за автором после установки 0.3.2.
 
 ---
 
@@ -291,7 +351,10 @@ _n/a — первый публичный релиз._
 
 ---
 
-[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/vefmvai/bookbench/compare/v0.3.2...HEAD
+[0.3.2]: https://github.com/vefmvai/bookbench/releases/tag/v0.3.2
+[0.3.1]: https://github.com/vefmvai/bookbench/releases/tag/v0.3.1
+[0.3.0]: https://github.com/vefmvai/bookbench/releases/tag/v0.3.0
 [0.2.0]: https://github.com/vefmvai/bookbench/releases/tag/v0.2.0
 [0.1.5]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.5
 [0.1.4]: https://github.com/vefmvai/bookbench/releases/tag/v0.1.4

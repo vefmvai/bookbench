@@ -43,6 +43,16 @@ This is the first command at stage 13 that delegates to a subagent. The 8-step o
   exit 0
 }
 
+# Genre pending guard (D-36, etap 24).
+# Если genre = pending — команда блокируется до явного выбора жанра.
+# Использует grep вместо yq для совместимости с минимальной средой.
+GENRE_LINE=$(grep -E '^[[:space:]]+genre:[[:space:]]' .book/config.yaml | head -1 | sed -E 's/^[[:space:]]+genre:[[:space:]]+//; s/[[:space:]]*#.*$//; s/^"//; s/"$//' | tr -d ' ')
+if [ "$GENRE_LINE" = "pending" ] || [ "$GENRE_LINE" = "null" ] || [ -z "$GENRE_LINE" ]; then
+  echo "ERROR: жанр в .book/config.yaml — pending или не задан."
+  echo "Запусти /book:research-genre <slug>, чтобы сгенерировать пресет, или назначь готовый жанр через /book:config genre <slug>, прежде чем продолжать."
+  exit 2
+fi
+
 # Detect existing ROADMAP
 EXISTING_PLANNED=0
 [ -f .book/ROADMAP.md ] && EXISTING_PLANNED=$(grep -cE '^## (Section|Раздел)' .book/ROADMAP.md || echo 0)

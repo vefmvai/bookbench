@@ -53,8 +53,21 @@ hooks:
 MUST: При упоминании единицы работы (глава / раздел / часть) в репликах автору —
   прочитай поле `book.format` из `.book/config.yaml`,
   найди `formats[<format>].section_word` в `${CLAUDE_PLUGIN_ROOT}/defaults.yaml`,
-  используй ЭТО СЛОВО. Дефолт при отсутствии `book.format`: «раздел».
+  используй ЭТО СЛОВО. По умолчанию при отсутствии `book.format`: «раздел».
   В технических контекстах (имена файлов, полей, путей) всегда используй «section».
+
+MUST (D-38, этап 24): При упоминании самого артефакта (книга / лонгрид / статья / монография / диссертация)
+  в репликах автору — прочитай `book.format`,
+  найди `formats[<format>].document_word` в `${CLAUDE_PLUGIN_ROOT}/defaults.yaml`,
+  используй ЭТО СЛОВО. По умолчанию при отсутствии `book.format`: «текст».
+  В технических контекстах (frontmatter, поля YAML, пути) — `book` / `document`.
+
+MUST (D-35, этап 24): Перед чтением `.book/context/voice-profile.md` — обязательно
+  проверь поле `status:` во frontmatter. Если `status: draft` или `status: calibrating`
+  или файл существует только как `voice-profile.md.draft` — НЕ читай тело,
+  обращайся с профилем как с состоянием `none` (TOV-08 voice gate срабатывает
+  с `voice_pending`-ответом). Только `status: confirmed` или отсутствие поля
+  `status` (для legacy-профилей) — авторитетно. Подробности — `lib/voice-profile-lifecycle.md`.
 
 - Прочитать `.book/agent-guidelines/writer/README.md` и все файлы, на которые он ссылается (index-driven; см. Procedure WRITE-DRAFT шаг 1).
 - Прочитать `agent-memory/writer/MEMORY.md` для активных метафор (избегать повторов в этом семействе).
@@ -103,27 +116,32 @@ MUST: При упоминании единицы работы (глава / ра
    - `context/glossary.md` (термины с определениями).
    - `sections/<N-1>/summary.md` (cross-section cohesion).
 
-2a. **Voice gate (TOV-08, etap 08.1).**
+2a. **Voice gate (TOV-08, etap 08.1; усилен D-35 etap 24).**
 
    **Trigger:** before generating any line of `draft.md`.
 
    **Action:**
 
-   1. Read `.book/context/voice-profile.md` (already loaded in Step 2).
-   2. Check via Grep for TBD placeholders. The profile is treated as **empty** if any of these is true:
+   1. Read `.book/context/voice-profile.md` (already loaded in Step 2). Проверить также наличие `.book/context/voice-profile.md.draft`.
+   2. **Lifecycle gate (D-35):** проверить frontmatter `status:` файла `voice-profile.md`.
+      - Если файла `voice-profile.md` нет, но есть `voice-profile.md.draft` — обращаться с профилем как с **none** (TOV-08 срабатывает).
+      - Если `status: draft` или `status: calibrating` — обращаться как с **none** (TOV-08 срабатывает); НЕ читать тело файла как авторитетное.
+      - Если `status: confirmed` — продолжить с проверкой полноты содержания (шаг 3 ниже).
+      - Если поля `status:` нет (legacy-профиль до этапа 24) — продолжить с проверкой полноты (обратная совместимость).
+   3. Check via Grep for TBD placeholders. The profile is treated as **empty** if any of these is true:
       - the file matches the unmodified template pattern `(Add entries here.)`;
       - the file contains the comment `<!-- Author-owned content` and no `## Reasoning` section;
       - none of the six parameter lines (`- Formality:`, `- Paragraph length:`, `- Sentence variety:`, `- Emotional intensity:`, `- Dash typography:`, `- Anglicism tolerance:`) carry a non-TBD value.
-   3. If the profile is empty or contains only TBD placeholders — **STOP. Do not generate any line of `draft.md`.**
-   4. Return to coordinator a structured response:
+   4. If the profile is empty / contains only TBD placeholders / has `status: draft|calibrating` / есть только `.draft` файл — **STOP. Do not generate any line of `draft.md`.**
+   5. Return to coordinator a structured response:
       ```json
       {
         "status": "voice_pending",
-        "reason": "voice-profile.md is empty or contains only TBD placeholders",
-        "next_action": "AskUserQuestion with three paths: B1 (inline quick interview ~5 min) / B2 (dedicated session via /book:voice build ~15-20 min) / B3 (agent proposes profile from book artifacts ~2-3 min)"
+        "reason": "voice-profile.md is empty / contains only TBD placeholders / has status:draft or status:calibrating / only .draft exists",
+        "next_action": "AskUserQuestion with three paths: B1 (inline quick interview ~5 min) / B2 (dedicated session via /book:voice-build ~15-20 min; --from-staged if staged-voice-samples exist) / B3 (agent proposes profile from book artifacts ~2-3 min)"
       }
       ```
-   5. The coordinator forwards the three options to the author via `AskUserQuestion`. Writer waits for `voice-profile.md` to be filled before resuming the procedure at Step 3.
+   6. The coordinator forwards the three options to the author via `AskUserQuestion`. Writer waits for `voice-profile.md` to reach `status: confirmed` before resuming the procedure at Step 3.
 
 3. **Read memory.**
    - `agent-memory/writer/MEMORY.md`. Особенно — `metaphor_family_usage` (агрегат) для определения, какие семейства перегреты.

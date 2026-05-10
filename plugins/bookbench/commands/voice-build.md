@@ -1,6 +1,6 @@
 ---
-description: Собирает профиль голоса (voice profile) для текущей книги через активацию скилла voice-builder в выделенной сессии. Поддерживает --mode=quick|serious (по умолчанию serious) и --rebuild для перезаписи уже существующего профиля. Пишет только внутрь .book/. По успеху сбрасывает флаг voice_pending в .book/STATE.md.
-argument-hint: "[--mode=quick|serious] [--rebuild]"
+description: Собирает профиль голоса (voice profile) для текущей книги через активацию скилла voice-builder в выделенной сессии. Поддерживает --mode=quick|serious (по умолчанию serious), --rebuild для перезаписи уже существующего профиля и --from-staged для использования образцов из .book/inputs/staged-voice-samples/ как стартового материала диалога (этап 24, D-35). Пишет только внутрь .book/. По успеху сбрасывает флаг voice_pending в .book/STATE.md и переводит voice-profile.md в status confirmed.
+argument-hint: "[--mode=quick|serious] [--rebuild] [--from-staged]"
 allowed-tools: [Task, Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion]
 ---
 
@@ -22,6 +22,7 @@ This command is a markdown prompt executed by Claude Code. It follows the eight-
 RAW="${ARGUMENTS:-}"
 MODE="serious"
 REBUILD=0
+FROM_STAGED=0
 
 set -- $RAW
 while [ $# -gt 0 ]; do
@@ -30,6 +31,7 @@ while [ $# -gt 0 ]; do
     --mode=serious)  MODE="serious" ;;
     --mode)          shift; MODE="${1:-serious}" ;;
     --rebuild)       REBUILD=1 ;;
+    --from-staged)   FROM_STAGED=1 ;;
     *)               echo "voice build: unknown flag '$1'" 1>&2 ;;
   esac
   shift 2>/dev/null || true
@@ -40,8 +42,34 @@ case "$MODE" in
   *) echo "voice build: invalid --mode='$MODE' (allowed: quick, serious)" 1>&2; exit 1 ;;
 esac
 
-echo "voice build: mode=$MODE rebuild=$REBUILD"
+echo "voice build: mode=$MODE rebuild=$REBUILD from_staged=$FROM_STAGED"
 ```
+
+### Step 1a — `--from-staged` resolution (D-35, etap 24)
+
+Если `FROM_STAGED=1`:
+
+```bash
+STAGED_DIR=".book/inputs/staged-voice-samples"
+if [ ! -d "$STAGED_DIR" ] || [ -z "$(ls -A "$STAGED_DIR" 2>/dev/null)" ]; then
+  echo "voice build --from-staged: папка $STAGED_DIR пуста или не существует. Запусти без --from-staged для обычного диалога."
+  exit 1
+fi
+STAGED_FILES=$(find "$STAGED_DIR" -maxdepth 1 -type f -name "*.md" -print)
+echo "voice build: будут использованы как стартовый материал диалога:"
+echo "$STAGED_FILES"
+```
+
+В Task-промпте voice-builder получает дополнительный блок:
+```
+--from-staged mode: используй файлы из .book/inputs/staged-voice-samples/ как стартовый
+материал для диалога. Не извлекай 6 параметров автоматически — обсуди с автором каждый
+параметр, опираясь на образцы. Предупреждение для автора: «Эти образцы — то, что ты
+скинул на /book:start. Используем их как ориентир, но финальный voice-profile —
+результат нашего разговора, а не автоматического извлечения.»
+```
+
+Если есть `.book/context/voice-profile.md.draft` (создан коуч-агентом в B1-confirmed) — voice-builder использует режим **ratify-existing**: показывает черновик автору, согласует / правит, переименовывает в `voice-profile.md` со `status: confirmed`.
 
 ### Step 2 — Resolve plugin paths and book root
 

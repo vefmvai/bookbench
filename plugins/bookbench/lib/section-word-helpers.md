@@ -33,7 +33,7 @@ formats:
 MUST: При упоминании единицы работы (глава / раздел / часть) в репликах автору —
   прочитай поле `book.format` из `.book/config.yaml`,
   найди `formats[<format>].section_word` в `${CLAUDE_PLUGIN_ROOT}/defaults.yaml`,
-  используй ЭТО СЛОВО. Дефолт при отсутствии `book.format`: «раздел».
+  используй ЭТО СЛОВО. По умолчанию при отсутствии `book.format`: «раздел».
   В технических контекстах (имена файлов, полей, путей) всегда используй «section».
 ```
 
@@ -73,7 +73,7 @@ book.format = "long-read" → section_word = "часть"
 book.format = "book" → section_word = "глава"
 book.format = "monograph" → section_word = "глава"
 book.format = "dissertation" → section_word = "глава"
-book.format = (undefined) → "раздел" (дефолт)
+book.format = (undefined) → "раздел" (значение по умолчанию)
 ```
 
 ---

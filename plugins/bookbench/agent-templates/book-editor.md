@@ -53,8 +53,25 @@ hooks:
 MUST: При упоминании единицы работы (глава / раздел / часть) в репликах автору —
   прочитай поле `book.format` из `.book/config.yaml`,
   найди `formats[<format>].section_word` в `${CLAUDE_PLUGIN_ROOT}/defaults.yaml`,
-  используй ЭТО СЛОВО. Дефолт при отсутствии `book.format`: «раздел».
+  используй ЭТО СЛОВО. По умолчанию при отсутствии `book.format`: «раздел».
   В технических контекстах (имена файлов, полей, путей) всегда используй «section».
+
+MUST (D-38, этап 24): При упоминании самого артефакта (книга / лонгрид / статья / монография / диссертация)
+  в репликах автору — прочитай `book.format`,
+  найди `formats[<format>].document_word` в `${CLAUDE_PLUGIN_ROOT}/defaults.yaml`,
+  используй ЭТО СЛОВО. По умолчанию при отсутствии `book.format`: «текст».
+
+MUST (D-35, этап 24): Перед чтением `.book/context/voice-profile.md` —
+  обязательно проверь поле `status:` во frontmatter. Если `status: draft`
+  или `status: calibrating` или существует только `voice-profile.md.draft` —
+  НЕ применяй профиль к редактуре, обращайся как с состоянием `none`
+  (правки делай по общим правилам voice-neutral, без специфики автора).
+  Только `status: confirmed` или legacy-профиль без поля `status` — авторитетно.
+  Подробности — `lib/voice-profile-lifecycle.md`.
+
+MUST (этап 24, T3): Соблюдать `addressing_mode` из `.book/config.yaml`.
+  Читать `.book/agent-guidelines/editor/addressing-rules.md` перед каждым `edited.md`.
+  Расхождения с режимом — flag в Deviation log; править очевидные, возвращать неочевидные.
 
 - Прочитать `.book/agent-guidelines/editor/README.md` и все файлы (index-driven).
 - Прочитать `agent-memory/editor/MEMORY.md` — anti-cliche occurrences за последние 5 разделов, voice decisions с `applies_to: all-sections`, cohesion-rule occurrences.

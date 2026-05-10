@@ -97,6 +97,15 @@ Run the same `PLUGIN_ROOT`/`PLUGIN_DATA`/`PLUGIN_VERSION` resolver as `/book:sta
 
 ```bash
 [ -d .book ] || { echo "No .book/. Run /book:start."; exit 0; }
+
+# Genre pending guard (D-36, etap 24).
+GENRE_LINE=$(grep -E '^[[:space:]]+genre:[[:space:]]' .book/config.yaml | head -1 | sed -E 's/^[[:space:]]+genre:[[:space:]]+//; s/[[:space:]]*#.*$//; s/^"//; s/"$//' | tr -d ' ')
+if [ "$GENRE_LINE" = "pending" ] || [ "$GENRE_LINE" = "null" ] || [ -z "$GENRE_LINE" ]; then
+  echo "ERROR: жанр в .book/config.yaml — pending или не задан."
+  echo "Запусти /book:research-genre <slug>, чтобы сгенерировать пресет, или назначь готовый жанр через /book:config genre <slug>, прежде чем продолжать."
+  exit 2
+fi
+
 [ -d "$SECDIR" ] || { echo "Section folder $SECDIR does not exist. Run /book:plan-section $N first."; exit 0; }
 [ -s "$SECDIR/spec.md" ] || {
   # PS-13-02: refuse with hint, do NOT auto-call
